@@ -250,7 +250,7 @@ public class RegisterUser extends AppCompatActivity {
                 DocumentReference documentReference = db.collection("users").document(userId);
                 Map<String, Object> userUpdate = new HashMap<>();
                 userUpdate.put("email", email);
-                userUpdate.put("username", name);
+                userUpdate.put("fullName", name);
                 userUpdate.put("address", address);
                 userUpdate.put("displayPicPath", profilePic);
                 documentReference.update(userUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {

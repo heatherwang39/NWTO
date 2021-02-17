@@ -13,6 +13,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,4 +47,7 @@ dependencies {
 
     //To generate round ImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //To fix single dex file error
+    implementation 'com.android.support:multidex:1.0.3'
 }
