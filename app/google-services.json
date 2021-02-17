@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "275784762989",
+    "project_id": "nwto1778",
+    "storage_bucket": "nwto1778.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275784762989:android:cfc67a2ac76f9d22eda164",
+        "android_client_info": {
+          "package_name": "com.example.nwto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "275784762989-p69tfd87e2lr04p6ifb0vpqehq2u5g98.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCff0Zmxb4UlXLxAgfr27SvPq6L2iP-f6w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "275784762989-p69tfd87e2lr04p6ifb0vpqehq2u5g98.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
