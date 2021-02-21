@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RegisterUser">
+    tools:context=".RegisterUserActivity">
 
     <TextView
         android:id="@+id/textViewBanner"
@@ -31,15 +31,15 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profileImage"
+            android:id="@+id/image_profile"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:src="@drawable/avatar"
+            android:src="@drawable/ic_avatar"
             app:civ_border_width="2dp"
             app:civ_border_color="#FF000000"/>
 
         <TextView
-            android:id="@+id/textViewTakePicture"
+            android:id="@+id/text_take_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -61,7 +61,7 @@
         >
 
         <EditText
-            android:id="@+id/editTextName"
+            android:id="@+id/edit_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -70,7 +70,7 @@
             android:inputType="textPersonName"/>
 
         <EditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/edit_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -79,7 +79,7 @@
             android:inputType="textEmailAddress"/>
 
         <EditText
-            android:id="@+id/editTextPassword"
+            android:id="@+id/edit_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -88,7 +88,7 @@
             android:inputType="textPassword" />
 
         <EditText
-            android:id="@+id/editTextPassword2"
+            android:id="@+id/edit_password2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -96,8 +96,8 @@
             android:hint="Confirm Password"
             android:inputType="textPassword"/>
 
-        <EditText
-            android:id="@+id/editTextAddress"
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -105,7 +105,7 @@
             android:hint="Street Address or Postal Code"
             android:inputType="textPersonName"/>
         <Button
-            android:id="@+id/buttonSignUp"
+            android:id="@+id/button_sign_up"
             android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -116,7 +116,7 @@
 
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

@@ -50,4 +50,7 @@ dependencies {
 
     //To fix single dex file error
     implementation 'com.android.support:multidex:1.0.3'
+
+    //To use Google Place API
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 }

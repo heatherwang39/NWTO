@@ -6,12 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,32 +33,40 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class RegisterUser extends AppCompatActivity {
+public class RegisterUserActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private static final String TAG = "EmailPassword";
-    private TextView textViewBanner,textViewTakePicture;
+    private TextView textViewTakePicture;
     private ImageView profileImage;
     private Button signUp;
-    private EditText editTextEmail, editTextPassword, editTextPassword2, editTextName, editTextAddress;
+    private EditText editTextEmail, editTextPassword, editTextPassword2, editTextName;
+    private AutoCompleteTextView autoCompleteTextView;
     private ProgressBar progressBar;
     private String uID;
     private String currentPhotoPath;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private Boolean noProfilePic = true;
     private Bitmap imageBitmap;
-    private String email, name, address;
+    private String email, name;
+    private String autoCompleteAddress,  postalCode;
+    private double latitude, longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +82,7 @@ public class RegisterUser extends AppCompatActivity {
         // Initialize Storage
         storage = FirebaseStorage.getInstance();
 
-        textViewTakePicture = (TextView) findViewById(R.id.textViewTakePicture);
+        textViewTakePicture = (TextView) findViewById(R.id.text_take_picture);
         textViewTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +90,7 @@ public class RegisterUser extends AppCompatActivity {
             }
         });
 
-        signUp = (Button) findViewById(R.id.buttonSignUp);
+        signUp = (Button) findViewById(R.id.button_sign_up);
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,28 +98,45 @@ public class RegisterUser extends AppCompatActivity {
             }
         });
 
-        profileImage = (ImageView) findViewById(R.id.profileImage);
+        profileImage = (ImageView) findViewById(R.id.image_profile);
+        editTextEmail = (EditText) findViewById(R.id.edit_email);
+        editTextPassword = (EditText) findViewById(R.id.edit_password);
+        editTextPassword2 = (EditText) findViewById(R.id.edit_password2);
+        editTextName = (EditText) findViewById(R.id.edit_name);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        editTextPassword2 = (EditText) findViewById(R.id.editTextPassword2);
-        editTextName = (EditText) findViewById(R.id.editTextName);
-        editTextAddress = (EditText) findViewById(R.id.editTextAddress);
+        autoCompleteTextView = findViewById(R.id.auto_complete_address);
+        autoCompleteTextView.setAdapter(new PlaceAutoSuggestAdapter(RegisterUserActivity.this,android.R.layout.simple_list_item_1));
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                convertAddress();
+            }
+        });
     }
 
-    // [START on_start_check_user]
-    // Cite: https://github.com/firebase/quickstart-android/blob/256c7e1e6e1dd2be7025bb3f858bf906fd158fa0/auth/app/src/main/java/com/google/firebase/quickstart/auth/java/EmailPasswordActivity.java#L46-L46
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(currentUser);
+    private void convertAddress() {
+        autoCompleteAddress = autoCompleteTextView.getText().toString();
+        Log.d("Address : ",autoCompleteAddress);
+        LatLng latLng = getLatLngFromAddress(autoCompleteAddress);
+        if(latLng!=null) {
+            Log.d("Lat Lng : ", " " + latLng.latitude + " " + latLng.longitude);
+            latitude = latLng.latitude;
+            longitude = latLng.longitude;
+            Address address=getAddressFromLatLng(latLng);
+            if(address!=null) {
+                postalCode = address.getPostalCode();
+                Log.d("Pin Code : ",""+postalCode);
+            }
+            else {
+                Log.d("Address","Address Not Found");
+            }
+        }
+        else {
+            Log.d("Lat Lng","Lat Lng Not Found");
+        }
     }
-    // [END on_start_check_user]
-
 
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -128,18 +157,17 @@ public class RegisterUser extends AppCompatActivity {
             noProfilePic = false;
         } else {
             Log.i(TAG, "takePictureIntent onActivityResult: RESULT CANCELLED");
-            Toast.makeText(RegisterUser.this, "Take Picture Cancelled.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterUserActivity.this, "Take Picture Cancelled.",Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    public void signUp(){
+    private void signUp(){
 
         email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString();
         String password2 = editTextPassword2.getText().toString();
         name = editTextName.getText().toString().trim();
-        address = editTextAddress.getText().toString().trim();
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             editTextEmail.setError("Valid Email Address is required!");
@@ -176,7 +204,7 @@ public class RegisterUser extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:firebase success");
-                            Toast.makeText(RegisterUser.this, "User created.",Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterUserActivity.this, "User created.",Toast.LENGTH_LONG).show();
                             //FirebaseUser user = mAuth.getCurrentUser();
                             uID = mAuth.getCurrentUser().getUid();
 
@@ -184,7 +212,9 @@ public class RegisterUser extends AppCompatActivity {
                             Map<String, Object> user = new HashMap<>();
                             user.put("email",email);
                             user.put("fullName",name);
-                            user.put("address",address);
+                            user.put("address",autoCompleteAddress);
+                            user.put("postalCode",postalCode);
+                            user.put("coordinates", Arrays.asList(latitude,longitude));
                             upload(imageBitmap);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -204,7 +234,7 @@ public class RegisterUser extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterUser.this, "Authentication failed.",Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterUserActivity.this, "Authentication failed.",Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }
@@ -244,16 +274,18 @@ public class RegisterUser extends AppCompatActivity {
         currentUser.updateProfile(request).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(RegisterUser.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterUserActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
                 String profilePic = currentUser.getPhotoUrl().toString();
                 String userId = mAuth.getCurrentUser().getUid();
                 DocumentReference documentReference = db.collection("users").document(userId);
                 Map<String, Object> userUpdate = new HashMap<>();
-                userUpdate.put("email", email);
-                userUpdate.put("fullName", name);
-                userUpdate.put("address", address);
+//                userUpdate.put("email",email);
+//                userUpdate.put("fullName",name);
+//                userUpdate.put("address",autoCompleteAddress);
+//                userUpdate.put("postalCode",postalCode);
+//                userUpdate.put("coordinates", Arrays.asList(latitude,longitude));
                 userUpdate.put("displayPicPath", profilePic);
-                documentReference.update(userUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
+                documentReference.set(userUpdate, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Profile pic has been updated for user " + userId);
@@ -264,12 +296,53 @@ public class RegisterUser extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(RegisterUser.this, "Failed in uploading profile pic.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterUserActivity.this, "Failed in uploading profile pic.", Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
+    private LatLng getLatLngFromAddress(String address){
 
+        Geocoder geocoder=new Geocoder(RegisterUserActivity.this);
+        List<Address> addressList;
+
+        try {
+            addressList = geocoder.getFromLocationName(address, 1);
+            if(addressList!=null){
+                Address singleaddress=addressList.get(0);
+                LatLng latLng = new LatLng(singleaddress.getLatitude(),singleaddress.getLongitude());
+                return latLng;
+            }
+            else{
+                return null;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    private Address getAddressFromLatLng(LatLng latLng){
+        Geocoder geocoder=new Geocoder(RegisterUserActivity.this);
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 5);
+            if(addresses!=null){
+                Address address=addresses.get(0);
+                return address;
+            }
+            else{
+                return null;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 
 }
