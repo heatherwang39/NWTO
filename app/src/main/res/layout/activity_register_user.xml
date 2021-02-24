@@ -8,7 +8,7 @@
     tools:context=".RegisterUserActivity">
 
     <TextView
-        android:id="@+id/textViewBanner"
+        android:id="@+id/text_banner"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:padding="20dp"
@@ -21,10 +21,10 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:id="@+id/imageContainer"
+        android:id="@+id/container_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewBanner"
+        android:layout_below="@+id/text_banner"
         android:padding="20dp"
         android:gravity="center_vertical"
         >
@@ -55,7 +55,7 @@
         android:id="@+id/userInfoForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageContainer"
+        android:layout_below="@+id/container_profile"
         android:padding="20dp"
         android:gravity="center_vertical"
         >
@@ -104,6 +104,7 @@
             android:ems="10"
             android:hint="Street Address or Postal Code"
             android:inputType="textPersonName"/>
+
         <Button
             android:id="@+id/button_sign_up"
             android:layout_width="360dp"

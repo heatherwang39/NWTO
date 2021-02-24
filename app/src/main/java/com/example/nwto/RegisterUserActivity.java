@@ -215,6 +215,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                             user.put("address",autoCompleteAddress);
                             user.put("postalCode",postalCode);
                             user.put("coordinates", Arrays.asList(latitude,longitude));
+                            user.put("radius","5 km");
+                            user.put("frequency","1 day");
                             upload(imageBitmap);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
