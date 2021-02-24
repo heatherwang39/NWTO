@@ -17,7 +17,7 @@
         android:textColor="@color/white"
         android:textSize="30sp" />
     <Button
-        android:id="@+id/button_sign_out"
+        android:id="@+id/button_log_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="username"
+            android:text="FirstName LastName"
             android:textSize="24sp"
             android:textStyle="bold" />
         <TextView
@@ -127,7 +127,7 @@
 
 
     <Button
-            android:id="@+id/button_eidt"
+            android:id="@+id/button_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
