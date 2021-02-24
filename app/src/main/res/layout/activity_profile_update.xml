@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    tools:context=".ProfileUpdateActivity">
 
     <TextView
         android:id="@+id/text_banner"
@@ -13,7 +13,7 @@
         android:padding="10dp"
         android:background="#C6CFD3"
         android:gravity="center_vertical"
-        android:text="Profile"
+        android:text="Profile Update"
         android:textColor="@color/white"
         android:textSize="26sp" />
     <Button
@@ -28,7 +28,6 @@
         android:drawableRight="@drawable/ic_logout"
         />
 
-
     <LinearLayout
         android:id="@+id/container_profile"
         android:layout_below="@+id/text_banner"
@@ -37,14 +36,27 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="20dp">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_profile"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_avatar"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp" />
+        <RelativeLayout
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_profile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_avatar"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_camera"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_camera_custom"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="0dp" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/text_full_name"
@@ -61,13 +73,15 @@
             android:layout_margin="5dp"
             android:text="user@gmail.com"
             android:textSize="22sp"/>
-        <TextView
-            android:id="@+id/text_address"
-            android:layout_width="wrap_content"
+
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_address"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="44 St Joseph St, Toronto, ON, Canada"
-            android:textSize="18sp"/>
+            android:layout_marginTop="10dp"
+            android:hint="44 St Joseph St, Toronto, ON, Canada"
+            android:inputType="textPersonName"/>
+
         <TextView
             android:id="@+id/text_crime_updates"
             android:layout_width="wrap_content"
@@ -89,14 +103,14 @@
                 android:gravity="center"
                 android:text="Radius"
                 android:textSize="22sp"/>
-            <TextView
-                android:id="@+id/text_radius"
+            <EditText
+                android:id="@+id/edit_radius"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="3"
+                android:hint="3"
                 android:textSize="22sp"/>
             <TextView
                 android:layout_width="match_parent"
@@ -120,14 +134,14 @@
                 android:gravity="center"
                 android:text="Every"
                 android:textSize="22sp"/>
-            <TextView
-                android:id="@+id/text_frequency"
+            <EditText
+                android:id="@+id/edit_frequency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="1"
+                android:hint="1"
                 android:textSize="22sp"/>
             <TextView
                 android:layout_width="match_parent"
@@ -138,19 +152,31 @@
                 android:text="day(s)"
                 android:textSize="22sp"/>
         </LinearLayout>
-
     </LinearLayout>
 
-
-    <Button
-            android:id="@+id/button_edit"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/container_profile"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_below="@+id/container_profile"
-        android:layout_centerHorizontal="true"
-            android:text="Edit"
+            android:text="Cancel"
             android:textAllCaps="true"
-            android:drawableRight="@drawable/ic_edit"/>
+            android:drawableRight="@drawable/ic_cancel"/>
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Save"
+            android:textAllCaps="true"
+            android:drawableRight="@drawable/ic_save"/>
+    </LinearLayout>
+
 
 </RelativeLayout>
