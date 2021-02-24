@@ -124,7 +124,7 @@ public class RegisterUserActivity extends AppCompatActivity {
             Log.d("Lat Lng : ", " " + latLng.latitude + " " + latLng.longitude);
             latitude = latLng.latitude;
             longitude = latLng.longitude;
-            Address address=getAddressFromLatLng(latLng);
+            Address address = getAddressFromLatLng(latLng);
             if(address!=null) {
                 postalCode = address.getPostalCode();
                 Log.d("Pin Code : ",""+postalCode);
@@ -215,8 +215,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                             user.put("address",autoCompleteAddress);
                             user.put("postalCode",postalCode);
                             user.put("coordinates", Arrays.asList(latitude,longitude));
-                            user.put("radius","5 km");
-                            user.put("frequency","1 day");
+                            user.put("radius","5");
+                            user.put("frequency","1");
                             upload(imageBitmap);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -280,11 +280,6 @@ public class RegisterUserActivity extends AppCompatActivity {
                 String userId = mAuth.getCurrentUser().getUid();
                 DocumentReference documentReference = db.collection("users").document(userId);
                 Map<String, Object> userUpdate = new HashMap<>();
-//                userUpdate.put("email",email);
-//                userUpdate.put("fullName",name);
-//                userUpdate.put("address",autoCompleteAddress);
-//                userUpdate.put("postalCode",postalCode);
-//                userUpdate.put("coordinates", Arrays.asList(latitude,longitude));
                 userUpdate.put("displayPicPath", profilePic);
                 documentReference.set(userUpdate, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -311,8 +306,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         try {
             addressList = geocoder.getFromLocationName(address, 1);
             if(addressList!=null){
-                Address singleaddress=addressList.get(0);
-                LatLng latLng = new LatLng(singleaddress.getLatitude(),singleaddress.getLongitude());
+                Address singleAddress=addressList.get(0);
+                LatLng latLng = new LatLng(singleAddress.getLatitude(),singleAddress.getLongitude());
                 return latLng;
             }
             else{

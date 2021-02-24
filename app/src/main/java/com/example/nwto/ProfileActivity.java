@@ -41,7 +41,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        mUID = mAuth.getCurrentUser().getUid();
 
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
@@ -71,7 +70,8 @@ public class ProfileActivity extends AppCompatActivity {
         mButtonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"EDIT");
+                startActivity(new Intent(ProfileActivity.this, ProfileUpdateActivity.class));
+                Log.d(TAG,"Editing Profile.");
             }
         });
 
@@ -110,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String profilePic = documentSnapshot.getString("displayPicPath");
                     Glide.with(ProfileActivity.this).load(profilePic).into(mImageProfile);
 
-                    Log.i("Profile","Show profile successfully"+fullName+" "+mUID);
+                    Log.i(TAG,"Show profile successfully"+fullName+" "+mUID);
                 }
             }
         });

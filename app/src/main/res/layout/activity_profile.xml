@@ -86,7 +86,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:text="Radius"
                 android:textSize="22sp"/>
             <TextView
@@ -117,7 +116,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:text="Every"
                 android:textSize="22sp"/>
             <TextView
