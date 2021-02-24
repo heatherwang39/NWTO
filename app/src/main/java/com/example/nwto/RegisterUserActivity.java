@@ -221,9 +221,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-//                                    Intent intent = new Intent(RegisterUser.this, Profile.class);
-//                                    intent.putExtra("imageBitmap",imageBitmap);
-//                                    startActivity(intent);
+                                    Intent intent = new Intent(RegisterUserActivity.this, ProfileActivity.class);
+                                    startActivity(intent);
                                     Log.d(TAG, "createUserWithEmail: firestore success, user profile is created for"+uID);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {

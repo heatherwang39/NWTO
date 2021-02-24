@@ -25,7 +25,6 @@ import javax.annotation.Nullable;
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseStorage storage;
 
     private static final String TAG = "Profile";
 
@@ -46,9 +45,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
-
-        // Initialize Storage
-        storage = FirebaseStorage.getInstance();
 
         mTextFullName = (TextView) findViewById(R.id.text_full_name);
         mTextEmail = (TextView) findViewById(R.id.text_email);
@@ -107,9 +103,9 @@ public class ProfileActivity extends AppCompatActivity {
                     String address = documentSnapshot.getString("address");
                     mTextAddress.setText(address);
                     String radius = documentSnapshot.getString("radius");
-                    mTextFullName.setText(radius);
+                    mTextRadius.setText(radius);
                     String frequency = documentSnapshot.getString("frequency");
-                    mTextFrequency.setText(radius);
+                    mTextFrequency.setText(frequency);
 
                     String profilePic = documentSnapshot.getString("displayPicPath");
                     Glide.with(ProfileActivity.this).load(profilePic).into(mImageProfile);
