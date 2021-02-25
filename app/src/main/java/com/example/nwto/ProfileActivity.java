@@ -56,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
         mImageNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(ProfileActivity.this, NavigationActivity.class));
             }
         });
 
