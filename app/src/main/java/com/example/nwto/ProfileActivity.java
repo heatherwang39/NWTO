@@ -29,7 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "Profile";
 
     private TextView mTextFullName, mTextEmail, mTextAddress, mTextRadius, mTextFrequency;
-    private ImageView mImageProfile;
+    private ImageView mImageProfile, mImageNav;
     private String mUID;
     private Button mButtonLogOut, mButtonEdit;
 
@@ -51,6 +51,14 @@ public class ProfileActivity extends AppCompatActivity {
         mTextRadius = (TextView) findViewById(R.id.text_radius);
         mTextFrequency = (TextView) findViewById(R.id.text_frequency);
         mImageProfile = (ImageView) findViewById(R.id.image_profile);
+        mImageNav = (ImageView) findViewById(R.id.image_nav);
+
+        mImageNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         mButtonLogOut = (Button) findViewById(R.id.button_log_out);
         mButtonLogOut.setOnClickListener(new View.OnClickListener() {
