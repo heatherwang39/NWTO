@@ -9,17 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
-public class ContactApadter extends RecyclerView.Adapter<ContactApadter.ViewHolder> {
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
     List<Contact> contactList;
     LayoutInflater inflater;
     Context ctx;
 
-    public ContactApadter(Context ctx, List<Contact> contactList){
+    public ContactAdapter(Context ctx, List<Contact> contactList){
         this.ctx = ctx;
         this.contactList = contactList;
         this.inflater = LayoutInflater.from(ctx);
@@ -36,19 +34,18 @@ public class ContactApadter extends RecyclerView.Adapter<ContactApadter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textFullName.setText(contactList.get(position).getFullName());
-
-        Picasso.get().load(contactList.get(position).getStorageRef()).into(holder.postView);
-//        Glide.with(this).load(postList.get(position).getStorageRef()).into(holder.postView);
-        holder.postView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ctx, CommentActivity.class);
-                intent.putExtra("postURL", postList.get(position).getStorageRef());
-                intent.putExtra("uID", postList.get(position).getUID());
-                intent.putExtra("caption", postList.get(position).getCaption());
-                ctx.startActivity(intent);
-            }
-        });
+        holder.textEmail.setText(contactList.get(position).getEmail());
+        holder.textPhoneNumber.setText(contactList.get(position).getPhoneNumber());
+//        holder.postView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(ctx, CommentActivity.class);
+//                intent.putExtra("postURL", postList.get(position).getStorageRef());
+//                intent.putExtra("uID", postList.get(position).getUID());
+//                intent.putExtra("caption", postList.get(position).getCaption());
+//                ctx.startActivity(intent);
+//            }
+//        });
     }
 
     @Override

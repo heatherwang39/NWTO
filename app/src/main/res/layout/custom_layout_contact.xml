@@ -7,6 +7,7 @@
     android:background="#F6F2F2">
 
     <TextView
+        android:id="@+id/text_full_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -22,12 +23,14 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/text_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="firstname.lastname@gmail.com"
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/text_phone_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="416-123-123"

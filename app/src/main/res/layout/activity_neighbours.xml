@@ -33,25 +33,34 @@
         android:text="Log Out"
         android:drawableRight="@drawable/ic_logout"
         />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_contact_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/container_buttons"
+        android:layout_below="@+id/text_banner"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical"/>
     <LinearLayout
+        android:id="@+id/container_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
-        <Button
-            android:id="@+id/button_write"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="20dp"
-            android:text="Write"
-            />
         <Button
             android:id="@+id/button_add_contact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="20dp"
-            android:text="Write"
+            android:layout_margin="15dp"
+            android:text="Add Contact"
+            />
+        <Button
+            android:id="@+id/button_write_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:text="Write Message"
             />
     </LinearLayout>
 
