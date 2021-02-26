@@ -165,6 +165,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     mPostalCode = documentSnapshot.getString("postalCode");
                     mRadius = documentSnapshot.getString("radius");
                     mEditRadius.setHint(mRadius);
+                    //TODO: change to set Text, and change the check empty after click save
                     mFrequency = documentSnapshot.getString("frequency");
                     mEditFrequency.setHint(mFrequency);
 
