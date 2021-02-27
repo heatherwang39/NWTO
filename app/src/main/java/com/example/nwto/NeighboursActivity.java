@@ -86,7 +86,7 @@ public class NeighboursActivity extends AppCompatActivity {
         mButtonWriteMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(NeighboursActivity.this, WriteMessageActivity.class));
             }
         });
 
