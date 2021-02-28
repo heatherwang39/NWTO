@@ -30,6 +30,7 @@ public class ResourcesActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
 
+    private CityApi cityApi;
     private String mUserPostalCode;
     private String mUserPostalCodeSpace;
     private double mUserLatitude;
@@ -42,21 +43,21 @@ public class ResourcesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resources);
 
-
         // Initialize Firebase Variables
         mAuth = FirebaseAuth.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mFireStore = FirebaseFirestore.getInstance();
 
+        // Initialize Layout Variables
         mTextWardNumb = (TextView) findViewById(R.id.resources_wardNumber);
 
-        mUserLatitude = 43.7681507;
-        mUserLongitude = -79.4143751;
-        mUserPostalCode = "M2N6W8";
-        mUserPostalCodeSpace = "M2N 6W8";
-//        getUserLocation();
-        CityApi cityApi = new CityApi();
-        cityApi.getWard(mUserLatitude, mUserLongitude, mTextWardNumb);
+//        mUserLatitude = 43.7681507;
+//        mUserLongitude = -79.4143751;
+//        mUserPostalCode = "M2N6W8";
+//        mUserPostalCodeSpace = "M2N 6W8";
+//        cityApi.getWard(mUserLatitude, mUserLongitude, mTextWardNumb);
+        cityApi = new CityApi();
+        getUserLocation();
     }
 
     private void getUserLocation() {
@@ -80,6 +81,7 @@ public class ResourcesActivity extends AppCompatActivity {
                                 mUserPostalCode =  postalCode.replaceAll("\\s+","");
                             }
                             Log.d(TAG, "getLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", PostalCode:"+mUserPostalCode);
+                            cityApi.getWard(mUserLatitude, mUserLongitude, mTextWardNumb);
                         }
                         else Log.e(TAG, "getLocation: onComplete -> Fail", task.getException());
                     }
