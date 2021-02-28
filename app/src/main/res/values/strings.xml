@@ -5,4 +5,15 @@
     <string name="CPAT">Crime Prevention Association of Toronto</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+
+<!--    FireBase Strings    -->
+    <string name="firestore_collection_users">users</string>
+    <string name="firestore_users_fullName">fullName</string>
+    <string name="firestore_users_email">email</string>
+    <string name="firestore_users_address">address</string>
+    <string name="firestore_users_radius">radius</string>
+    <string name="firestore_users_frequency">frequency</string>
+    <string name="firestore_users_displayPicPath">displayPicPath</string>
+    <string name="firestore_users_postalCode">postalCode</string>
+    <string name="firestore_users_coordinates">coordinates</string>
 </resources>

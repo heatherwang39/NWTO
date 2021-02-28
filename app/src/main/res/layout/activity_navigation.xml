@@ -112,6 +112,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <ImageView
+                android:id="@+id/image_nav_resources"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/ic_resources_custom"/>
