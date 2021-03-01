@@ -5,12 +5,14 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -48,8 +50,15 @@ public class SendSMSActivity extends AppCompatActivity {
         mButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendBySMS();
-                Log.d(TAG,"Send message via Email.");
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if(checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                        sendBySMS();
+                        Log.d(TAG,"Sending message via SMS.");
+                    } else {
+                        requestPermissions(new String[]{Manifest.permission.SEND_SMS},1);
+                    }
+                }
             }
         });
 
@@ -66,9 +75,14 @@ public class SendSMSActivity extends AppCompatActivity {
 
     private void sendBySMS() {
         String message = mEditMessage.getText().toString();
-
+        try{
         SmsManager mySmsManager = SmsManager.getDefault();
-        mySmsManager.sendTextMessage("4165643931",null, message, null, null);
+        mySmsManager.sendTextMessage("+11231231234",null, message, null, null);
+        Toast.makeText(SendSMSActivity.this, "Message is sent.",Toast.LENGTH_SHORT).show();
 
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(SendSMSActivity.this, "Failed to send message.",Toast.LENGTH_SHORT).show();
+        }
     }
 }
