@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.nwto">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,17 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NWTO">
+        <activity android:name=".SendSMSActivity"></activity>
         <activity
             android:name=".CrimeStatsActivity"
             android:label="Crime Stats"
-            android:parentActivityName=".NavigationActivity">
-        </activity>
+            android:parentActivityName=".NavigationActivity"></activity>
         <activity
             android:name=".ResourcesActivity"
             android:label="Resources"
-            android:parentActivityName=".NavigationActivity">
-        </activity>
-        <activity android:name=".WriteMessageActivity"></activity>
+            android:parentActivityName=".NavigationActivity"></activity>
+        <activity android:name=".WriteMessageActivity" />
         <activity android:name=".AddContactActivity" />
         <activity android:name=".NeighboursActivity" />
         <activity android:name=".NavigationActivity" />

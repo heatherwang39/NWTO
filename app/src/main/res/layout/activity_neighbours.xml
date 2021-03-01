@@ -51,16 +51,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="15dp"
-            android:text="Add Contact"
+            android:layout_margin="5dp"
+            android:text="Add New"
             />
         <Button
-            android:id="@+id/button_write_message"
+            android:id="@+id/button_send_sms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="15dp"
-            android:text="Write Message"
+            android:layout_margin="5dp"
+            android:text="Send SMS"
+            />
+        <Button
+            android:id="@+id/button_send_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:text="Send Email"
             />
     </LinearLayout>
 

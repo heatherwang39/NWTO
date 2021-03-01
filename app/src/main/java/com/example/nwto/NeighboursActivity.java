@@ -32,7 +32,7 @@ public class NeighboursActivity extends AppCompatActivity {
     private static final String TAG = "Neighbours";
 
     private String mOwnerUID;
-    private Button mButtonLogOut, mButtonAddContact, mButtonWriteMessage;
+    private Button mButtonLogOut, mButtonAddContact, mButtonSendSMS, mButtonSendEmail;
     private ImageView mImageNav;
 
     private RecyclerView mRecycleContactList;
@@ -82,8 +82,16 @@ public class NeighboursActivity extends AppCompatActivity {
             }
         });
 
-        mButtonWriteMessage = (Button) findViewById(R.id.button_write_message);
-        mButtonWriteMessage.setOnClickListener(new View.OnClickListener() {
+        mButtonSendSMS = (Button) findViewById(R.id.button_send_sms);
+        mButtonSendSMS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(NeighboursActivity.this, SendSMSActivity.class));
+            }
+        });
+
+        mButtonSendEmail = (Button) findViewById(R.id.button_send_email);
+        mButtonSendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(NeighboursActivity.this, WriteMessageActivity.class));
