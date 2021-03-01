@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NWTO">
-        <activity android:name=".ResourcesActivity" />
+        <activity
+            android:name=".ResourcesActivity"
+            android:label="Resources"
+            android:parentActivityName=".NavigationActivity">
+        </activity>
         <activity android:name=".WriteMessageActivity"></activity>
         <activity android:name=".AddContactActivity" />
         <activity android:name=".NeighboursActivity" />

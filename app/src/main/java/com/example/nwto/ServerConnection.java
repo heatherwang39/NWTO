@@ -27,6 +27,16 @@ public class ServerConnection {
         return sb.toString();
     }
 
+    public static String createQuery(String endPoint, String... params) {
+        String delimiter = "/";
+        StringBuilder sb = new StringBuilder(endPoint);
+        for (String param : params) {
+            sb.append(delimiter);
+            sb.append(param);
+        }
+        return sb.toString();
+    }
+
     public static JsonObject requestGET(String requestURL) {
         HttpURLConnection connection = null;
         String stringResponse = ERROR;

@@ -2,31 +2,28 @@ package com.example.nwto;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.common.io.Resources;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ResourcesActivity extends AppCompatActivity {
     private static final String TAG = ResourcesActivity.class.getSimpleName();
 
-    private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
 
@@ -35,8 +32,12 @@ public class ResourcesActivity extends AppCompatActivity {
     private String mUserPostalCodeSpace;
     private double mUserLatitude;
     private double mUserLongitude;
+    private ResourceAdapter mResourceAdapter;
+    private List<Resource> mResources;
 
-    private TextView mTextWardNumb;
+    private ProgressBar mProgressBar;
+    private TextView mTextWardNumb, mTextAreaName;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,18 +45,28 @@ public class ResourcesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resources);
 
         // Initialize Firebase Variables
-        mAuth = FirebaseAuth.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mFireStore = FirebaseFirestore.getInstance();
 
         // Initialize Layout Variables
-        mTextWardNumb = (TextView) findViewById(R.id.resources_wardNumber);
+        mProgressBar = (ProgressBar) findViewById(R.id.resources_progressBar);
+        mTextWardNumb = (TextView) findViewById(R.id.resources_textView_wardNumber);
+        mTextAreaName = (TextView) findViewById(R.id.resources_textView_areaName);
+        mRecyclerView = (RecyclerView) findViewById(R.id.resources_recyclerView);
 
+        mResources = new ArrayList<>();
+        mResourceAdapter = new ResourceAdapter(mResources);
+        mRecyclerView.setAdapter(mResourceAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Testing TODO: remove
 //        mUserLatitude = 43.7681507;
 //        mUserLongitude = -79.4143751;
 //        mUserPostalCode = "M2N6W8";
 //        mUserPostalCodeSpace = "M2N 6W8";
-//        cityApi.getWard(mUserLatitude, mUserLongitude, mTextWardNumb);
+//        cityApi = new CityApi();
+//        getCustomResources();
+
         cityApi = new CityApi();
         getUserLocation();
     }
@@ -81,15 +92,15 @@ public class ResourcesActivity extends AppCompatActivity {
                                 mUserPostalCode =  postalCode.replaceAll("\\s+","");
                             }
                             Log.d(TAG, "getLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", PostalCode:"+mUserPostalCode);
-                            cityApi.getWard(mUserLatitude, mUserLongitude, mTextWardNumb);
+                            getCustomResources();
                         }
                         else Log.e(TAG, "getLocation: onComplete -> Fail", task.getException());
                     }
                 });
     }
 
-
-
-
-
+    private void getCustomResources() {
+        cityApi.getWard(mUserLatitude, mUserLongitude, mTextWardNumb, mTextAreaName);
+        cityApi.getResources(mUserPostalCode, mResources, mResourceAdapter, mProgressBar);
+    }
 }
