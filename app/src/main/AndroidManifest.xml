@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NWTO">
         <activity
+            android:name=".CrimeStatsActivity"
+            android:label="Crime Stats"
+            android:parentActivityName=".NavigationActivity">
+        </activity>
+        <activity
             android:name=".ResourcesActivity"
             android:label="Resources"
             android:parentActivityName=".NavigationActivity">
