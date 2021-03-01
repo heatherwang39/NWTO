@@ -18,13 +18,15 @@ public class ServerConnection {
 
     public static String createQuery(String endPoint, Map<String, String> params) {
         StringBuilder sb = new StringBuilder(endPoint);
+        sb.append("?");
         for (Map.Entry<String, String> param : params.entrySet()) {
-            sb.append("?");
             sb.append(param.getKey());
             sb.append("=");
             sb.append(param.getValue());
+            sb.append("&");
         }
-        return sb.toString();
+        String query = sb.toString();
+        return query.substring(0, query.length() - 1);
     }
 
     public static String createQuery(String endPoint, String... params) {

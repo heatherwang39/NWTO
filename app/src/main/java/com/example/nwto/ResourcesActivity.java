@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResourcesActivity extends AppCompatActivity {
-    private static final String TAG = ResourcesActivity.class.getSimpleName();
+    private static final String TAG = "TAG: " + ResourcesActivity.class.getSimpleName();
 
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
