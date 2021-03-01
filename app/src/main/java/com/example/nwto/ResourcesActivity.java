@@ -44,16 +44,17 @@ public class ResourcesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resources);
 
-        // Initialize Firebase Variables
+        // Initializes Firebase Variables
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mFireStore = FirebaseFirestore.getInstance();
 
-        // Initialize Layout Variables
+        // Initializes Layout Variables
         mProgressBar = (ProgressBar) findViewById(R.id.resources_progressBar);
         mTextWardNumb = (TextView) findViewById(R.id.resources_textView_wardNumber);
         mTextAreaName = (TextView) findViewById(R.id.resources_textView_areaName);
         mRecyclerView = (RecyclerView) findViewById(R.id.resources_recyclerView);
 
+        // Initializes Resources Adapter
         mResources = new ArrayList<>();
         mResourceAdapter = new ResourceAdapter(mResources);
         mRecyclerView.setAdapter(mResourceAdapter);
@@ -77,6 +78,7 @@ public class ResourcesActivity extends AppCompatActivity {
         String documentField_coordinates = getResources().getString(R.string.firestore_users_coordinates);
         String documentField_postalCode = getResources().getString(R.string.firestore_users_postalCode);
 
+        // reads the User's location and postal code
         mFireStore.collection(collectionName).document(documentID).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -92,7 +94,7 @@ public class ResourcesActivity extends AppCompatActivity {
                                 mUserPostalCode =  postalCode.replaceAll("\\s+","");
                             }
                             Log.d(TAG, "getLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", PostalCode:"+mUserPostalCode);
-                            getCustomResources();
+                            getCustomResources(); // reads and updates the Government contact information
                         }
                         else Log.e(TAG, "getLocation: onComplete -> Fail", task.getException());
                     }
