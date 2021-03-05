@@ -22,11 +22,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class WriteMessageActivity extends AppCompatActivity {
+public class SendEmailActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
-    private static final String TAG = "Write Message";
+    private static final String TAG = "Send Email";
 
     private String mOwnerUID, mSubject, mBody;
     private ArrayList<String> mEmailList;
@@ -115,7 +115,7 @@ public class WriteMessageActivity extends AppCompatActivity {
                         if (email.resolveActivity(getPackageManager()) != null) {
                             startActivity(email);
                         } else {
-                            Toast.makeText(WriteMessageActivity.this, "There is no application that support this email action",
+                            Toast.makeText(SendEmailActivity.this, "There is no application that support this email action",
                                     Toast.LENGTH_SHORT).show();
                         }
 //                       startActivity(new Intent(WriteMessageActivity.this, NeighboursActivity.class));

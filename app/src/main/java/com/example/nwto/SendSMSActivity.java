@@ -1,5 +1,6 @@
 package com.example.nwto;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -14,8 +15,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -42,7 +48,11 @@ public class SendSMSActivity extends AppCompatActivity {
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
 
-        ActivityCompat.requestPermissions(SendSMSActivity.this, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS}, PackageManager.PERMISSION_GRANTED);
+        ActivityCompat.requestPermissions(
+                SendSMSActivity.this,
+                new String[]{Manifest.permission.SEND_SMS,
+                        Manifest.permission.READ_SMS},
+                PackageManager.PERMISSION_GRANTED);
 
         mEditMessage = (EditText) findViewById(R.id.edit_message);
 
@@ -75,14 +85,34 @@ public class SendSMSActivity extends AppCompatActivity {
 
     private void sendBySMS() {
         String message = mEditMessage.getText().toString();
-        try{
-        SmsManager mySmsManager = SmsManager.getDefault();
-        mySmsManager.sendTextMessage("+11231231234",null, message, null, null);
-        Toast.makeText(SendSMSActivity.this, "Message is sent.",Toast.LENGTH_SHORT).show();
+        CollectionReference collectionReference = db.collection("contacts");
 
-        }catch (Exception e){
-            e.printStackTrace();
-            Toast.makeText(SendSMSActivity.this, "Failed to send message.",Toast.LENGTH_SHORT).show();
-        }
+        collectionReference.orderBy("fullName")
+                .whereEqualTo("ownerUID",mOwnerUID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Contact contact = document.toObject(Contact.class);
+                                String phoneNumber = contact.getPhoneNumber();
+                                try {
+                                    SmsManager mySmsManager = SmsManager.getDefault();
+                                    mySmsManager.sendTextMessage(phoneNumber, null, message, null, null);
+                                    Log.d(TAG, "Sending message to: " + phoneNumber + message);
+                                    Toast.makeText(SendSMSActivity.this, "Message is sent.", Toast.LENGTH_SHORT).show();
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(SendSMSActivity.this, "Failed to send message.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
+
 }

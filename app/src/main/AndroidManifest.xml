@@ -23,7 +23,7 @@
             android:name=".ResourcesActivity"
             android:label="Resources"
             android:parentActivityName=".NavigationActivity"></activity>
-        <activity android:name=".WriteMessageActivity" />
+        <activity android:name=".SendEmailActivity" />
         <activity android:name=".AddContactActivity" />
         <activity android:name=".NeighboursActivity" />
         <activity android:name=".NavigationActivity" />
