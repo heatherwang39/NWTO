@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -85,8 +87,8 @@ public class SendSMSActivity extends AppCompatActivity {
 
     private void sendBySMS() {
         String message = mEditMessage.getText().toString();
-        CollectionReference collectionReference = db.collection("contacts");
 
+        CollectionReference collectionReference = db.collection("contacts");
         collectionReference.orderBy("fullName")
                 .whereEqualTo("ownerUID",mOwnerUID)
                 .get()
@@ -111,8 +113,17 @@ public class SendSMSActivity extends AppCompatActivity {
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i=new Intent(SendSMSActivity.this, NeighboursActivity.class);
+                                startActivity(i);
+                            }
+                        }, 2000);
                     }
                 });
+
     }
 
 }

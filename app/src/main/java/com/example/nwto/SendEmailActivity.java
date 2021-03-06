@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -114,11 +115,19 @@ public class SendEmailActivity extends AppCompatActivity {
 
                         if (email.resolveActivity(getPackageManager()) != null) {
                             startActivity(email);
+                            Toast.makeText(SendEmailActivity.this, "Email sent!",
+                                    Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(SendEmailActivity.this, "There is no application that support this email action",
                                     Toast.LENGTH_SHORT).show();
                         }
-//                       startActivity(new Intent(WriteMessageActivity.this, NeighboursActivity.class));
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i=new Intent(SendEmailActivity.this, NeighboursActivity.class);
+                                startActivity(i);
+                            }
+                        }, 2000);
                     }
                 });
 
