@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:hint="415-123-1234"
+            android:hint="4151231234"
             android:textSize="24sp"/>
     </LinearLayout>
 
