@@ -1,11 +1,19 @@
 package com.example.nwto;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +27,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private double mUserLongitude;
     private int mUserRadius;
 
+    private MaterialButton mFilter;
     private TextView mDummy;
 
     @Override
@@ -27,7 +36,19 @@ public class CrimeStatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_crimestats);
 
         // Initializes Layout Variables
+        mFilter = (MaterialButton) findViewById(R.id.crimestats_filter_button);
         mDummy = (TextView) findViewById(R.id.crimestats_dummy); // Testing
+
+        mFilter.setOnClickListener(view -> openFilterDialog());
+
+        // Sets action bar
+//        setSupportActionBar(mToolBar);
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setHomeButtonEnabled(true);
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        Drawable drawable= ResourcesCompat.getDrawable(this.getResources(), R.drawable.abc_ic_ab_back_material, null);
+//        actionBar.setHomeAsUpIndicator(drawable);
+
 
         tpsApi = new TPSApi(mDummy);
 
@@ -36,5 +57,9 @@ public class CrimeStatsActivity extends AppCompatActivity {
 //        tpsApi.queryYTD(-1, -1, -1, 32, 2021, 2, 25, 2021,3,1, null, null);
 //        tpsApi.queryYE(1, 43.762148, -79.410010, -1, -1, 2018, 3, 2, 2018,3,3, null, null);
 
+    }
+
+    private void openFilterDialog() {
+        CrimeStatsFilterDialog.display(getSupportFragmentManager());
     }
 }

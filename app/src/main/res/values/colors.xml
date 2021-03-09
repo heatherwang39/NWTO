@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+colorPrimary – The color of the app bar
+colorPrimaryDark – The color of the status bar and contextual app bars; this is normally a dark version of colorPrimary
+colorAccent – The color of UI controls such as check boxes, radio buttons, and edit text boxes
+windowBackground – The color of the screen background
+textColorPrimary – The color of UI text in the app bar
+statusBarColor – The color of the status bar
+navigationBarColor – The color of the navigation bar
+-->
+
 <resources>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
@@ -7,4 +17,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#FFBB86FC</color>        <!-- The color of the app bar -->
+    <color name="colorPrimaryDark">#FF6200EE</color>    <!-- The color of the status bar and contextual app bars; this is normally a dark version of colorPrimary -->
+    <color name="colorAccent">#FF3700B3</color>         <!-- The color of UI controls such as check boxes, radio buttons, and edit text boxes -->
+    <color name="windowBackground">#FFFFFF</color>      <!-- The color of the screen background -->
+    <color name="textColorPrimary">#FF018786</color>    <!-- The color of UI text in the app bar -->
+    <color name="statusBarColor">#FF000000</color>      <!-- The color of the status bar -->
+    <color name="navigationBarColor">#FFFFFFFF</color>  <!-- The color of the navigation bar -->
 </resources>
