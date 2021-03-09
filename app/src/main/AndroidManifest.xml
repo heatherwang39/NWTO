@@ -14,15 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NWTO">
-        <activity android:name=".SendSMSActivity"></activity>
+        <activity android:name=".DiscussionActivity"></activity>
+        <activity android:name=".SendSMSActivity" />
         <activity
             android:name=".CrimeStatsActivity"
             android:label="Crime Stats"
-            android:parentActivityName=".NavigationActivity"></activity>
+            android:parentActivityName=".NavigationActivity" />
         <activity
             android:name=".ResourcesActivity"
             android:label="Resources"
-            android:parentActivityName=".NavigationActivity"></activity>
+            android:parentActivityName=".NavigationActivity" />
         <activity android:name=".SendEmailActivity" />
         <activity android:name=".AddContactActivity" />
         <activity android:name=".NeighboursActivity" />
