@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 public class NavigationActivity extends AppCompatActivity {
 
-    private ImageView mImageNavProfile, mImageNavNeighbours, mImageNavResources, mImageNavCrimeStats;
+    private ImageView mImageNavProfile, mImageNavNeighbours, mImageNavDiscussion, mImageNavResources, mImageNavCrimeStats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,14 @@ public class NavigationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(NavigationActivity.this, NeighboursActivity.class));
+            }
+        });
+
+        mImageNavDiscussion = (ImageView) findViewById(R.id.image_nav_discussion);
+        mImageNavDiscussion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(NavigationActivity.this, DiscussionActivity.class));
             }
         });
 
