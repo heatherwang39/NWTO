@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -32,26 +34,45 @@ import java.util.Map;
 public class CityApi {
     private static final String TAG = "TAG: " + CityApi.class.getSimpleName();
 
+    private final CardView cardView;
+    private final TextView textWardNumb, textAreaName;
+    private final ProgressBar progressBar;
+    private final List<Resource> resources;
+    private final ResourceAdapter resourceAdapter;
+
+    /**
+     *
+     * @param cardView
+     * @param textWardNumb TextView object where ward number will be updated
+     * @param textAreaName TextView object where area name will be updated
+     * @param progressBar spinning progress bar (when all resources are loaded, the bar will be gone)
+     * @param resources a list of Resource objects
+     * @param resourceAdapter adapter for resources
+     */
+    public CityApi(CardView cardView, TextView textWardNumb, TextView textAreaName, ProgressBar progressBar, List<Resource> resources, ResourceAdapter resourceAdapter) {
+        this.cardView = cardView;
+        this.textWardNumb = textWardNumb;
+        this.textAreaName = textAreaName;
+        this.progressBar = progressBar;
+        this.resources = resources;
+        this.resourceAdapter = resourceAdapter;
+    }
+
     /**
      * Locates the User's ward number based on latitude and longitude
      * @param latitude ex. 43.7681507
      * @param longitude ex. -79.4143751
-     * @param TextWardNumb TextView object where ward number will be updated
-     * @param TextAreaName TextView object where area name will be updated
      */
-    public void getWard(double latitude, double longitude, TextView TextWardNumb, TextView TextAreaName) {
-        new GetWardMetadata(latitude, longitude, TextWardNumb, TextAreaName).execute();
+    public void getWard(double latitude, double longitude) {
+        new GetWardMetadata(latitude, longitude).execute();
     }
 
     /**
      * Finds the contact information for the User's Councillor, MPP and MP
      * @param postalCode non-spaced postal code
-     * @param resources a list of Resource objects
-     * @param resourceAdapter adapter for resources
-     * @param progressBar spinning progress bar (when all resources are loaded, the bar will be gone)
      */
-    public void getResources(String postalCode, List<Resource> resources, ResourceAdapter resourceAdapter, ProgressBar progressBar) {
-        new GetResources(postalCode, resources, resourceAdapter, progressBar).execute();
+    public void getResources(String postalCode) {
+        new GetResources(postalCode).execute();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,14 +85,11 @@ public class CityApi {
         private final String cityOfTorontoEndPoint = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show";
         private final String cityWard_metaData_ID = "5e7a8234-f805-43ac-820f-03d7c360b588";
         private final double latitude, longitude;
-        private final TextView textWardNumb, textAreaName;
 
-        public GetWardMetadata(double latitude, double longitude, TextView textWardNumb, TextView textAreaName) {
+        public GetWardMetadata(double latitude, double longitude) {
             super();
             this.latitude = latitude;
             this.longitude = longitude;
-            this.textWardNumb = textWardNumb;
-            this.textAreaName = textAreaName;
         }
 
         @Override
@@ -95,7 +113,7 @@ public class CityApi {
                 Boolean datastore_active = resource.getAsJsonPrimitive("datastore_active").getAsBoolean();
                 if (datastore_active) {
                     String resourceID = resource.getAsJsonPrimitive("id").getAsString();
-                    new GetWardResource(latitude, longitude, textWardNumb, textAreaName).execute(resourceID);
+                    new GetWardResource(latitude, longitude).execute(resourceID);
                 }
             }
         }
@@ -109,14 +127,11 @@ public class CityApi {
     private class GetWardResource extends AsyncTask<String, Void, JsonObject> {
         private final String dataStoreEndPoint = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search";
         private final double latitude, longitude;
-        private final TextView textWardNumb, textAreaName;
 
-        public GetWardResource(double latitude, double longitude, TextView textWardNumb, TextView textAreaName) {
+        public GetWardResource(double latitude, double longitude) {
             super();
             this.latitude = latitude;
             this.longitude = longitude;
-            this.textWardNumb = textWardNumb;
-            this.textAreaName = textAreaName;
         }
 
         @Override
@@ -152,6 +167,7 @@ public class CityApi {
                     Log.d(TAG, "AsyncGetWardResource: onPostExecute -> ward number=" + wardNumber + " area name=" + areaName);
                     textWardNumb.setText("Ward" + wardNumber); // updates the TextViews
                     textAreaName.setText(areaName);
+                    cardView.setVisibility(View.VISIBLE);
                     return;
                 }
             }
@@ -181,15 +197,9 @@ public class CityApi {
     private class GetResources extends AsyncTask<Void, Void, JsonObject> {
         private final String openNorthEndpoint = "https://represent.opennorth.ca/postcodes";
         private final String postalCode;
-        private final List<Resource> resources;
-        private final ResourceAdapter resourceAdapter;
-        private final ProgressBar progressBar;
 
-        public GetResources(String postalCode, List<Resource> resources, ResourceAdapter resourceAdapter, ProgressBar progressBar) {
+        public GetResources(String postalCode) {
             this.postalCode = postalCode;
-            this.resources = resources;
-            this.resourceAdapter = resourceAdapter;
-            this.progressBar = progressBar;
         }
 
         @Override

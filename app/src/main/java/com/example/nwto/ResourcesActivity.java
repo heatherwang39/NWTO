@@ -2,12 +2,14 @@ package com.example.nwto;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,13 +31,13 @@ public class ResourcesActivity extends AppCompatActivity {
 
     private CityApi cityApi;
     private String mUserPostalCode;
-    private String mUserPostalCodeSpace;
     private double mUserLatitude;
     private double mUserLongitude;
     private ResourceAdapter mResourceAdapter;
     private List<Resource> mResources;
 
     private ProgressBar mProgressBar;
+    private CardView mTitleCardView;
     private TextView mTextWardNumb, mTextAreaName;
     private RecyclerView mRecyclerView;
 
@@ -50,9 +52,11 @@ public class ResourcesActivity extends AppCompatActivity {
 
         // Initializes Layout Variables
         mProgressBar = (ProgressBar) findViewById(R.id.resources_progressBar);
+        mTitleCardView = (CardView) findViewById(R.id.resources_cardView_title);
         mTextWardNumb = (TextView) findViewById(R.id.resources_textView_wardNumber);
         mTextAreaName = (TextView) findViewById(R.id.resources_textView_areaName);
         mRecyclerView = (RecyclerView) findViewById(R.id.resources_recyclerView);
+        mTitleCardView.setVisibility(View.INVISIBLE);
 
         // Initializes Resources Adapter
         mResources = new ArrayList<>();
@@ -60,15 +64,7 @@ public class ResourcesActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mResourceAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Testing TODO: remove
-//        mUserLatitude = 43.7681507;
-//        mUserLongitude = -79.4143751;
-//        mUserPostalCode = "M2N6W8";
-//        mUserPostalCodeSpace = "M2N 6W8";
-//        cityApi = new CityApi();
-//        getCustomResources();
-
-        cityApi = new CityApi();
+        cityApi = new CityApi(mTitleCardView, mTextWardNumb, mTextAreaName, mProgressBar, mResources, mResourceAdapter);
         getUserLocation();
     }
 
@@ -90,7 +86,6 @@ public class ResourcesActivity extends AppCompatActivity {
                                 String postalCode = (String) document.get(documentField_postalCode);
                                 mUserLatitude = coordinates.get(0);
                                 mUserLongitude = coordinates.get(1);
-                                mUserPostalCodeSpace = postalCode;
                                 mUserPostalCode =  postalCode.replaceAll("\\s+","");
                             }
                             Log.d(TAG, "getLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", PostalCode:"+mUserPostalCode);
@@ -102,7 +97,7 @@ public class ResourcesActivity extends AppCompatActivity {
     }
 
     private void getCustomResources() {
-        cityApi.getWard(mUserLatitude, mUserLongitude, mTextWardNumb, mTextAreaName);
-        cityApi.getResources(mUserPostalCode, mResources, mResourceAdapter, mProgressBar);
+        cityApi.getWard(mUserLatitude, mUserLongitude);
+        cityApi.getResources(mUserPostalCode);
     }
 }
