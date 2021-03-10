@@ -16,7 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0" />
 
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/crimestats_filter_button"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
