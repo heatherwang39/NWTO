@@ -7,7 +7,9 @@ import android.widget.TextView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +20,12 @@ public class TPSApi {
     private static final String YTD = "YTD_Crime/FeatureServer/0/query";
     private static final String YE = "MCI_2014_to_2019/FeatureServer/0/query";
 
-    private final TextView mDummy;
+    private final List<Crime> crimes;
+    private final CrimeAdapter crimeAdapter;
 
-    public TPSApi(TextView dummy) {
-        mDummy = dummy;
+    public TPSApi(List<Crime> crimes, CrimeAdapter crimeAdapter) {
+        this.crimes = crimes;
+        this.crimeAdapter = crimeAdapter;
     }
 
     /**
@@ -214,8 +218,32 @@ public class TPSApi {
 
     private void parseResponse_YTD(JsonObject response) {
         JsonArray features = response.getAsJsonArray("features");
-        if (features.size() == 0) mDummy.setText("No Result Found");
-        else mDummy.setText(features.toString());
+
+        if (features.size() == 0) {
+//            mDummy.setText("No Result Found");
+            return;
+        }
+
+        for (int i = 0; i < features.size(); i++) {
+            JsonObject feature = (JsonObject) features.get(i);
+            JsonObject attributes = feature.getAsJsonObject("attributes");
+            JsonObject geometry = feature.getAsJsonObject("geometry");
+
+            String uniqueID = attributes.getAsJsonPrimitive("event_unique_id").getAsString();
+            String division = attributes.getAsJsonPrimitive("division").getAsString();
+            long occurrencedate = attributes.getAsJsonPrimitive("occurrencedate").getAsLong();
+            String premisetype = attributes.getAsJsonPrimitive("premisetype").getAsString();
+            String category = attributes.getAsJsonPrimitive("mci_category").getAsString();
+            double latitude = geometry.getAsJsonPrimitive("y").getAsDouble();
+            double longitude = geometry.getAsJsonPrimitive("x").getAsDouble();
+
+            Date date = new Date(occurrencedate);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            String convertedDate = dateFormat.format(date);
+
+            crimes.add(new Crime(i, uniqueID, division, premisetype, category, convertedDate, latitude, longitude));
+        }
+        crimeAdapter.notifyDataSetChanged();
     }
 
     private void parseResponse_YE(JsonObject resposne) {
