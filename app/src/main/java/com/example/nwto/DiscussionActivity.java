@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.nwto.fragment.DiscussionNeighboursFragment;
+import com.example.nwto.fragment.DiscussionPostFragment;
+import com.example.nwto.fragment.DiscussionTorontoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DiscussionActivity extends AppCompatActivity {

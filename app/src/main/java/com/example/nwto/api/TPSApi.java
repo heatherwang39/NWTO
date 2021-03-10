@@ -1,9 +1,11 @@
-package com.example.nwto;
+package com.example.nwto.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
+import com.example.nwto.model.Crime;
+import com.example.nwto.adapter.CrimeAdapter;
+import com.example.nwto.util.ServerConnection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 

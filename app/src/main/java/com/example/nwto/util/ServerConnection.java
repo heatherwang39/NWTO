@@ -1,4 +1,4 @@
-package com.example.nwto;
+package com.example.nwto.util;
 
 import android.util.Log;
 

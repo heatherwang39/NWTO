@@ -1,4 +1,4 @@
-package com.example.nwto;
+package com.example.nwto.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nwto.model.Contact;
+import com.example.nwto.NeighboursActivity;
+import com.example.nwto.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

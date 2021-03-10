@@ -1,4 +1,4 @@
-package com.example.nwto;
+package com.example.nwto.model;
 
 public class Resource implements Comparable<Resource> {
     private int order;

@@ -1,4 +1,4 @@
-package com.example.nwto;
+package com.example.nwto.adapter;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.nwto.model.Crime;
+import com.example.nwto.R;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.nwto;
+package com.example.nwto.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
+import com.example.nwto.model.Resource;
+import com.example.nwto.adapter.ResourceAdapter;
+import com.example.nwto.util.ServerConnection;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

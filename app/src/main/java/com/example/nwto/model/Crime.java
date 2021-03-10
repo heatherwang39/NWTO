@@ -1,4 +1,4 @@
-package com.example.nwto;
+package com.example.nwto.model;
 
 public class Crime implements Comparable<Crime>{
     private int order;

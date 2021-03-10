@@ -1,10 +1,12 @@
-package com.example.nwto;
+package com.example.nwto.adapter;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+
+import com.example.nwto.api.PlaceApi;
 
 import java.util.ArrayList;
 
