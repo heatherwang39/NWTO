@@ -61,6 +61,11 @@ public class CityApi {
         this.resourceAdapter = resourceAdapter;
     }
 
+    public String getNeighbourhood(double latitude, double longitude) {
+        // TODO: add a function
+        return "Hello";
+    }
+
     /**
      * Locates the User's ward number based on latitude and longitude
      * @param latitude ex. 43.7681507

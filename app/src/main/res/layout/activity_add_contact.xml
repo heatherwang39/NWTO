@@ -20,7 +20,7 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:text="Full Name:"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
         <EditText
             android:id="@+id/edit_full_name"
@@ -29,7 +29,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:hint="Firstname Lastname"
-            android:textSize="24sp"/>
+            android:textSize="20sp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:text="Email:"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
         <EditText
             android:id="@+id/edit_email"
@@ -51,7 +51,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:hint="user@test.com"
-            android:textSize="24sp"/>
+            android:textSize="20sp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +64,7 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:text="Phone:"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
         <EditText
             android:id="@+id/edit_phone_number"
@@ -73,7 +73,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:hint="4151231234"
-            android:textSize="24sp"/>
+            android:textSize="20sp"/>
     </LinearLayout>
 
 

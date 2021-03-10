@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -56,8 +59,8 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     private static final String TAG = "Profile Update";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private TextView mTextFullName, mTextEmail;
-    private EditText mEditRadius, mEditFrequency;
+    private TextView mTextFullName, mTextEmail, mTextRadius, mTextFrequency;
+    private SeekBar mSeekBarRadius, mSeekBarFrequency;
     private ImageView mImageProfile, mImageCamera;
     private Button mButtonLogOut, mButtonSave, mButtonCancel;
     private AutoCompleteTextView mAutoCompleteAddress;
@@ -81,8 +84,43 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
         mTextFullName = (TextView) findViewById(R.id.text_full_name);
         mTextEmail = (TextView) findViewById(R.id.text_email);
-        mEditRadius = (EditText) findViewById(R.id.edit_radius);
-        mEditFrequency = (EditText) findViewById(R.id.edit_frequency);
+        mTextRadius = (TextView) findViewById(R.id.text_radius);
+        mTextFrequency = (TextView) findViewById(R.id.text_frequency);
+
+        mSeekBarRadius = (SeekBar) findViewById(R.id.seek_bar_radius);
+        mSeekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mRadius = String.valueOf(progress);
+                mTextRadius.setText(mRadius);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        mSeekBarFrequency = (SeekBar) findViewById(R.id.seek_bar_frequency);
+        mSeekBarFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mFrequency = String.valueOf(progress);
+                mTextFrequency.setText(mFrequency);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
 
         mAutoCompleteAddress = findViewById(R.id.auto_complete_address);
         mAutoCompleteAddress.setAdapter(new PlaceAutoSuggestAdapter(ProfileUpdateActivity.this,android.R.layout.simple_list_item_1));
@@ -164,11 +202,19 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     mAddress = documentSnapshot.getString("address");
                     mAutoCompleteAddress.setHint(mAddress);
                     mPostalCode = documentSnapshot.getString("postalCode");
+
+                    List<Double> coordinates = (ArrayList<Double>) documentSnapshot.get("coordinates");
+                    mLatitude = coordinates.get(0);
+                    mLongitude = coordinates.get(1);
+
                     mRadius = documentSnapshot.getString("radius");
-                    mEditRadius.setHint(mRadius);
+                    mTextRadius.setText(mRadius);
+                    mSeekBarRadius.setProgress(Integer.parseInt(mRadius));
+
                     //TODO: change to set Text, and change the check empty after click save
                     mFrequency = documentSnapshot.getString("frequency");
-                    mEditFrequency.setHint(mFrequency);
+                    mTextFrequency.setText(mFrequency);
+                    mSeekBarFrequency.setProgress(Integer.parseInt(mFrequency));
 
                     mProfilePic = documentSnapshot.getString("displayPicPath");
                     Glide.with(ProfileUpdateActivity.this).load(mProfilePic).into(mImageProfile);
@@ -181,12 +227,6 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
     private void saveUpdates() {
         //check whether user did modified
-        if(!mEditRadius.getText().toString().equals("")){
-            mRadius = mEditRadius.getText().toString();
-        }
-        if(!mEditFrequency.getText().toString().equals("")){
-            mFrequency = mEditFrequency.getText().toString();
-        }
         if(mImageBitmap != null) upload(mImageBitmap);
 
         DocumentReference documentReference = db.collection("users").document(mUID);

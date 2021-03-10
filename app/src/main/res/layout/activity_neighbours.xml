@@ -33,14 +33,15 @@
         android:text="Log Out"
         android:drawableRight="@drawable/ic_logout"
         />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_contact_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/container_buttons"
         android:layout_below="@+id/text_banner"
-        android:layout_marginTop="10dp"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
+
     <LinearLayout
         android:id="@+id/container_buttons"
         android:layout_width="match_parent"
@@ -53,6 +54,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:text="Add New"
+            android:textSize="12sp"
             />
         <Button
             android:id="@+id/button_send_sms"
@@ -61,6 +63,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:text="Send SMS"
+            android:textSize="12sp"
             />
         <Button
             android:id="@+id/button_send_email"
@@ -69,6 +72,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:text="Send Email"
+            android:textSize="12sp"
             />
     </LinearLayout>
 

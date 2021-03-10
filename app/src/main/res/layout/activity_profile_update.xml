@@ -94,29 +94,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center_vertical">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
                 android:text="Radius"
                 android:textSize="22sp"/>
-            <EditText
-                android:id="@+id/edit_radius"
-                android:layout_width="match_parent"
+
+            <SeekBar
+                android:id="@+id/seek_bar_radius"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:max="3"
+                android:progress="3" />
+
+            <TextView
+                android:id="@+id/text_radius"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_weight="2"
                 android:gravity="center"
-                android:hint="3"
+                android:text="3"
                 android:textSize="22sp"/>
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_weight="2"
-                android:gravity="center"
                 android:text="km"
                 android:textSize="22sp"/>
         </LinearLayout>
@@ -124,28 +129,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center_vertical">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
                 android:text="Every"
                 android:textSize="22sp"/>
-            <EditText
-                android:id="@+id/edit_frequency"
-                android:layout_width="match_parent"
+            <SeekBar
+                android:id="@+id/seek_bar_frequency"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:max="7"
+                android:progress="3" />
+            <TextView
+                android:id="@+id/text_frequency"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_weight="2"
                 android:gravity="center"
-                android:hint="1"
+                android:text="1"
                 android:textSize="22sp"/>
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_weight="2"
                 android:gravity="center"
                 android:text="day(s)"
                 android:textSize="22sp"/>
