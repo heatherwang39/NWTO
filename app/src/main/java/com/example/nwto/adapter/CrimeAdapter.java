@@ -31,7 +31,7 @@ public class CrimeAdapter extends RecyclerView.Adapter<CrimeAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        // set behaviour for each resource card
+        // sets behaviour for each crime info card
         Crime crime = crimes.get(position);
         holder.mUniqueID.setText(crime.getUniqueID());
         holder.mDate.setText(crime.getDate());
@@ -49,7 +49,7 @@ public class CrimeAdapter extends RecyclerView.Adapter<CrimeAdapter.MyViewHolder
         return crimes.size();
     }
 
-    // Class for one list (single comment item)
+    // Class for one list (single crime item)
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView mUniqueID, mDate, mDivision, mCrimeType, mPremiseType, mGeometry;
         public CardView mCardView;

@@ -63,7 +63,7 @@ public class ResourcesActivity extends AppCompatActivity {
 
         // Initializes Resources Adapter
         mResources = new ArrayList<>();
-        mResourceAdapter = new ResourceAdapter(mResources);
+        mResourceAdapter = new ResourceAdapter(this ,mResources);
         mRecyclerView.setAdapter(mResourceAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
