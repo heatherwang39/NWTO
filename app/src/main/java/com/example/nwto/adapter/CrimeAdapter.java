@@ -1,5 +1,6 @@
 package com.example.nwto.adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,11 @@ import com.example.nwto.R;
 import java.util.List;
 
 public class CrimeAdapter extends RecyclerView.Adapter<CrimeAdapter.MyViewHolder> {
+    private Context context;
     private List<Crime> crimes;
 
-    public CrimeAdapter(List<Crime> crimes) {
+    public CrimeAdapter(Context context, List<Crime> crimes) {
+        this.context = context;
         this.crimes = crimes;
     }
 
@@ -40,8 +43,8 @@ public class CrimeAdapter extends RecyclerView.Adapter<CrimeAdapter.MyViewHolder
         holder.mPremiseType.setText(crime.getPremise());
         holder.mGeometry.setText("(" + crime.getLatitude() + ", " + crime.getLongitude() + ")");
 
-        if (position % 2 == 0) holder.mCardView.setCardBackgroundColor(Color.parseColor("#DAE9F4"));
-        else holder.mCardView.setCardBackgroundColor(Color.parseColor("#8CC5EF"));
+        if (position % 2 == 0) holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.crimeCard1));
+        else holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.crimeCard2));
     }
 
     @Override

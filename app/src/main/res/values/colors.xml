@@ -25,4 +25,10 @@ navigationBarColor – The color of the navigation bar
     <color name="textColorPrimary">#FF018786</color>    <!-- The color of UI text in the app bar -->
     <color name="statusBarColor">#FF000000</color>      <!-- The color of the status bar -->
     <color name="navigationBarColor">#FFFFFFFF</color>  <!-- The color of the navigation bar -->
+
+    <color name="resourceCard1">#4AAAF6</color>
+    <color name="resourceCard2">#64C3EF</color>
+    <color name="crimeCard1">#DAE9F4</color>
+    <color name="crimeCard2">#8CC5EF</color>
+
 </resources>

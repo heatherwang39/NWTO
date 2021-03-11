@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:cardBackgroundColor="#2196F3"
+        app:cardBackgroundColor="@color/resourceCard1"
         app:cardUseCompatPadding="true"
         app:cardElevation="1dp"
         app:cardCornerRadius="10dp">

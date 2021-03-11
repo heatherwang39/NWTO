@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="#38B7F1"
+                app:cardBackgroundColor="@color/resourceCard1"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="1dp"
                 app:cardUseCompatPadding="true"

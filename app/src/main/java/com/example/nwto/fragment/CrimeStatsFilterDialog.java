@@ -17,7 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.nwto.CrimeStatsActivity;
 import com.example.nwto.R;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +31,7 @@ public class CrimeStatsFilterDialog extends DialogFragment {
     private Spinner mPremiseTypeSpinner, mCrimeTypeSpinner;
     private SeekBar mDateSeekBar, mRadiusSeekBar;
     private TextView mDateText, mRadiusText;
-    private Button mCancel, mSave;
+    private Button mFilterByLocation, mFilterByDivision, mCancel, mSave;
 
     public static CrimeStatsFilterDialog display(FragmentManager fragmentManager) {
         CrimeStatsFilterDialog crimeStatsFilterDialog = new CrimeStatsFilterDialog();
@@ -61,10 +63,19 @@ public class CrimeStatsFilterDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.dialog_crimestats_preference, container, false);
+        configureLayouts(view);
+        configureButtons();
 
+
+        return view;
+    }
+
+    private void configureLayouts(View view) {
         // Initializes Layout Variables
+        mFilterByLocation = (MaterialButton) view.findViewById(R.id.preference_userLocation_button);
+        mFilterByDivision = (MaterialButton) view.findViewById(R.id.preference_policeDivision_button);
         mDivisionPicker = (NumberPicker) view.findViewById(R.id.preference_divisionPicker);
-        mNeighbourhoodPicker = (NumberPicker) view.findViewById(R.id.preference_neighbourhoodPicker);
+        // mNeighbourhoodPicker = (NumberPicker) view.findViewById(R.id.preference_neighbourhoodPicker);
         mPremiseTypeSpinner = (Spinner) view.findViewById(R.id.preference_premiseType_spinner);
         mCrimeTypeSpinner = (Spinner) view.findViewById(R.id.preference_crimeType_spinner);
         mDateSeekBar = (SeekBar) view.findViewById(R.id.preference_date_seekBar);
@@ -75,16 +86,16 @@ public class CrimeStatsFilterDialog extends DialogFragment {
         mSave = (Button) view.findViewById(R.id.preference_save_button);
 
         // Initializes Division & Neighbourhood Pickers
-        String[] policeDivisions = new String[] {"00", "11", "12", "13", "14", "22", "23", "31", "32", "33", "41", "42", "43", "51", "52", "53", "54", "55", "58"};
+        String[] policeDivisions = new String[] {"D00", "D11", "D12", "D13", "D14", "D22", "D23", "D31", "D32", "D33", "D41", "D42", "D43", "D51", "D52", "D53", "D54", "D55", "D58"};
         mDivisionPicker.setMinValue(0);
         mDivisionPicker.setMaxValue(policeDivisions.length - 1);
         mDivisionPicker.setDisplayedValues(policeDivisions);
+        mDivisionPicker.setEnabled(false);
 
-
-        String[] neighbourhoodNumbs = getNeighbourhoodNames();
-        mNeighbourhoodPicker.setMinValue(0);
-        mNeighbourhoodPicker.setMaxValue(neighbourhoodNumbs.length - 1);
-        mNeighbourhoodPicker.setDisplayedValues(neighbourhoodNumbs);
+        // String[] neighbourhoodNumbs = getNeighbourhoodNames();
+        // mNeighbourhoodPicker.setMinValue(0);
+        // mNeighbourhoodPicker.setMaxValue(neighbourhoodNumbs.length - 1);
+        // mNeighbourhoodPicker.setDisplayedValues(neighbourhoodNumbs);
 
         // Initializes Premise & Crime Type Spinners
         String[] premiseTypes = new String[] {"All", "Apartment", "Commercial", "Educational", "House", "Transit", "Outside", "Other"};
@@ -98,10 +109,72 @@ public class CrimeStatsFilterDialog extends DialogFragment {
         ArrayAdapter<String>  crimeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, crimeList);
         crimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCrimeTypeSpinner.setAdapter(crimeAdapter);
+    }
 
+    private void configureButtons() {
+        mFilterByLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFilterByLocation.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                mFilterByDivision.setBackgroundColor(getResources().getColor(R.color.windowBackground));
+                mRadiusSeekBar.setEnabled(true);
+                mDivisionPicker.setEnabled(false);
+            }
+        });
 
+        mFilterByDivision.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFilterByLocation.setBackgroundColor(getResources().getColor(R.color.windowBackground));
+                mFilterByDivision.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                mRadiusSeekBar.setEnabled(false);
+                mDivisionPicker.setEnabled(true);
+            }
+        });
 
-        return view;
+        mDateSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                mDateText.setText(String.valueOf(i + 1));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mRadiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                mRadiusText.setText(String.valueOf(i + 1));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mCancel.setOnClickListener(view1 -> dismiss());
+
+//        mSave.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                CrimeStatsActivity parentActivity = (CrimeStatsActivity) getActivity();
+//                parentActivity.
+//            }
+//        });
     }
 
     private String[] getNeighbourhoodNames() {

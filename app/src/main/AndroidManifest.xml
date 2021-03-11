@@ -19,6 +19,7 @@
         <activity
             android:name=".CrimeStatsActivity"
             android:label="Crime Stats"
+            android:screenOrientation="portrait"
             android:parentActivityName=".NavigationActivity" />
         <activity
             android:name=".ResourcesActivity"

@@ -44,8 +44,8 @@ public class ResourceAdapter extends RecyclerView.Adapter<ResourceAdapter.MyView
         holder.mName.setText(resource.getName());
         holder.mEmail.setText(resource.getEmail());
         holder.mPhoneNumb.setText(resource.getPhoneNumb());
-        if (position % 2 == 0) holder.mCardView.setCardBackgroundColor(Color.parseColor("#2196F3"));
-        else holder.mCardView.setCardBackgroundColor(Color.parseColor("#38B7F1"));
+        if (position % 2 == 0) holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.resourceCard2));
+        else holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.resourceCard1));
 
         // opens Android system's default email or phone features
         holder.mEmailButton.setOnClickListener(new OpenEmail(resource.getEmail()));

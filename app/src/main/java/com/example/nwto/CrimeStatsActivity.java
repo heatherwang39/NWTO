@@ -25,7 +25,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CrimeStatsActivity extends AppCompatActivity {
     private static final String TAG = "TAG: " + CrimeStatsActivity.class.getSimpleName();
@@ -46,7 +48,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private MaterialButton mFilterButton;
     private RecyclerView mCrimeRecyclerView;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +65,20 @@ public class CrimeStatsActivity extends AppCompatActivity {
 
         // Initializes Crimes Adapter
         mCrimes = new ArrayList<>();
-        mCrimeAdapter = new CrimeAdapter(mCrimes);
+        mCrimeAdapter = new CrimeAdapter(this, mCrimes);
         mCrimeRecyclerView.setAdapter(mCrimeAdapter);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         tpsApi = new TPSApi(mCrimes, mCrimeAdapter);
 
         getUserInfo();
+    }
+
+    public Map<String, Object> getData() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("radius", mUserRadius);
+        data.put("frequency", mUserFrequency);
+
+        return data;
     }
 
     private void openFilterDialog() {
