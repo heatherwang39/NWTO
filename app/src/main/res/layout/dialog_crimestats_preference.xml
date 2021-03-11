@@ -29,6 +29,7 @@
         android:layout_marginTop="8dp"
         android:text="User Location"
         android:textSize="12dp"
+        android:textColor="@color/white"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/preference_text1"
@@ -215,12 +216,12 @@
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/preference_save_button"
+        android:id="@+id/preference_apply_button"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Save"
+        android:text="Apply"
         app:layout_constraintBottom_toBottomOf="@+id/preference_cancel_button"
         app:layout_constraintEnd_toEndOf="@+id/preference_policeDivision_button"
         app:layout_constraintHorizontal_bias="1"

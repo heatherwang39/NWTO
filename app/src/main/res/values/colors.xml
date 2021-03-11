@@ -20,7 +20,7 @@ navigationBarColor – The color of the navigation bar
 
     <color name="colorPrimary">#838AB5</color>        <!-- The color of the app bar, buttons -->
     <color name="colorPrimaryDark">#48BBEF</color>    <!-- The color of the status bar and contextual app bars; this is normally a dark version of colorPrimary -->
-    <color name="colorAccent">#00BCD4</color>         <!-- The color of UI controls such as check boxes, radio buttons, and edit text boxes -->
+    <color name="colorAccent">#838AB5</color>         <!-- The color of UI controls such as check boxes, radio buttons, and edit text boxes -->
     <color name="windowBackground">#FFFFFF</color>      <!-- The color of the screen background -->
     <color name="textColorPrimary">#FF018786</color>    <!-- The color of UI text in the app bar -->
     <color name="statusBarColor">#FF000000</color>      <!-- The color of the status bar -->

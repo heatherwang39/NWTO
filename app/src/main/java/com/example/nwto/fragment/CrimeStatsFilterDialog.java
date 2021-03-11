@@ -23,15 +23,19 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class CrimeStatsFilterDialog extends DialogFragment {
     private static final String TAG = "TAG: " + CrimeStatsFilterDialog.class.getSimpleName();
+    private static final String[] POLICE_DIVISIONS = new String[] {"D00", "D11", "D12", "D13", "D14", "D22", "D23", "D31", "D32", "D33", "D41", "D42", "D43", "D51", "D52", "D53", "D54", "D55", "D58"};
+    private static final String[] PREMISE_TYPES = new String[] {"All", "Apartment", "Commercial", "Educational", "House", "Transit", "Outside", "Other"};
+    private static final String[] CRIME_TYPES = new String[] {"All", "Assault", "Auto Theft", "Break and Enter", "Homicide", "Robbery", "Sexual Violation", "Shooting", "Theft Over"};
 
     private NumberPicker mDivisionPicker, mNeighbourhoodPicker;
     private Spinner mPremiseTypeSpinner, mCrimeTypeSpinner;
     private SeekBar mDateSeekBar, mRadiusSeekBar;
     private TextView mDateText, mRadiusText;
-    private Button mFilterByLocation, mFilterByDivision, mCancel, mSave;
+    private Button mFilterByLocation, mFilterByDivision, mCancel, mApply;
 
     public static CrimeStatsFilterDialog display(FragmentManager fragmentManager) {
         CrimeStatsFilterDialog crimeStatsFilterDialog = new CrimeStatsFilterDialog();
@@ -63,9 +67,9 @@ public class CrimeStatsFilterDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.dialog_crimestats_preference, container, false);
-        configureLayouts(view);
-        configureButtons();
 
+        configureLayouts(view); // initializes all layout variables and assigns all listeners
+        loadSavedFilterPage(); // loads previously saved (applied) filter page
 
         return view;
     }
@@ -83,13 +87,12 @@ public class CrimeStatsFilterDialog extends DialogFragment {
         mRadiusSeekBar = (SeekBar) view.findViewById(R.id.preference_radius_seekBar);
         mRadiusText = (TextView) view.findViewById(R.id.preference_radius_text);
         mCancel = (Button) view.findViewById(R.id.preference_cancel_button);
-        mSave = (Button) view.findViewById(R.id.preference_save_button);
+        mApply = (Button) view.findViewById(R.id.preference_apply_button);
 
         // Initializes Division & Neighbourhood Pickers
-        String[] policeDivisions = new String[] {"D00", "D11", "D12", "D13", "D14", "D22", "D23", "D31", "D32", "D33", "D41", "D42", "D43", "D51", "D52", "D53", "D54", "D55", "D58"};
         mDivisionPicker.setMinValue(0);
-        mDivisionPicker.setMaxValue(policeDivisions.length - 1);
-        mDivisionPicker.setDisplayedValues(policeDivisions);
+        mDivisionPicker.setMaxValue(POLICE_DIVISIONS.length - 1);
+        mDivisionPicker.setDisplayedValues(POLICE_DIVISIONS);
         mDivisionPicker.setEnabled(false);
 
         // String[] neighbourhoodNumbs = getNeighbourhoodNames();
@@ -98,40 +101,19 @@ public class CrimeStatsFilterDialog extends DialogFragment {
         // mNeighbourhoodPicker.setDisplayedValues(neighbourhoodNumbs);
 
         // Initializes Premise & Crime Type Spinners
-        String[] premiseTypes = new String[] {"All", "Apartment", "Commercial", "Educational", "House", "Transit", "Outside", "Other"};
-        List<String> premiseList = Arrays.asList(premiseTypes);
+        List<String> premiseList = Arrays.asList(PREMISE_TYPES);
         ArrayAdapter<String>  premiseAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, premiseList);
         premiseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mPremiseTypeSpinner.setAdapter(premiseAdapter);
 
-        String[] crimeTypes = new String[] {"All", "Assault", "Auto Theft", "Break and Enter", "Homicide", "Robbery", "Sexual Violation", "Shooting", "Theft Over"};
-        List<String> crimeList = Arrays.asList(crimeTypes);
+        List<String> crimeList = Arrays.asList(CRIME_TYPES);
         ArrayAdapter<String>  crimeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, crimeList);
         crimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCrimeTypeSpinner.setAdapter(crimeAdapter);
-    }
 
-    private void configureButtons() {
-        mFilterByLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFilterByLocation.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                mFilterByDivision.setBackgroundColor(getResources().getColor(R.color.windowBackground));
-                mRadiusSeekBar.setEnabled(true);
-                mDivisionPicker.setEnabled(false);
-            }
-        });
-
-        mFilterByDivision.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFilterByLocation.setBackgroundColor(getResources().getColor(R.color.windowBackground));
-                mFilterByDivision.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                mRadiusSeekBar.setEnabled(false);
-                mDivisionPicker.setEnabled(true);
-            }
-        });
-
+        // Configure Buttons
+        mFilterByLocation.setOnClickListener(view1 -> clickFilterByLocation());
+        mFilterByDivision.setOnClickListener(view1 -> clickFilterByDivision());
         mDateSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -148,7 +130,6 @@ public class CrimeStatsFilterDialog extends DialogFragment {
 
             }
         });
-
         mRadiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -165,16 +146,74 @@ public class CrimeStatsFilterDialog extends DialogFragment {
 
             }
         });
-
         mCancel.setOnClickListener(view1 -> dismiss());
+        mApply.setOnClickListener(view1 -> saveFilterPage());
+    }
 
-//        mSave.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                CrimeStatsActivity parentActivity = (CrimeStatsActivity) getActivity();
-//                parentActivity.
-//            }
-//        });
+    private void loadSavedFilterPage() {
+        // receives filter parameters from CrimeStats Activity
+        CrimeStatsActivity crimeStatsActivity = (CrimeStatsActivity) getActivity();
+        Map<String, Object> data = crimeStatsActivity.getFilterParams();
+
+        int radius = (int) data.get(getResources().getString(R.string.crimefilter_radius));
+        int frequency = (int) data.get(getResources().getString(R.string.crimefilter_frequency));
+        boolean filterByLocation = (boolean) data.get(getResources().getString(R.string.crimefilter_filterByLocation));
+        int divisionNumb = (int) data.get(getResources().getString(R.string.crimefilter_divisionNumber));
+        String premiseType = (String) data.get(getResources().getString(R.string.crimefilter_premiseType));
+        String crimeType = (String) data.get(getResources().getString(R.string.crimefilter_crimeType));
+
+        // calculates corresponding layout settings
+        int radiusSeekBarIndex = radius - 1;
+        int dateRangeSeekBarIndex = frequency - 1;
+        int divisionPickerIndex = divisionNumb == -1 ? 0 : Arrays.binarySearch(POLICE_DIVISIONS, "D" + divisionNumb);
+        int premiseSpinnerIndex = premiseType == null ? 0 : Arrays.binarySearch(PREMISE_TYPES, premiseType);
+        int crimeSpinnerIndex = crimeType == null ? 0 : Arrays.binarySearch(CRIME_TYPES, crimeType);
+
+        // updates the layouts
+        if (filterByLocation) clickFilterByLocation();
+        else clickFilterByDivision();
+        mRadiusSeekBar.setProgress(radiusSeekBarIndex);
+        mDateSeekBar.setProgress(dateRangeSeekBarIndex);
+        mDivisionPicker.setValue(divisionPickerIndex);
+        mPremiseTypeSpinner.setSelection(premiseSpinnerIndex);
+        mCrimeTypeSpinner.setSelection(crimeSpinnerIndex);
+    }
+
+    private void saveFilterPage() {
+        CrimeStatsActivity crimeStatsActivity = (CrimeStatsActivity) getActivity();
+
+        // calculates filter parameters (converts index to actual values)
+        int radius = Integer.parseInt(mRadiusText.getText().toString());
+        int frequency = Integer.parseInt(mDateText.getText().toString());
+        boolean filterByLocation = mRadiusSeekBar.isEnabled();
+        int divisionNumb = filterByLocation ? -1 : Integer.parseInt(POLICE_DIVISIONS[mDivisionPicker.getValue()].substring(1));
+
+        int premiseSpinnerIndex = mPremiseTypeSpinner.getSelectedItemPosition();
+        String premiseType = premiseSpinnerIndex == 0 ? null : PREMISE_TYPES[premiseSpinnerIndex];
+
+        int crimeSpinnerIndex = mCrimeTypeSpinner.getSelectedItemPosition();
+        String crimeType = crimeSpinnerIndex == 0 ? null : CRIME_TYPES[crimeSpinnerIndex];
+
+        crimeStatsActivity.setFilterParams(radius, frequency, filterByLocation, divisionNumb, premiseType, crimeType);
+        dismiss(); // dismisses the filter page
+    }
+
+    private void clickFilterByLocation() {
+        mFilterByLocation.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        mFilterByLocation.setTextColor(getResources().getColor(R.color.white));
+        mFilterByDivision.setBackgroundColor(getResources().getColor(R.color.windowBackground));
+        mFilterByDivision.setTextColor(getResources().getColor(R.color.colorAccent));
+        mRadiusSeekBar.setEnabled(true);
+        mDivisionPicker.setEnabled(false);
+    }
+
+    private void clickFilterByDivision() {
+        mFilterByLocation.setBackgroundColor(getResources().getColor(R.color.windowBackground));
+        mFilterByLocation.setTextColor(getResources().getColor(R.color.colorAccent));
+        mFilterByDivision.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        mFilterByDivision.setTextColor(getResources().getColor(R.color.white));
+        mRadiusSeekBar.setEnabled(false);
+        mDivisionPicker.setEnabled(true);
     }
 
     private String[] getNeighbourhoodNames() {

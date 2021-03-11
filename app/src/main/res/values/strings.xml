@@ -16,4 +16,13 @@
     <string name="firestore_users_displayPicPath">displayPicPath</string>
     <string name="firestore_users_postalCode">postalCode</string>
     <string name="firestore_users_coordinates">coordinates</string>
+
+    <!--    Crime List Filter Strings   -->
+    <string name="crimefilter_radius">radius</string>
+    <string name="crimefilter_frequency">frequency</string>
+    <string name="crimefilter_filterByLocation">filterByLocation</string>
+    <string name="crimefilter_divisionNumber">division</string>
+    <string name="crimefilter_premiseType">premise</string>
+    <string name="crimefilter_crimeType">crime</string>
+
 </resources>

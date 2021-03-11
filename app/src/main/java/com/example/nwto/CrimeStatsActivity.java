@@ -2,6 +2,8 @@ package com.example.nwto;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,16 +39,17 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
 
-    private double mUserLatitude;
-    private double mUserLongitude;
-    private int mUserFrequency;
-    private int mUserRadius;
+    private double mUserLatitude, mUserLongitude;
+    private int mUserFrequency, mUserRadius, mDivisionNumb;
+    private String mPremiseType, mCrimeType;
+    private boolean mFilterByLocation;
 
     private CrimeAdapter mCrimeAdapter;
     private List<Crime> mCrimes;
 
     private MaterialButton mFilterButton;
     private RecyclerView mCrimeRecyclerView;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,8 +63,14 @@ public class CrimeStatsActivity extends AppCompatActivity {
         // Initializes Layout Variables
         mFilterButton = (MaterialButton) findViewById(R.id.crimestats_filter_button);
         mCrimeRecyclerView = (RecyclerView) findViewById(R.id.crimestats_crimes_recyclerView);
+        mProgressBar = (ProgressBar) findViewById(R.id.crimestats_progressBar);
 
+        // Initializes variables for Filter page
         mFilterButton.setOnClickListener(view -> openFilterDialog());
+        mDivisionNumb = -1;
+        mPremiseType = null;
+        mCrimeType = null;
+        mFilterByLocation = true;
 
         // Initializes Crimes Adapter
         mCrimes = new ArrayList<>();
@@ -73,12 +82,29 @@ public class CrimeStatsActivity extends AppCompatActivity {
         getUserInfo();
     }
 
-    public Map<String, Object> getData() {
+    public Map<String, Object> getFilterParams() {
+        // sends filter parameters to CrimeStatsFilterDialog
         Map<String, Object> data = new HashMap<>();
-        data.put("radius", mUserRadius);
-        data.put("frequency", mUserFrequency);
 
+        data.put(getResources().getString(R.string.crimefilter_radius), mUserRadius);
+        data.put(getResources().getString(R.string.crimefilter_frequency), mUserFrequency);
+        data.put(getResources().getString(R.string.crimefilter_filterByLocation), mFilterByLocation);
+        data.put(getResources().getString(R.string.crimefilter_divisionNumber), mDivisionNumb);
+        data.put(getResources().getString(R.string.crimefilter_premiseType), mPremiseType);
+        data.put(getResources().getString(R.string.crimefilter_crimeType), mCrimeType);
         return data;
+    }
+
+    public void setFilterParams(int userRadius, int userFrequency, boolean FilterByLocation, int division, String premiseType, String crimeType) {
+        // receives filter parameters from CrimeStatsFilterDialog
+        mUserRadius = userRadius;
+        mUserFrequency = userFrequency;
+        mFilterByLocation = FilterByLocation;
+        mDivisionNumb = division;
+        mPremiseType = premiseType;
+        mCrimeType = crimeType;
+
+        getRecentCrimes();
     }
 
     private void openFilterDialog() {
@@ -117,6 +143,9 @@ public class CrimeStatsActivity extends AppCompatActivity {
     }
 
     private void getRecentCrimes() {
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        // calculates start date and end date
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
         calendar.add(Calendar.DATE, -mUserFrequency);
@@ -135,9 +164,14 @@ public class CrimeStatsActivity extends AppCompatActivity {
         int startDay = Integer.parseInt(startDate.substring(3, 5));
         int startYear = Integer.parseInt(startDate.substring(6));
 
-        tpsApi.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1, startYear, startMonth, startDay, endYear, endMonth, endDay, null, null);
-//        tpsApi.queryYTD(-1, -1, -1, 32, 2021, 2, 25, 2021,3,1, null, null);
-//        tpsApi.queryYE(1, 43.762148, -79.410010, -1, -1, 2018, 3, 2, 2018,3,3, null, null);
+        // queries YTD server and outputs the results
+        if (mFilterByLocation)
+            tpsApi.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
+        else
+            tpsApi.queryYTD(-1, -1, -1, mDivisionNumb, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
+        // tpsApi.queryYTD(-1, -1, -1, 32, 2021, 2, 25, 2021,3,1, null, null);
+        // tpsApi.queryYE(1, 43.762148, -79.410010, -1, -1, 2018, 3, 2, 2018,3,3, null, null);
+        mProgressBar.setVisibility(View.GONE);
     }
 
 }
