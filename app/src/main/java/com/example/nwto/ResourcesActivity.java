@@ -67,7 +67,7 @@ public class ResourcesActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mResourceAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        cityApi = new CityApi(mTitleCardView, mTextWardNumb, mTextAreaName, mProgressBar, mResources, mResourceAdapter);
+        cityApi = new CityApi();
         getUserLocation();
     }
 
@@ -100,7 +100,7 @@ public class ResourcesActivity extends AppCompatActivity {
     }
 
     private void getCustomResources() {
-        cityApi.getWard(mUserLatitude, mUserLongitude);
-        cityApi.getResources(mUserPostalCode);
+        cityApi.updateResourcesPage(mUserLatitude, mUserLongitude, mUserPostalCode, mTitleCardView, mTextWardNumb, mTextAreaName, mProgressBar, mResources, mResourceAdapter);
+        cityApi.getNeighbourhood(mUserLatitude, mUserLongitude);
     }
 }
