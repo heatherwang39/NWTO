@@ -2,22 +2,23 @@ package com.example.nwto;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
 
 import com.example.nwto.adapter.CrimeAdapter;
 import com.example.nwto.api.TPSApi;
-import com.example.nwto.fragment.CrimeStatsFilterDialog;
+import com.example.nwto.fragment.CrimeFilterDialog;
+import com.example.nwto.fragment.CrimeMapFragment;
+import com.example.nwto.fragment.CrimeRecentEventsFragment;
+import com.example.nwto.fragment.CrimeStatsFragment;
 import com.example.nwto.model.Crime;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,10 +48,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private CrimeAdapter mCrimeAdapter;
     private List<Crime> mCrimes;
 
-    private MaterialButton mFilterButton;
-    private RecyclerView mCrimeRecyclerView;
-    private ProgressBar mProgressBar;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,13 +57,12 @@ public class CrimeStatsActivity extends AppCompatActivity {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mFireStore = FirebaseFirestore.getInstance();
 
-        // Initializes Layout Variables
-        mFilterButton = (MaterialButton) findViewById(R.id.crimestats_filter_button);
-        mCrimeRecyclerView = (RecyclerView) findViewById(R.id.crimestats_crimes_recyclerView);
-        mProgressBar = (ProgressBar) findViewById(R.id.crimestats_progressBar);
+        // Initializes bottom navigation view
+        BottomNavigationView navigationView = findViewById(R.id.crimestats_navigationView);
+        navigationView.setOnNavigationItemSelectedListener(new NavigationListener());
+        navigationView.setSelectedItemId(R.id.nav_crime_recent_events);
 
         // Initializes variables for Filter page
-        mFilterButton.setOnClickListener(view -> openFilterDialog());
         mDivisionNumb = -1;
         mPremiseType = null;
         mCrimeType = null;
@@ -75,11 +71,38 @@ public class CrimeStatsActivity extends AppCompatActivity {
         // Initializes Crimes Adapter
         mCrimes = new ArrayList<>();
         mCrimeAdapter = new CrimeAdapter(this, mCrimes);
-        mCrimeRecyclerView.setAdapter(mCrimeAdapter);
-        mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         tpsApi = new TPSApi(mCrimes, mCrimeAdapter);
 
         getUserInfo();
+    }
+
+    private class NavigationListener implements BottomNavigationView.OnNavigationItemSelectedListener {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment = null;
+            switch (item.getItemId()){
+                case R.id.nav_crime_recent_events:
+                    selectedFragment = new CrimeRecentEventsFragment();
+                    break;
+                case R.id.nav_crime_map:
+                    selectedFragment = new CrimeMapFragment();
+                    break;
+                case R.id.nav_crime_stats:
+                    selectedFragment = new CrimeStatsFragment();
+                    break;
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.crimestats_frameLayout, selectedFragment).commit();
+            return true;
+        }
+    }
+
+    public CrimeAdapter getCrimeAdapter() {
+        return mCrimeAdapter;
+    }
+
+    public void openFilterDialog() {
+        // TODO: remove
+        CrimeFilterDialog.display(getSupportFragmentManager());
     }
 
     public Map<String, Object> getFilterParams() {
@@ -105,10 +128,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
         mCrimeType = crimeType;
 
         getRecentCrimes();
-    }
-
-    private void openFilterDialog() {
-        CrimeStatsFilterDialog.display(getSupportFragmentManager());
     }
 
     private void getUserInfo() {
@@ -143,8 +162,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
     }
 
     private void getRecentCrimes() {
-        mProgressBar.setVisibility(View.VISIBLE);
-
         // calculates start date and end date
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
@@ -171,7 +188,5 @@ public class CrimeStatsActivity extends AppCompatActivity {
             tpsApi.queryYTD(-1, -1, -1, mDivisionNumb, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
         // tpsApi.queryYTD(-1, -1, -1, 32, 2021, 2, 25, 2021,3,1, null, null);
         // tpsApi.queryYE(1, 43.762148, -79.410010, -1, -1, 2018, 3, 2, 2018,3,3, null, null);
-        mProgressBar.setVisibility(View.GONE);
     }
-
 }

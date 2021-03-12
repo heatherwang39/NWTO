@@ -101,6 +101,5 @@ public class ResourcesActivity extends AppCompatActivity {
 
     private void getCustomResources() {
         cityApi.updateResourcesPage(mUserLatitude, mUserLongitude, mUserPostalCode, mTitleCardView, mTextWardNumb, mTextAreaName, mProgressBar, mResources, mResourceAdapter);
-        cityApi.getNeighbourhood(mUserLatitude, mUserLongitude);
     }
 }

@@ -25,8 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class CrimeStatsFilterDialog extends DialogFragment {
-    private static final String TAG = "TAG: " + CrimeStatsFilterDialog.class.getSimpleName();
+public class CrimeFilterDialog extends DialogFragment {
+    private static final String TAG = "TAG: " + CrimeFilterDialog.class.getSimpleName();
     private static final String[] POLICE_DIVISIONS = new String[] {"D00", "D11", "D12", "D13", "D14", "D22", "D23", "D31", "D32", "D33", "D41", "D42", "D43", "D51", "D52", "D53", "D54", "D55", "D58"};
     private static final String[] PREMISE_TYPES = new String[] {"All", "Apartment", "Commercial", "Educational", "House", "Transit", "Outside", "Other"};
     private static final String[] CRIME_TYPES = new String[] {"All", "Assault", "Auto Theft", "Break and Enter", "Homicide", "Robbery", "Sexual Violation", "Shooting", "Theft Over"};
@@ -37,10 +37,10 @@ public class CrimeStatsFilterDialog extends DialogFragment {
     private TextView mDateText, mRadiusText;
     private Button mFilterByLocation, mFilterByDivision, mCancel, mApply;
 
-    public static CrimeStatsFilterDialog display(FragmentManager fragmentManager) {
-        CrimeStatsFilterDialog crimeStatsFilterDialog = new CrimeStatsFilterDialog();
-        crimeStatsFilterDialog.show(fragmentManager, TAG);
-        return crimeStatsFilterDialog;
+    public static CrimeFilterDialog display(FragmentManager fragmentManager) {
+        CrimeFilterDialog crimeFilterDialog = new CrimeFilterDialog();
+        crimeFilterDialog.show(fragmentManager, TAG);
+        return crimeFilterDialog;
     }
 
     @Override
