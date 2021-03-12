@@ -2,6 +2,9 @@ package com.example.nwto.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.nwto.model.Crime;
 import com.example.nwto.R;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class CrimeAdapter extends RecyclerView.Adapter<CrimeAdapter.MyViewHolder> {
     private Context context;
@@ -41,7 +46,7 @@ public class CrimeAdapter extends RecyclerView.Adapter<CrimeAdapter.MyViewHolder
         holder.mDivision.setText(crime.getDivision());
         holder.mCrimeType.setText(crime.getCategory());
         holder.mPremiseType.setText(crime.getPremise());
-        holder.mGeometry.setText("(" + crime.getLatitude() + ", " + crime.getLongitude() + ")");
+        holder.mGeometry.setText(convertGeometryToAddress(crime.getLatitude(), crime.getLongitude()));
 
         if (position % 2 == 0) holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.crimeCard1));
         else holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.crimeCard2));
@@ -67,5 +72,19 @@ public class CrimeAdapter extends RecyclerView.Adapter<CrimeAdapter.MyViewHolder
             mGeometry = (TextView) itemView.findViewById(R.id.crime_geometry);
             mCardView = (CardView) itemView.findViewById(R.id.crime_cardView);
         }
+    }
+
+    private String convertGeometryToAddress(double latitude, double longitude) {
+        String location = "(" + latitude + ", " + longitude + ")";
+        Geocoder geocoder = new Geocoder(context, Locale.CANADA);
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            location = addresses.get(0).getAddressLine(0);
+            location = location.replace(" at ", " & ");
+            location = location.split(",")[0];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return location;
     }
 }

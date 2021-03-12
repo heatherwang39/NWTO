@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Geometry:"
+                android:text="Location:"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/crime_textView4"
                 app:layout_constraintTop_toBottomOf="@+id/crime_textView4" />
@@ -124,7 +124,7 @@
                 android:id="@+id/crime_geometry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(Lat, Long)"
+                android:text="Location"
                 android:layout_marginLeft="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/crime_textView5"
                 app:layout_constraintStart_toEndOf="@+id/crime_textView5"
