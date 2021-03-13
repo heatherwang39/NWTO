@@ -24,6 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -94,6 +96,15 @@ public class CrimeStatsActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.crimestats_frameLayout, selectedFragment).commit();
             return true;
         }
+    }
+
+    public GeoPoint getStartingPoint() {
+        if (!mFilterByLocation && mCrimes.size() != 0) return new GeoPoint(mCrimes.get(0).getLatitude(), mCrimes.get(0).getLongitude());
+        else return new GeoPoint(mUserLatitude, mUserLongitude);
+    }
+
+    public List<Crime> getCrimes() {
+        return mCrimes;
     }
 
     public CrimeAdapter getCrimeAdapter() {

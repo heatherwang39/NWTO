@@ -6,11 +6,77 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stats"
+        android:text="Compare"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/crimestats_average"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Average"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/crimestats_yearly"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Yearly"
+        app:layout_constraintBottom_toBottomOf="@+id/crimestats_average"
+        app:layout_constraintStart_toEndOf="@+id/crimestats_average"
+        app:layout_constraintTop_toTopOf="@+id/crimestats_average" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Display"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/crimestats_byList"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:text="Table"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintStart_toStartOf="@+id/crimestats_average"
+        app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/crimestats_byGraph"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Graph"
+        app:layout_constraintBottom_toBottomOf="@+id/crimestats_byList"
+        app:layout_constraintStart_toEndOf="@+id/crimestats_byList"
+        app:layout_constraintTop_toTopOf="@+id/crimestats_byList" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -61,4 +61,7 @@ dependencies {
 
     //To use Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //TO use osmdroid
+    implementation 'org.osmdroid:osmdroid-android:6.1.10'
 }
