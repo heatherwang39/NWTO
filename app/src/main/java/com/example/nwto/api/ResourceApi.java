@@ -55,6 +55,14 @@ public class ResourceApi {
             this.areaName = areaName;
             this.polygonCoordinates = polygonCoordinates;
         }
+
+        public List<List<Double>> getCoordinates() {
+            return polygonCoordinates;
+        }
+
+        public String getAreaName() {
+            return areaName;
+        }
     }
 
     @SuppressLint("StaticFieldLeak")

@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.nwto.adapter.CrimeAdapter;
+import com.example.nwto.api.ResourceApi;
 import com.example.nwto.api.TPSApi;
-import com.example.nwto.fragment.CrimeFilterDialog;
 import com.example.nwto.fragment.CrimeMapFragment;
 import com.example.nwto.fragment.CrimeRecentEventsFragment;
 import com.example.nwto.fragment.CrimeStatsFragment;
@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Polygon;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class CrimeStatsActivity extends AppCompatActivity {
 
     private CrimeAdapter mCrimeAdapter;
     private List<Crime> mCrimes;
+    private List<List<GeoPoint>> mPoliceBoundaries;
+    private List<String> mPoliceDivisionNames;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +78,12 @@ public class CrimeStatsActivity extends AppCompatActivity {
         mCrimeAdapter = new CrimeAdapter(this, mCrimes);
         tpsApi = new TPSApi(mCrimes, mCrimeAdapter);
 
-        getUserInfo();
+        // Initializes Division Boundary info variables
+        mPoliceBoundaries = new ArrayList<>();
+        mPoliceDivisionNames = new ArrayList<>();
+
+        readUserInfo(); // for Recent Crimes Fragment
+        readPoliceBoundaries(); // for Crime Map Fragment
     }
 
     private class NavigationListener implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -98,9 +106,14 @@ public class CrimeStatsActivity extends AppCompatActivity {
         }
     }
 
+    // GETTERS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public GeoPoint getStartingPoint() {
         if (!mFilterByLocation && mCrimes.size() != 0) return new GeoPoint(mCrimes.get(0).getLatitude(), mCrimes.get(0).getLongitude());
         else return new GeoPoint(mUserLatitude, mUserLongitude);
+    }
+
+    public GeoPoint getUserLocation() {
+        return new GeoPoint(mUserLatitude, mUserLongitude);
     }
 
     public List<Crime> getCrimes() {
@@ -111,11 +124,13 @@ public class CrimeStatsActivity extends AppCompatActivity {
         return mCrimeAdapter;
     }
 
-    public void openFilterDialog() {
-        // TODO: remove
-        CrimeFilterDialog.display(getSupportFragmentManager());
+    public List<List<GeoPoint>> getPoliceBoundaries() {
+        return mPoliceBoundaries;
     }
 
+    public List<String> getPoliceDivisionNames() {
+        return mPoliceDivisionNames;
+    }
     public Map<String, Object> getFilterParams() {
         // sends filter parameters to CrimeStatsFilterDialog
         Map<String, Object> data = new HashMap<>();
@@ -138,10 +153,11 @@ public class CrimeStatsActivity extends AppCompatActivity {
         mPremiseType = premiseType;
         mCrimeType = crimeType;
 
-        getRecentCrimes();
+        readRecentCrimes();
     }
 
-    private void getUserInfo() {
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void readUserInfo() {
         String collectionName = getResources().getString(R.string.firestore_collection_users);
         String documentID = mUser.getUid();
         String documentField_coordinates = getResources().getString(R.string.firestore_users_coordinates);
@@ -165,14 +181,14 @@ public class CrimeStatsActivity extends AppCompatActivity {
                                 mUserRadius = Integer.parseInt(radius);
                             }
                             Log.d(TAG, "getUserLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", Frequency:" + mUserFrequency + ", Radius:"+ mUserRadius);
-                            getRecentCrimes(); // reads and updates the crime info
+                            readRecentCrimes(); // reads and updates the crime info
                         }
                         else Log.e(TAG, "getUserLocation: onComplete -> Fail", task.getException());
                     }
                 });
     }
 
-    private void getRecentCrimes() {
+    private void readRecentCrimes() {
         // calculates start date and end date
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
@@ -199,5 +215,23 @@ public class CrimeStatsActivity extends AppCompatActivity {
             tpsApi.queryYTD(-1, -1, -1, mDivisionNumb, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
         // tpsApi.queryYTD(-1, -1, -1, 32, 2021, 2, 25, 2021,3,1, null, null);
         // tpsApi.queryYE(1, 43.762148, -79.410010, -1, -1, 2018, 3, 2, 2018,3,3, null, null);
+    }
+
+    private void readPoliceBoundaries() {
+        new ResourceApi(){
+            @Override
+            public void processPoliceDivisionBoundaries(List<Record> records) {
+                for (Record record : records) {
+                    List<List<Double>> polygonCoordinates = record.getCoordinates();
+                    List<GeoPoint> geoPoints = new ArrayList<>();
+                    for (List<Double> coordinates : polygonCoordinates) {
+                        GeoPoint geoPoint = new GeoPoint(coordinates.get(1), coordinates.get(0));
+                        geoPoints.add(geoPoint);
+                    }
+                    mPoliceBoundaries.add(geoPoints);
+                    mPoliceDivisionNames.add(record.getAreaName());
+                }
+            }
+        }.getMappingResource(mUserLatitude, mUserLongitude, 4);
     }
 }

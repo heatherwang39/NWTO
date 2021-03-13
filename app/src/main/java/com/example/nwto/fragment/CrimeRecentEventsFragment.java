@@ -37,7 +37,6 @@ public class CrimeRecentEventsFragment extends Fragment {
         // Assigns Crime Adapter and Filter button listener
         mCrimeRecyclerView.setAdapter(crimeStatsActivity.getCrimeAdapter());
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(crimeStatsActivity));
-        // mFilterButton.setOnClickListener(view1 -> crimeStatsActivity.openFilterDialog()); // TODO: remove
         mFilterButton.setOnClickListener(view1 -> CrimeFilterDialog.display(getFragmentManager()));
         return view;
     }
