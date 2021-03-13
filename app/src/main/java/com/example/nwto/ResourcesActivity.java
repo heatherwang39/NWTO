@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nwto.adapter.ResourceAdapter;
-import com.example.nwto.api.CityApi;
+import com.example.nwto.api.ResourceApi;
 import com.example.nwto.model.Resource;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ResourcesActivity extends AppCompatActivity {
@@ -32,7 +33,6 @@ public class ResourcesActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
 
-    private CityApi cityApi;
     private String mUserPostalCode;
     private double mUserLatitude;
     private double mUserLongitude;
@@ -59,7 +59,7 @@ public class ResourcesActivity extends AppCompatActivity {
         mTextWardNumb = (TextView) findViewById(R.id.resources_textView_wardNumber);
         mTextAreaName = (TextView) findViewById(R.id.resources_textView_areaName);
         mRecyclerView = (RecyclerView) findViewById(R.id.resources_recyclerView);
-        mTitleCardView.setVisibility(View.INVISIBLE);
+        startLoading(); // sets RecyclerView and CardView invisible and starts the progress bar
 
         // Initializes Resources Adapter
         mResources = new ArrayList<>();
@@ -67,8 +67,21 @@ public class ResourcesActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mResourceAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        cityApi = new CityApi();
-        getUserLocation();
+        getUserLocation(); // reads user location and updates the contact cards information
+    }
+
+    private void startLoading() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mTitleCardView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void stopLoading() {
+        Collections.sort(mResources);
+        mResourceAdapter.notifyDataSetChanged();
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mTitleCardView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     private void getUserLocation() {
@@ -92,14 +105,85 @@ public class ResourcesActivity extends AppCompatActivity {
                                 mUserPostalCode =  postalCode.replaceAll("\\s+","");
                             }
                             Log.d(TAG, "getLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", PostalCode:"+mUserPostalCode);
-                            getCustomResources(); // reads and updates the Government contact information
+                            updateResourceCards(); // reads and updates the contact cards information
                         }
                         else Log.e(TAG, "getLocation: onComplete -> Fail", task.getException());
                     }
                 });
     }
 
-    private void getCustomResources() {
-        cityApi.updateResourcesPage(mUserLatitude, mUserLongitude, mUserPostalCode, mTitleCardView, mTextWardNumb, mTextAreaName, mProgressBar, mResources, mResourceAdapter);
+    private void updateResourceCards() {
+        // updates Ward Number & Ward Name
+        new ResourceApi(){
+            @Override
+            public void updateWardInfoCard(String wardNumb, String wardName) {
+                mTextWardNumb.setText("Ward" + wardNumb); // updates the TextViews
+                mTextAreaName.setText(wardName);
+                // mTitleCardView.setVisibility(View.VISIBLE);
+            }
+        }.getMappingResource(mUserLatitude, mUserLongitude, 1);
+
+        // updates Crime Prevention Officer & Police Division contact info
+        new ResourceApi(){
+            @Override
+            public void updatePoliceDivisionContactCard(String divisionNumb) {
+                readPoliceContactInfoFromFireStore(divisionNumb);
+            }
+        }.getMappingResource(mUserLatitude, mUserLongitude, 2);
+
+        // updates Government Officials' contact info
+        new ResourceApi(){
+            @Override
+            public void updateOfficialContactCard(String title, String name, String email, String phoneNumb) {
+                int order = 0;
+                switch (title) {
+                    case "Councillor":
+                        order = 2;
+                        break;
+                    case "MPP":
+                        order = 3;
+                        break;
+                    case "MP":
+                        order = 4;
+                        break;
+                }
+                mResources.add(new Resource(order, title, name, email, phoneNumb));
+                mResourceAdapter.notifyDataSetChanged();
+            }
+        }.getOfficialResource(mUserPostalCode);
+    }
+
+    private void readPoliceContactInfoFromFireStore(String divisionNumb) {
+        String collectionName = "police_contact_info";
+        String documentField_divisionAddress = "divisionAddress";
+        String documentField_divisionEmail = "divisionEmail";
+        String documentField_divisionPhone = "divisionPhone";
+        String documentField_officerName = "officerName";
+        String documentField_officerEmail = "officerEmail";
+        String documentField_officerPhone = "officerPhone";
+
+        // reads the police division and crime prevention officer info
+        mFireStore.collection(collectionName).document(divisionNumb).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                String divisionAddress = (String) document.get(documentField_divisionAddress);
+                                String divisionEmail = (String) document.get(documentField_divisionEmail);
+                                String divisionPhone = (String) document.get(documentField_divisionPhone);
+                                String officerName = (String) document.get(documentField_officerName);
+                                String officerEmail = (String) document.get(documentField_officerEmail);
+                                String officerPhone = (String) document.get(documentField_officerPhone);
+                                mResources.add(new Resource(0, "Division " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
+                                mResources.add(new Resource(1, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
+                                Log.d(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Success");
+                            }
+                        }
+                        else Log.e(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Fail", task.getException());
+                        stopLoading();
+                    }
+                });
     }
 }
