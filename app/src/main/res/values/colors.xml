@@ -17,6 +17,9 @@ navigationBarColor – The color of the navigation bar
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green">#4CAF50</color>
+    <color name="yellow">#009688</color>
+    <color name="red">#E91E63</color>
 
     <color name="colorPrimary">#838AB5</color>        <!-- The color of the app bar, buttons -->
     <color name="colorPrimaryDark">#48BBEF</color>    <!-- The color of the status bar and contextual app bars; this is normally a dark version of colorPrimary -->

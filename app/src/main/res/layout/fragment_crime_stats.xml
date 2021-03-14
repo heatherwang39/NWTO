@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,40 +10,40 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Compare"
+        android:text="Mode"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.1" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/crimestats_average"
+        android:id="@+id/crimestats_mode1"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="Average"
-        android:textColor="@color/white"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:backgroundTint="@color/colorAccent"
+        android:text="Mode 1"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/textView" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/crimestats_yearly"
+        android:id="@+id/crimestats_mode2"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="Yearly"
-        app:layout_constraintBottom_toBottomOf="@+id/crimestats_average"
-        app:layout_constraintStart_toEndOf="@+id/crimestats_average"
-        app:layout_constraintTop_toTopOf="@+id/crimestats_average" />
+        android:text="Mode 2"
+        app:layout_constraintBottom_toBottomOf="@+id/crimestats_mode1"
+        app:layout_constraintStart_toEndOf="@+id/crimestats_mode1"
+        app:layout_constraintTop_toTopOf="@+id/crimestats_mode1" />
 
     <TextView
         android:id="@+id/textView12"
@@ -55,7 +56,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/crimestats_byList"
+        android:id="@+id/crimestats_byTable"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
@@ -63,7 +64,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/textView12"
-        app:layout_constraintStart_toStartOf="@+id/crimestats_average"
+        app:layout_constraintStart_toStartOf="@+id/crimestats_mode1"
         app:layout_constraintTop_toTopOf="@+id/textView12" />
 
     <com.google.android.material.button.MaterialButton
@@ -74,9 +75,186 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="Graph"
-        app:layout_constraintBottom_toBottomOf="@+id/crimestats_byList"
-        app:layout_constraintStart_toEndOf="@+id/crimestats_byList"
-        app:layout_constraintTop_toTopOf="@+id/crimestats_byList" />
+        app:layout_constraintBottom_toBottomOf="@+id/crimestats_byTable"
+        app:layout_constraintStart_toEndOf="@+id/crimestats_byTable"
+        app:layout_constraintTop_toTopOf="@+id/crimestats_byTable" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/crimestats_tableMode1_recylcerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crimestats_byTable" />
+
+<!--    <TableLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:gravity="center"-->
+<!--        android:stretchColumns="0,1,2"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/crimestats_byTable">-->
+
+<!--        <TableRow-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_margin="1dp"-->
+<!--            android:layout_weight="0"-->
+<!--            android:background="#E91E63">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="0"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Crime Types"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="1"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text="2018-2019 Monthly Average"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="2"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Last Month"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textStyle="bold" />-->
+<!--        </TableRow>-->
+
+<!--        <TableRow-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_margin="1dp"-->
+<!--            android:layout_weight="0"-->
+<!--            android:background="#000000">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="0"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"/>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="1"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="2"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
+<!--        </TableRow>-->
+
+
+<!--        <TableRow-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_margin="1dp"-->
+<!--            android:background="#000000">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="0"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="1"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="2"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
+<!--        </TableRow>-->
+
+<!--        <TableRow-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_margin="1dp"-->
+<!--            android:background="#000000">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="0"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="1"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_column="2"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="#FFFFFF"-->
+<!--                android:gravity="center"-->
+<!--                android:text=" Text"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
+<!--        </TableRow>-->
+
+
+<!--    </TableLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

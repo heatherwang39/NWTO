@@ -3,6 +3,7 @@ package com.example.nwto;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,12 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.nwto.adapter.CrimeAdapter;
+import com.example.nwto.adapter.TableAdapter;
 import com.example.nwto.api.ResourceApi;
 import com.example.nwto.api.TPSApi;
 import com.example.nwto.fragment.CrimeMapFragment;
 import com.example.nwto.fragment.CrimeRecentEventsFragment;
 import com.example.nwto.fragment.CrimeStatsFragment;
 import com.example.nwto.model.Crime;
+import com.example.nwto.model.TableBox;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -37,6 +40,7 @@ import java.util.Map;
 
 public class CrimeStatsActivity extends AppCompatActivity {
     private static final String TAG = "TAG: " + CrimeStatsActivity.class.getSimpleName();
+    private int colorWhite, colorGreen, colorYellow, colorRed, colorBlack, colorAccent;
 
     private TPSApi tpsApi;
 
@@ -52,6 +56,9 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private List<Crime> mCrimes;
     private List<List<GeoPoint>> mPoliceBoundaries;
     private List<String> mPoliceDivisionNames;
+
+    private List<TableBox> mTable_mode1;
+    private TableAdapter mTableAdapter_mode1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,14 +80,19 @@ public class CrimeStatsActivity extends AppCompatActivity {
         mCrimeType = null;
         mFilterByLocation = true;
 
-        // Initializes Crimes Adapter
+        // Initializes Crimes Adapter for Recent Crimes page
         mCrimes = new ArrayList<>();
         mCrimeAdapter = new CrimeAdapter(this, mCrimes);
         tpsApi = new TPSApi(mCrimes, mCrimeAdapter);
 
-        // Initializes Division Boundary info variables
+        // Initializes Division Boundary info variables for Crime Map page
         mPoliceBoundaries = new ArrayList<>();
         mPoliceDivisionNames = new ArrayList<>();
+
+        // Initializes for Crime Stats page
+        mTable_mode1 = new ArrayList<>();
+        mTableAdapter_mode1 = new TableAdapter(this, mTable_mode1);
+
 
         readUserInfo(); // for Recent Crimes Fragment
         readPoliceBoundaries(); // for Crime Map Fragment
@@ -131,6 +143,15 @@ public class CrimeStatsActivity extends AppCompatActivity {
     public List<String> getPoliceDivisionNames() {
         return mPoliceDivisionNames;
     }
+
+    public List<TableBox> getTable_mode1() {
+        return mTable_mode1;
+    }
+
+    public TableAdapter getTableAdapter_mode1() {
+        return mTableAdapter_mode1;
+    }
+
     public Map<String, Object> getFilterParams() {
         // sends filter parameters to CrimeStatsFilterDialog
         Map<String, Object> data = new HashMap<>();
@@ -234,4 +255,50 @@ public class CrimeStatsActivity extends AppCompatActivity {
             }
         }.getMappingResource(mUserLatitude, mUserLongitude, 4);
     }
+
+    // YTD_CRIME={Assault, Auto Theft, Break and Enter, Homicide, Robbery, Sexual Violation, Shooting, Theft Over}
+    // YE_CRIME={Assault, Auto Theft, Break and Enter, Robbery, Theft Over}
+
+    private void read() {
+        initializeColor();
+
+        // Table Header
+        mTable_mode1.add(new TableBox("Crime Types", colorWhite));
+        mTable_mode1.add(new TableBox("2018 - 2019 Monthly Average", colorWhite));
+        mTable_mode1.add(new TableBox("Last Month", colorWhite));
+
+        // Table Body
+        // Col #1: Assault
+        mTable_mode1.add(new TableBox("Assault", colorWhite));
+
+
+        // Col #2: Auto Theft
+        mTable_mode1.add(new TableBox("Auto Theft", colorWhite));
+
+
+        // Col #3: Break and Enter
+        mTable_mode1.add(new TableBox("Break & Enter", colorWhite));
+
+
+        // Col #4: Robbery
+        mTable_mode1.add(new TableBox("Robbery", colorWhite));
+
+
+        // Col #5: Theft Over
+        mTable_mode1.add(new TableBox("Theft Over", colorWhite));
+
+
+
+        mTableAdapter_mode1.notifyDataSetChanged();
+    }
+
+    private void initializeColor() {
+        colorWhite = getResources().getColor(R.color.white);
+        colorGreen = getResources().getColor(R.color.green);
+        colorYellow = getResources().getColor(R.color.yellow);
+        colorRed = getResources().getColor(R.color.red);
+        colorBlack = getResources().getColor(R.color.black);
+        colorAccent = getResources().getColor(R.color.colorAccent);
+    }
+
 }
