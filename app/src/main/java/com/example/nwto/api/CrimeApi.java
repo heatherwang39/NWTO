@@ -1,10 +1,8 @@
 package com.example.nwto.api;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.nwto.model.Crime;
-import com.example.nwto.adapter.CrimeAdapter;
 import com.example.nwto.util.ServerConnection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -16,19 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TPSApi {
-    private static final String TAG = "TAG: " + TPSApi.class.getSimpleName();
-    private static final String endPoint = "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/";
+public class CrimeApi {
+    private static final String TPS_ENDPOINT = "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/";
     private static final String YTD = "YTD_Crime/FeatureServer/0/query";
     private static final String YE = "MCI_2014_to_2019/FeatureServer/0/query";
-
-    private final List<Crime> crimes;
-    private final CrimeAdapter crimeAdapter;
-
-    public TPSApi(List<Crime> crimes, CrimeAdapter crimeAdapter) {
-        this.crimes = crimes;
-        this.crimeAdapter = crimeAdapter;
-    }
 
     /**
      * Queries TPS Year-to-Date (2021) API to retrieve necessary information
@@ -45,12 +34,12 @@ public class TPSApi {
      * @param premiseType search filter: Apartment, Commercial, Educational, House, Transit, Outside, Other, (null to include all)
      * @param category search filter: Assault, Auto Theft, Break and Enter, Homicide, Robbery, Sexual Violation, Shooting, Theft Over, (null to include all)
      */
-    public void queryYTD(int radius, double latitude, double longitude,
-                         int divisionNumb, int startY, int startM, int startD, int endY, int endM, int endD, String premiseType, String category) {
+    public final void queryYTD(int radius, double latitude, double longitude,
+                               int divisionNumb, int startY, int startM, int startD, int endY, int endM, int endD, String premiseType, String category) {
         String query = buildQuery_YTD(divisionNumb, startY, startM, startD, endY, endM, endD, premiseType, category);
         String defaultOutFields = "*";
         Map<String, String> params = buildParams(query, radius, latitude, longitude, defaultOutFields);
-        new GetResponse(endPoint + YTD, params, YTD).execute();
+        new GetResponse(TPS_ENDPOINT + YTD, params, YTD).execute();
     }
 
     /**
@@ -69,13 +58,18 @@ public class TPSApi {
      * @param premiseType search filter: Apartment, Commercial, House, Outside, Other, (null to include all)
      * @param category search filter: Assault, Auto Theft, Break and Enter, Robbery, Theft Over, (null to include all)
      */
-    public void queryYE(int radius, double latitude, double longitude,
-                        int divisionNumb, int neighbourhoodNumb, int startY, int startM, int startD, int endY, int endM, int endD, String premiseType, String category) {
+    public final void queryYE(int radius, double latitude, double longitude,
+                              int divisionNumb, int neighbourhoodNumb, int startY, int startM, int startD, int endY, int endM, int endD, String premiseType, String category) {
         String query = buildQuery_YE(divisionNumb, neighbourhoodNumb, startY, startM, startD, endY, endM, endD, premiseType, category);
         String defaultOutFields = "*";
         Map<String, String> params = buildParams(query, radius, latitude, longitude, defaultOutFields);
-        new GetResponse(endPoint + YE, params, YE).execute();
+        new GetResponse(TPS_ENDPOINT + YE, params, YE).execute();
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void processCrimes_YTD(List<Crime> crimes) {}
+    public void processCrimes_YE(List<Crime> crimes) {}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -206,7 +200,6 @@ public class TPSApi {
         @Override
         protected JsonObject doInBackground(Void... voids) {
             String query = ServerConnection.createQuery(endPoint, params);
-            Log.d(TAG, "GetResponse: doInBackground: Query -> " + query);
             return ServerConnection.requestGET(query);
         }
 
@@ -214,41 +207,61 @@ public class TPSApi {
         protected void onPostExecute(JsonObject response) {
             super.onPostExecute(response);
             if (type.equals(YTD)) parseResponse_YTD(response);
-            else parseResponse_YE(response);
+            else if (type.equals(YE)) parseResponse_YE(response);
         }
     }
 
     private void parseResponse_YTD(JsonObject response) {
-        crimes.clear();
+        List<Crime> crimes = new ArrayList<>();
         JsonArray features = response.getAsJsonArray("features");
 
-        if (features.size() == 0)
-            crimes.add(new Crime(0, "No Results Found", "", "", "", "", 0, 0));
-        else {
-            for (int i = 0; i < features.size(); i++) {
-                JsonObject feature = (JsonObject) features.get(i);
-                JsonObject attributes = feature.getAsJsonObject("attributes");
-                JsonObject geometry = feature.getAsJsonObject("geometry");
+        for (int i = 0; i < features.size(); i++) {
+            JsonObject feature = (JsonObject) features.get(i);
+            JsonObject attributes = feature.getAsJsonObject("attributes");
+            JsonObject geometry = feature.getAsJsonObject("geometry");
 
-                String uniqueID = attributes.getAsJsonPrimitive("event_unique_id").getAsString();
-                String division = attributes.getAsJsonPrimitive("division").getAsString();
-                long occurrencedate = attributes.getAsJsonPrimitive("occurrencedate").getAsLong();
-                String premisetype = attributes.getAsJsonPrimitive("premisetype").getAsString();
-                String category = attributes.getAsJsonPrimitive("mci_category").getAsString();
-                double latitude = geometry.getAsJsonPrimitive("y").getAsDouble();
-                double longitude = geometry.getAsJsonPrimitive("x").getAsDouble();
+            String uniqueID = attributes.getAsJsonPrimitive("event_unique_id").getAsString();
+            String division = attributes.getAsJsonPrimitive("division").getAsString();
+            long occurrencedate = attributes.getAsJsonPrimitive("occurrencedate").getAsLong();
+            String premisetype = attributes.getAsJsonPrimitive("premisetype").getAsString();
+            String category = attributes.getAsJsonPrimitive("mci_category").getAsString();
+            double latitude = geometry.getAsJsonPrimitive("y").getAsDouble();
+            double longitude = geometry.getAsJsonPrimitive("x").getAsDouble();
 
-                Date date = new Date(occurrencedate);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-                String convertedDate = dateFormat.format(date);
+            Date date = new Date(occurrencedate);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            String convertedDate = dateFormat.format(date);
 
-                crimes.add(new Crime(i, uniqueID, division, premisetype, category, convertedDate, latitude, longitude));
-            }
+            crimes.add(new Crime(i, uniqueID, division, premisetype, category, convertedDate, latitude, longitude));
         }
-        crimeAdapter.notifyDataSetChanged();
+
+        processCrimes_YTD(crimes);
     }
 
-    private void parseResponse_YE(JsonObject resposne) {
+    private void parseResponse_YE(JsonObject response) {
+        List<Crime> crimes = new ArrayList<>();
+        JsonArray features = response.getAsJsonArray("features");
 
+        for (int i = 0; i < features.size(); i++) {
+            JsonObject feature = (JsonObject) features.get(i);
+            JsonObject attributes = feature.getAsJsonObject("attributes");
+            JsonObject geometry = feature.getAsJsonObject("geometry");
+
+            String uniqueID = attributes.getAsJsonPrimitive("event_unique_id").getAsString();
+            String division = attributes.getAsJsonPrimitive("Division").getAsString();
+            long occurrencedate = attributes.getAsJsonPrimitive("occurrencedate").getAsLong();
+            String premisetype = attributes.getAsJsonPrimitive("premisetype").getAsString();
+            String category = attributes.getAsJsonPrimitive("MCI").getAsString();
+            double latitude = geometry.getAsJsonPrimitive("y").getAsDouble();
+            double longitude = geometry.getAsJsonPrimitive("x").getAsDouble();
+
+            Date date = new Date(occurrencedate);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            String convertedDate = dateFormat.format(date);
+
+            crimes.add(new Crime(i, uniqueID, division, premisetype, category, convertedDate, latitude, longitude));
+        }
+
+        processCrimes_YE(crimes);
     }
 }

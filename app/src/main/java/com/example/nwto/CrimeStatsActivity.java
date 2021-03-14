@@ -3,7 +3,6 @@ package com.example.nwto;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,8 +11,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.nwto.adapter.CrimeAdapter;
 import com.example.nwto.adapter.TableAdapter;
+import com.example.nwto.api.CrimeApi;
 import com.example.nwto.api.ResourceApi;
-import com.example.nwto.api.TPSApi;
 import com.example.nwto.fragment.CrimeMapFragment;
 import com.example.nwto.fragment.CrimeRecentEventsFragment;
 import com.example.nwto.fragment.CrimeStatsFragment;
@@ -28,7 +27,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Polygon;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,8 +39,6 @@ import java.util.Map;
 public class CrimeStatsActivity extends AppCompatActivity {
     private static final String TAG = "TAG: " + CrimeStatsActivity.class.getSimpleName();
     private int colorWhite, colorGreen, colorYellow, colorRed, colorBlack, colorAccent;
-
-    private TPSApi tpsApi;
 
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
@@ -83,7 +79,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
         // Initializes Crimes Adapter for Recent Crimes page
         mCrimes = new ArrayList<>();
         mCrimeAdapter = new CrimeAdapter(this, mCrimes);
-        tpsApi = new TPSApi(mCrimes, mCrimeAdapter);
 
         // Initializes Division Boundary info variables for Crime Map page
         mPoliceBoundaries = new ArrayList<>();
@@ -92,7 +87,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
         // Initializes for Crime Stats page
         mTable_mode1 = new ArrayList<>();
         mTableAdapter_mode1 = new TableAdapter(this, mTable_mode1);
-
 
         readUserInfo(); // for Recent Crimes Fragment
         readPoliceBoundaries(); // for Crime Map Fragment
@@ -144,10 +138,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
         return mPoliceDivisionNames;
     }
 
-    public List<TableBox> getTable_mode1() {
-        return mTable_mode1;
-    }
-
     public TableAdapter getTableAdapter_mode1() {
         return mTableAdapter_mode1;
     }
@@ -178,6 +168,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private void readUserInfo() {
         String collectionName = getResources().getString(R.string.firestore_collection_users);
         String documentID = mUser.getUid();
@@ -201,10 +192,10 @@ public class CrimeStatsActivity extends AppCompatActivity {
                                 mUserFrequency =  Integer.parseInt(frequency);
                                 mUserRadius = Integer.parseInt(radius);
                             }
-                            Log.d(TAG, "getUserLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", Frequency:" + mUserFrequency + ", Radius:"+ mUserRadius);
+                            Log.d(TAG, "readUserInfo: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", Frequency:" + mUserFrequency + ", Radius:"+ mUserRadius);
                             readRecentCrimes(); // reads and updates the crime info
                         }
-                        else Log.e(TAG, "getUserLocation: onComplete -> Fail", task.getException());
+                        else Log.e(TAG, "readUserInfo: onComplete -> Fail", task.getException());
                     }
                 });
     }
@@ -219,7 +210,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         String endDate = dateFormat.format(currentDate);
         String startDate = dateFormat.format(oldDate);
-        Log.d(TAG, "getCrimeStats -> currentDate=" + endDate + ", oldDate=" + startDate);
+        Log.d(TAG, "readRecentCrimes -> currentDate=" + endDate + ", oldDate=" + startDate);
 
         int endMonth = Integer.parseInt(endDate.substring(0, 2));
         int endDay = Integer.parseInt(endDate.substring(3, 5));
@@ -229,11 +220,33 @@ public class CrimeStatsActivity extends AppCompatActivity {
         int startDay = Integer.parseInt(startDate.substring(3, 5));
         int startYear = Integer.parseInt(startDate.substring(6));
 
-        // queries YTD server and outputs the results
-        if (mFilterByLocation)
-            tpsApi.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
-        else
-            tpsApi.queryYTD(-1, -1, -1, mDivisionNumb, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
+        // queries YTD server and updates the Recent Crimes Fragment page
+        mCrimes.clear();
+        if (mFilterByLocation) { // search by the User's location
+            new CrimeApi() {
+                @Override
+                public void processCrimes_YTD(List<Crime> crimes) {
+                    if (crimes.size() == 0)
+                        mCrimes.add(new Crime(0, "No Results Found", "", "", "", "", 0, 0));
+                    else
+                        mCrimes.addAll(crimes);
+                    mCrimeAdapter.notifyDataSetChanged();
+                }
+            }.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
+        }
+        else { // search by the selected Police Division Number
+            new CrimeApi(){
+                @Override
+                public void processCrimes_YTD(List<Crime> crimes) {
+                    if (crimes.size() == 0)
+                        mCrimes.add(new Crime(0, "No Results Found", "", "", "", "", 0, 0));
+                    else
+                        mCrimes.addAll(crimes);
+                    mCrimeAdapter.notifyDataSetChanged();
+                }
+            }.queryYTD(-1, -1, -1, mDivisionNumb, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
+        }
+
         // tpsApi.queryYTD(-1, -1, -1, 32, 2021, 2, 25, 2021,3,1, null, null);
         // tpsApi.queryYE(1, 43.762148, -79.410010, -1, -1, 2018, 3, 2, 2018,3,3, null, null);
     }
@@ -256,10 +269,10 @@ public class CrimeStatsActivity extends AppCompatActivity {
         }.getMappingResource(mUserLatitude, mUserLongitude, 4);
     }
 
-    // YTD_CRIME={Assault, Auto Theft, Break and Enter, Homicide, Robbery, Sexual Violation, Shooting, Theft Over}
-    // YE_CRIME={Assault, Auto Theft, Break and Enter, Robbery, Theft Over}
+    private void readTable() {
+        // YTD_CRIME={Assault, Auto Theft, Break and Enter, Homicide, Robbery, Sexual Violation, Shooting, Theft Over}
+        // YE_CRIME={Assault, Auto Theft, Break and Enter, Robbery, Theft Over}
 
-    private void read() {
         initializeColor();
 
         // Table Header
@@ -291,6 +304,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
 
         mTableAdapter_mode1.notifyDataSetChanged();
     }
+
 
     private void initializeColor() {
         colorWhite = getResources().getColor(R.color.white);
