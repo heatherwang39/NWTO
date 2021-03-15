@@ -7,6 +7,19 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Major Crime Statistics"
+        android:textSize="20dp"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05"/>
+
+    <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/crimestats_mode1"
@@ -83,178 +96,49 @@
         android:id="@+id/crimestats_tableMode1_recylcerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crimestats_byTable"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/crimestats_tableMode2_recylcerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crimestats_byTable"
+        android:visibility="gone"/>
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/crimestats_graphMode1_graphView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/crimestats_byTable" />
 
-<!--    <TableLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_marginTop="32dp"-->
-<!--        android:gravity="center"-->
-<!--        android:stretchColumns="0,1,2"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/crimestats_byTable">-->
-
-<!--        <TableRow-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_margin="1dp"-->
-<!--            android:layout_weight="0"-->
-<!--            android:background="#E91E63">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="0"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Crime Types"-->
-<!--                android:textSize="20dp"-->
-<!--                android:textStyle="bold" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="1"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text="2018-2019 Monthly Average"-->
-<!--                android:textSize="20dp"-->
-<!--                android:textStyle="bold" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="2"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Last Month"-->
-<!--                android:textSize="20dp"-->
-<!--                android:textStyle="bold" />-->
-<!--        </TableRow>-->
-
-<!--        <TableRow-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_margin="1dp"-->
-<!--            android:layout_weight="0"-->
-<!--            android:background="#000000">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="0"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"/>-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="1"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"-->
-<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="2"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"-->
-<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
-<!--        </TableRow>-->
-
-
-<!--        <TableRow-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_margin="1dp"-->
-<!--            android:background="#000000">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="0"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"-->
-<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="1"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"-->
-<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="2"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"-->
-<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
-<!--        </TableRow>-->
-
-<!--        <TableRow-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_margin="1dp"-->
-<!--            android:background="#000000">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="0"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"-->
-<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="1"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"-->
-<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_column="2"-->
-<!--                android:layout_margin="1dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:gravity="center"-->
-<!--                android:text=" Text"-->
-<!--                android:textAppearance="?android:attr/textAppearanceLarge" />-->
-<!--        </TableRow>-->
-
-
-<!--    </TableLayout>-->
-
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/crimestats_graphMode2_graphView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crimestats_byTable" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

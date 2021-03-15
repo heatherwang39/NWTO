@@ -1,6 +1,7 @@
 package com.example.nwto.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.nwto.model.Crime;
 import com.example.nwto.util.ServerConnection;
@@ -200,6 +201,7 @@ public class CrimeApi {
         @Override
         protected JsonObject doInBackground(Void... voids) {
             String query = ServerConnection.createQuery(endPoint, params);
+            Log.d("TAG", "CrimeApi: doInBackground: querying -> " + query);
             return ServerConnection.requestGET(query);
         }
 

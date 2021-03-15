@@ -12,7 +12,11 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:clickable="false"
+        android:scrollbarAlwaysDrawHorizontalTrack="true"
         android:backgroundTint="@color/white"
         android:text="Text"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9dp"
+        android:autoSizeMaxTextSize="13dp"/>
 </LinearLayout>

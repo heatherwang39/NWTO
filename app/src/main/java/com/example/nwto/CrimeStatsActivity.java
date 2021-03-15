@@ -3,6 +3,8 @@ package com.example.nwto;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,14 +33,20 @@ import org.osmdroid.util.GeoPoint;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class CrimeStatsActivity extends AppCompatActivity {
     private static final String TAG = "TAG: " + CrimeStatsActivity.class.getSimpleName();
     private int colorWhite, colorGreen, colorYellow, colorRed, colorBlack, colorAccent;
+    public static final String[] STUB = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
+    public static final int NUMB_COL_MODE1 = 4;
+    public static final int[] COLUMN_MODE2 = new int[] {2016, 2017, 2018, 2019}; // years
+    public static final int NUMB_COL_MODE2 = COLUMN_MODE2.length + 1;
 
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
@@ -53,22 +61,27 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private List<List<GeoPoint>> mPoliceBoundaries;
     private List<String> mPoliceDivisionNames;
 
-    private List<TableBox> mTable_mode1;
-    private TableAdapter mTableAdapter_mode1;
+    private List<TableBox> mTable_mode1, mTable_mode2;
+    private TableAdapter mTableAdapter_mode1, mTableAdapter_mode2;
+
+    BottomNavigationView navigationView;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crimestats);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.crimestats_progressBar);
+
         // Initializes Firebase Variables
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mFireStore = FirebaseFirestore.getInstance();
 
         // Initializes bottom navigation view
-        BottomNavigationView navigationView = findViewById(R.id.crimestats_navigationView);
+        navigationView = findViewById(R.id.crimestats_navigationView);
         navigationView.setOnNavigationItemSelectedListener(new NavigationListener());
-        navigationView.setSelectedItemId(R.id.nav_crime_recent_events);
+        // navigationView.setSelectedItemId(R.id.nav_crime_recent_events);
 
         // Initializes variables for Filter page
         mDivisionNumb = -1;
@@ -87,9 +100,13 @@ public class CrimeStatsActivity extends AppCompatActivity {
         // Initializes for Crime Stats page
         mTable_mode1 = new ArrayList<>();
         mTableAdapter_mode1 = new TableAdapter(this, mTable_mode1);
+        mTable_mode2 = new ArrayList<>();
+        mTableAdapter_mode2 = new TableAdapter(this, mTable_mode2);
 
+        initializeColor();
         readUserInfo(); // for Recent Crimes Fragment
         readPoliceBoundaries(); // for Crime Map Fragment
+//        readStats_Testing(); // for Testing
     }
 
     private class NavigationListener implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -140,6 +157,18 @@ public class CrimeStatsActivity extends AppCompatActivity {
 
     public TableAdapter getTableAdapter_mode1() {
         return mTableAdapter_mode1;
+    }
+
+    public TableAdapter getTableAdapter_mode2() {
+        return mTableAdapter_mode2;
+    }
+
+    public List<TableBox> getTable_mode1() {
+        return mTable_mode1;
+    }
+
+    public List<TableBox> getTable_mode2() {
+        return mTable_mode2;
     }
 
     public Map<String, Object> getFilterParams() {
@@ -193,7 +222,9 @@ public class CrimeStatsActivity extends AppCompatActivity {
                                 mUserRadius = Integer.parseInt(radius);
                             }
                             Log.d(TAG, "readUserInfo: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", Frequency:" + mUserFrequency + ", Radius:"+ mUserRadius);
-                            readRecentCrimes(); // reads and updates the crime info
+                            readRecentCrimes(); // reads and updates the recent crime info
+                            readStatsMode1(STUB); // reads and updates for Crime Stats table mode 1
+                            readStatsMode2(STUB, COLUMN_MODE2);
                         }
                         else Log.e(TAG, "readUserInfo: onComplete -> Fail", task.getException());
                     }
@@ -269,42 +300,143 @@ public class CrimeStatsActivity extends AppCompatActivity {
         }.getMappingResource(mUserLatitude, mUserLongitude, 4);
     }
 
-    private void readTable() {
+    private void readStatsMode1(String[] crimeTypes_YE) {
         // YTD_CRIME={Assault, Auto Theft, Break and Enter, Homicide, Robbery, Sexual Violation, Shooting, Theft Over}
-        // YE_CRIME={Assault, Auto Theft, Break and Enter, Robbery, Theft Over}
+        // String[] crimeTypes_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
+        String[] header = new String[] {"2018-19 Average", "Growth", "Last Month"}; // excluding (0, 0)
 
-        initializeColor();
+        int[] lmPeriod = getLastMonthPeriod();
+        int[] avgPeriod = new int[] {2018, 1, 1, 2019, 12, 31};
+        int duration = 24;
+        int totalNumbTableBoxes = NUMB_COL_MODE1 * (crimeTypes_YE.length + 1);
+        mTable_mode1.clear();
 
-        // Table Header
-        mTable_mode1.add(new TableBox("Crime Types", colorWhite));
-        mTable_mode1.add(new TableBox("2018 - 2019 Monthly Average", colorWhite));
-        mTable_mode1.add(new TableBox("Last Month", colorWhite));
+        // Row 0, Col 0: Table's First Entry
+        mTable_mode1.add(new TableBox(0, "Types", colorWhite));
 
-        // Table Body
-        // Col #1: Assault
-        mTable_mode1.add(new TableBox("Assault", colorWhite));
+        // Col 0 & 2
+        for (int i = 0; i < crimeTypes_YE.length; i++) {
+            mTable_mode1.add(new TableBox((i + 1) * NUMB_COL_MODE1, crimeTypes_YE[i], colorWhite)); // Col 0: Table Stub
+            mTable_mode1.add(new TableBox((2 + NUMB_COL_MODE1 * (i + 1)), "", colorWhite)); // Col 2: place holder for Growth column
+        }
 
+        // Row 0: Table header
+        for (int i = 0; i < header.length; i++)
+            mTable_mode1.add(new TableBox(i + 1, header[i], colorWhite));
 
-        // Col #2: Auto Theft
-        mTable_mode1.add(new TableBox("Auto Theft", colorWhite));
+        if (mFilterByLocation) {
+            // Col 1: 2018-2019 Monthly Average for each crime type
+            new CrimeApi() {
+                @Override
+                public void processCrimes_YE(List<Crime> crimes) {
+                    // finds crime counts of 2018-2019 per crime type
+                    int[] crimeCounts = new int[crimeTypes_YE.length];
+                    for (Crime crime : crimes) {
+                        String type = crime.getCategory();
+                        for (int i = 0; i < crimeTypes_YE.length; i++)
+                            if (type.equals(crimeTypes_YE[i])) crimeCounts[i]++;
+                    }
 
+                    // calculates average monthly crime counts
+                    int colIndex = 1;
+                    for (int j = 0; j < crimeCounts.length; j++) {
+                        double monthlyAvg = crimeCounts[j] / ((double) duration);
+                        mTable_mode1.add(new TableBox(colIndex + NUMB_COL_MODE1 * (j + 1), String.format("%.2f", monthlyAvg), colorWhite));
+                    }
 
-        // Col #3: Break and Enter
-        mTable_mode1.add(new TableBox("Break & Enter", colorWhite));
+                    if (mTable_mode1.size() == totalNumbTableBoxes) calculateGrowth(crimeTypes_YE.length);
+                }
+            }.queryYE(mUserRadius, mUserLatitude, mUserLongitude, -1, -1,
+                      avgPeriod[0], avgPeriod[1], avgPeriod[2], avgPeriod[3], avgPeriod[4], avgPeriod[5], null, null);
 
+            // Col 3: Last Month count for each crime type TODO: handle January's last month
+            new CrimeApi() {
+                @Override
+                public void processCrimes_YTD(List<Crime> crimes) {
+                    // finds crime counts of Last Month per crime type
+                    int[] crimeCounts = new int[crimeTypes_YE.length];
+                    for (Crime crime : crimes) {
+                        String type = crime.getCategory();
+                        for (int i = 0; i < crimeTypes_YE.length; i++)
+                            if (type.equals(crimeTypes_YE[i])) crimeCounts[i]++;
+                    }
 
-        // Col #4: Robbery
-        mTable_mode1.add(new TableBox("Robbery", colorWhite));
+                    int colIndex = 3;
+                    for (int j = 0; j < crimeCounts.length; j++)
+                        mTable_mode1.add(new TableBox(colIndex + NUMB_COL_MODE1 * (j + 1), Integer.toString(crimeCounts[j]), colorWhite));
 
-
-        // Col #5: Theft Over
-        mTable_mode1.add(new TableBox("Theft Over", colorWhite));
-
-
-
-        mTableAdapter_mode1.notifyDataSetChanged();
+                    if (mTable_mode1.size() == totalNumbTableBoxes) calculateGrowth(crimeTypes_YE.length);
+                }
+            }.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1,
+                       lmPeriod[0], lmPeriod[1], lmPeriod[2], lmPeriod[3], lmPeriod[4], lmPeriod[5], null, null);
+        }
+        else {
+            // case for filtering by division
+            // include this method in setFilterParams() to update as the User changes filter params
+        }
     }
 
+    private void readStatsMode2(String[] crimeTypes_YE, int[] years) {
+        // String[] crimeTypes_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
+        // int[] years = new int[] {2017, 2018, 2019};
+        int duration = 12;
+        mTable_mode2.clear();
+
+        // Row 0, Col 0: Table's First Entry
+        mTable_mode2.add(new TableBox(0, "Types", colorWhite));
+
+        // Col 0: Table Stub
+        for (int i = 0; i < crimeTypes_YE.length; i++)
+            mTable_mode2.add(new TableBox((i + 1) * NUMB_COL_MODE2, crimeTypes_YE[i], colorWhite));
+
+        if (mFilterByLocation) {
+            // Row 0: Table Header (Year)
+            for (int i = 0; i < years.length; i++) {
+                int colIndex = i + 1;
+                int year = years[i];
+                mTable_mode2.add(new TableBox(colIndex, Integer.toString(year) + " AVG", colorWhite));
+            }
+
+            // Col 2 to End: monthly average for each crime type per Year
+            new CrimeApi() {
+                @Override
+                public void processCrimes_YE(List<Crime> crimes) {
+                    // finds crime counts per year per crime type
+                    int[][] crimeCounts = new int[years.length][crimeTypes_YE.length];
+                    for (Crime crime : crimes) {
+                        int year = Integer.parseInt(crime.getDate().substring(6)); // "MM-dd-yyyy"
+                        String type = crime.getCategory();
+                        for (int i = 0; i < years.length; i++) {
+                            if (year == years[i]) {
+                                for (int j = 0; j < crimeTypes_YE.length; j++)
+                                    if (type.equals(crimeTypes_YE[j])) crimeCounts[i][j]++;
+                            }
+                        }
+                    }
+
+                    // finds monthly average of crime counts per year per crime type
+                    for (int i = 0; i < crimeCounts.length; i++) {
+                        for (int j = 0; j < crimeCounts[0].length; j++) {
+                            double monthlyAvg = crimeCounts[i][j] / ((double) duration);
+                            int colIndex = i + 1;
+                            int rowIndex = j + 1;
+                            mTable_mode2.add(new TableBox(colIndex + NUMB_COL_MODE2 * (rowIndex), String.format("%.2f", monthlyAvg), colorWhite));
+                        }
+                    }
+
+                    Collections.sort(mTable_mode2);
+                    mTableAdapter_mode2.notifyDataSetChanged();
+                    mProgressBar.setVisibility(View.GONE); // finishes background tasks and brings the Recent Crime Fragment page to front
+                    navigationView.setSelectedItemId(R.id.nav_crime_recent_events);
+                }
+            }.queryYE(mUserRadius, mUserLatitude, mUserLongitude, -1, -1,
+                      years[0], 1, 1, years[years.length - 1], 12, 31, null, null);
+        }
+        else {
+            // case for filtering by division
+            // include this method in setFilterParams() to update as the User changes filter params
+        }
+    }
 
     private void initializeColor() {
         colorWhite = getResources().getColor(R.color.white);
@@ -315,4 +447,84 @@ public class CrimeStatsActivity extends AppCompatActivity {
         colorAccent = getResources().getColor(R.color.colorAccent);
     }
 
+    private int[] getLastMonthPeriod() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        calendar.set(Calendar.DATE, 1);
+        Date firstDayPrevMonth = calendar.getTime();
+        calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+        Date lastDayPrevMonth = calendar.getTime();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String endDate = dateFormat.format(lastDayPrevMonth);
+        String startDate = dateFormat.format(firstDayPrevMonth);
+
+        int endMonth = Integer.parseInt(endDate.substring(0, 2));
+        int endDay = Integer.parseInt(endDate.substring(3, 5));
+        int endYear = Integer.parseInt(endDate.substring(6));
+
+        int startMonth = Integer.parseInt(startDate.substring(0, 2));
+        int startDay = Integer.parseInt(startDate.substring(3, 5));
+        int startYear = Integer.parseInt(startDate.substring(6));
+
+        return new int[] {startYear, startMonth, startDay, endYear, endMonth, endDay};
+    }
+
+    private void calculateGrowth(int numbOfRows) {
+        Collections.sort(mTable_mode1);
+        int threshold = 30;
+        for (int i = 0; i < numbOfRows; i++) { // numbOfRows doesn't count the header row
+            int rowIndex = NUMB_COL_MODE1 * (i + 1);
+            double avgMonthlyCount = Double.parseDouble(mTable_mode1.get(rowIndex + 1).getText());
+            double lastMonthCount = Double.parseDouble(mTable_mode1.get(rowIndex + 3).getText());
+            double growth = lastMonthCount - avgMonthlyCount;
+            int color = 0;
+            if (growth < -threshold) color = colorGreen;
+            else if (growth > threshold) color = colorRed;
+            else color = colorYellow;
+
+            TableBox growthBox = mTable_mode1.get(rowIndex + 2);
+            growthBox.setText(String.format("%.2f", growth) + "%");
+            growthBox.setBackgroundColor(color);
+        }
+
+        // mProgressBar.setVisibility(View.GONE);
+        mTableAdapter_mode1.notifyDataSetChanged();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void readStats_Testing() {
+        Random random = new Random();
+
+        mTable_mode1.add(new TableBox(0, "Types", colorWhite));
+        mTable_mode1.add(new TableBox(1, "2018-19 Average", colorWhite));
+        mTable_mode1.add(new TableBox(2, "Growth", colorWhite));
+        mTable_mode1.add(new TableBox(3, "Last Month", colorWhite));
+
+        for (String type : STUB) {
+            mTable_mode1.add(new TableBox(0, type, colorWhite));
+            mTable_mode1.add(new TableBox(0, String.format("%.2f", random.nextDouble() * 100), colorWhite));
+            mTable_mode1.add(new TableBox(0, String.format("%.2f", random.nextDouble() * 200 - 50), colorWhite));
+            mTable_mode1.add(new TableBox(0, String.format("%.2f", random.nextDouble() * 100), colorWhite));
+        }
+
+        mTable_mode2.add(new TableBox(0, "Types", colorWhite));
+        for (int year : COLUMN_MODE2) {
+            mTable_mode2.add(new TableBox(1, Integer.toString(year) + " AVG", colorWhite));
+        }
+
+        for (String type : STUB) {
+            mTable_mode2.add(new TableBox(0, type, colorWhite));
+            mTable_mode2.add(new TableBox(0, String.format("%.2f", random.nextDouble() * 50), colorWhite));
+            mTable_mode2.add(new TableBox(0, String.format("%.2f", random.nextDouble() * 50), colorWhite));
+            mTable_mode2.add(new TableBox(0, String.format("%.2f", random.nextDouble() * 50), colorWhite));
+            mTable_mode2.add(new TableBox(0, String.format("%.2f", random.nextDouble() * 50), colorWhite));
+        }
+
+        mProgressBar.setVisibility(View.GONE);
+        mTableAdapter_mode1.notifyDataSetChanged();
+        mTableAdapter_mode2.notifyDataSetChanged();
+        navigationView.setSelectedItemId(R.id.nav_crime_recent_events);
+    }
 }
