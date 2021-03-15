@@ -123,6 +123,7 @@ public class ResourceApi {
             String resourceID = strings[0];
             Map<String, String> dataParams = new HashMap<String, String>() {{
                 put("id", resourceID);
+                put("limit", "200");
             }};
             String query = ServerConnection.createQuery(DATA_ENDPOINT, dataParams);
             return ServerConnection.requestGET(query);
