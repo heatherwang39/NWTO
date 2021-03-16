@@ -53,7 +53,7 @@ public class DiscussionPostFragment extends Fragment {
     private FirebaseUser mCurrentUser;
     private FirebaseStorage storage;
 
-    private static final String TAG = "Profile Update";
+    private static final String TAG = "Post Discussion";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private EditText mEditTopic, mEditContent;

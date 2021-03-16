@@ -2,34 +2,52 @@ package com.example.nwto.model;
 
 public class Post {
     private String uID;
+//    private String profilePic;
+//    private String fullName;
     private String storageRef;
     private String timeStamp;
     private String topic;
     private String content;
-    private String fullName;
-    private String Neighbourhood;
+//    private String Neighbourhood;
 
     public Post(){
     }
 
     public Post(String uID, String storageRef, String timeStamp, String topic,
-                String content, String fullName, String Neighbourhood) {
+                String content) {
         this.uID = uID;
+//        this.profilePic = profilePic;
+//        this.fullName = fullName;
         this.storageRef = storageRef;
         this.timeStamp = timeStamp;
         this.topic = topic;
         this.content = content;
-        this.fullName = fullName;
-        this.Neighbourhood = Neighbourhood;
+//        this.Neighbourhood = Neighbourhood;
     }
 
-    public String getuID() {
+    public String getUID() {
         return uID;
     }
 
-    public void setuID(String uID) {
+    public void setUID(String uID) {
         this.uID = uID;
     }
+
+//    public String getProfilePic() {
+//        return profilePic;
+//    }
+//
+//    public void setProfilePic(String profilePic) {
+//        this.profilePic = profilePic;
+//    }
+//
+//    public String getFullName() {
+//        return fullName;
+//    }
+//
+//    public void setFullName(String fullName) {
+//        this.fullName = fullName;
+//    }
 
     public String getStorageRef() {
         return storageRef;
@@ -63,21 +81,13 @@ public class Post {
         this.content = content;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getNeighbourhood() {
-        return Neighbourhood;
-    }
-
-    public void setNeighbourhood(String neighbourhood) {
-        Neighbourhood = neighbourhood;
-    }
+//    public String getNeighbourhood() {
+//        return Neighbourhood;
+//    }
+//
+//    public void setNeighbourhood(String neighbourhood) {
+//        Neighbourhood = neighbourhood;
+//    }
 
 
 

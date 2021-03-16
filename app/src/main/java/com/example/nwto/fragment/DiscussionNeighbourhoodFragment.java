@@ -11,10 +11,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.nwto.R;
 
-public class DiscussionNeighboursFragment extends Fragment {
+public class DiscussionNeighbourhoodFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_discussion_neighbours,container,false);
+        return inflater.inflate(R.layout.fragment_discussion_neigbourhood,container,false);
     }
 }
