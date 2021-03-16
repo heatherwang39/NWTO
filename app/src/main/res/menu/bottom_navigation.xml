@@ -8,7 +8,7 @@
     <item
         android:id="@+id/nav_neighbours"
         android:icon="@drawable/ic_neighbour_custom"
-        android:title="Neighbours" />
+        android:title="Neighbourhood" />
 
     <item
         android:id="@+id/nav_post"
