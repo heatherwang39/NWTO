@@ -477,14 +477,14 @@ public class CrimeStatsActivity extends AppCompatActivity {
             int rowIndex = NUMB_COL_MODE1 * (i + 1);
             double avgMonthlyCount = Double.parseDouble(mTable_mode1.get(rowIndex + 1).getText());
             double lastMonthCount = Double.parseDouble(mTable_mode1.get(rowIndex + 3).getText());
-            double growth = lastMonthCount - avgMonthlyCount;
+            double growth = (lastMonthCount - avgMonthlyCount) / avgMonthlyCount * 100;
             int color = 0;
             if (growth < -threshold) color = colorGreen;
             else if (growth > threshold) color = colorRed;
             else color = colorYellow;
 
             TableBox growthBox = mTable_mode1.get(rowIndex + 2);
-            growthBox.setText(String.format("%.2f", growth) + "%");
+            growthBox.setText(String.format("%.0f", growth) + "%");
             growthBox.setBackgroundColor(color);
         }
 
