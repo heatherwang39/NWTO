@@ -2,9 +2,9 @@ package com.example.nwto.model;
 
 public class Post {
     private String uID;
-//    private String profilePic;
-//    private String fullName;
-    private String storageRef;
+    private String profilePic;
+    private String fullName;
+    private String postPic;
     private String timeStamp;
     private String topic;
     private String content;
@@ -13,12 +13,12 @@ public class Post {
     public Post(){
     }
 
-    public Post(String uID, String storageRef, String timeStamp, String topic,
-                String content) {
+    public Post(String uID, String profilePic, String fullName, String postPic,
+                String timeStamp, String topic, String content) {
         this.uID = uID;
-//        this.profilePic = profilePic;
-//        this.fullName = fullName;
-        this.storageRef = storageRef;
+        this.profilePic = profilePic;
+        this.fullName = fullName;
+        this.postPic = postPic;
         this.timeStamp = timeStamp;
         this.topic = topic;
         this.content = content;
@@ -33,28 +33,28 @@ public class Post {
         this.uID = uID;
     }
 
-//    public String getProfilePic() {
-//        return profilePic;
-//    }
-//
-//    public void setProfilePic(String profilePic) {
-//        this.profilePic = profilePic;
-//    }
-//
-//    public String getFullName() {
-//        return fullName;
-//    }
-//
-//    public void setFullName(String fullName) {
-//        this.fullName = fullName;
-//    }
-
-    public String getStorageRef() {
-        return storageRef;
+    public String getProfilePic() {
+        return profilePic;
     }
 
-    public void setStorageRef(String storageRef) {
-        this.storageRef = storageRef;
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getPostPic() {
+        return postPic;
+    }
+
+    public void setPostPic(String storageRef) {
+        this.postPic = storageRef;
     }
 
     public String getTimeStamp() {

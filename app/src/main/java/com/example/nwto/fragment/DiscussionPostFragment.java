@@ -36,7 +36,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -59,7 +62,7 @@ public class DiscussionPostFragment extends Fragment {
     private EditText mEditTopic, mEditContent;
     private ImageView mImageUpload;
     private Button mButtonPost;
-    private String mUID, mFullName, mCurrentPhotoPath, mTimeStamp, mTopic, mContent;
+    private String mUID, mFullName,mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent;
     private Bitmap mImageBitmap;
     private Uri postURI;
 
@@ -159,6 +162,20 @@ public class DiscussionPostFragment extends Fragment {
     }
 
     private void makePost() throws IOException {
+        //check the topic is not empty
+        mTopic = mEditTopic.getText().toString();
+        mContent = mEditContent.getText().toString();
+        if(mTopic.length()<1){
+            mEditTopic.setError("Please enter a topic.");
+            mEditTopic.requestFocus();
+            return;
+        }
+        if(mContent.length()<1){
+            mEditContent.setError("Please enter the content.");
+            mEditContent.requestFocus();
+            return;
+        }
+
         //check if postBitmap exists
         if(mImageBitmap != null){
             // crop the picture to square
@@ -236,31 +253,49 @@ public class DiscussionPostFragment extends Fragment {
 
 
     private void addToUserPosts(Uri uri){
-        Map<String, Object> post = new HashMap<>();
+        //get user info, including fullName, profilePic
+        DocumentReference documentReference = db.collection("users").document(mUID);
+        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(getActivity(), "Error while loading the profile", Toast.LENGTH_SHORT);
+                    Log.d(TAG, "-->" + e.toString());
+                    return;
+                }
 
-        mTopic = mEditTopic.getText().toString();
-        mContent = mEditContent.getText().toString();
+                if (documentSnapshot.exists()) {
+                    mFullName = documentSnapshot.getString("fullName");
+                    mProfilePic = documentSnapshot.getString("displayPicPath");
+                    Map<String, Object> post = new HashMap<>();
 
-        //I don't use custom object post here because all field names are converted to lowercase automatically, like uid and timestamp
-        post.put("uID", mUID);
-        post.put("storageRef", String.valueOf(uri));
-        post.put("timeStamp", mTimeStamp);
-        post.put("topic", mTopic);
-        post.put("content", mContent);
+                    //I don't use custom object post here because all field names are converted to lowercase automatically, like uid and timestamp
+                    post.put("uID", mUID);
+                    post.put("fullName", mFullName);
+                    post.put("profilePic", mProfilePic);
+                    post.put("postPic", String.valueOf(uri));
+                    post.put("timeStamp", mTimeStamp);
+                    post.put("topic", mTopic);
+                    post.put("content", mContent);
 
-        db.collection("posts")
-                .add(post)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "On Success: addToUserPosts" + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error addToUserPosts", e);
-                    }
-                });
+                    //create a new post and store it in firestore
+                    db.collection("posts")
+                            .add(post)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d(TAG, "On Success: addToUserPosts" + documentReference.getId());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error addToUserPosts", e);
+                                }
+                            });
+                }
+            }
+        });
     }
+
 }
