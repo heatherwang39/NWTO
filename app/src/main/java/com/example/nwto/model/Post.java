@@ -8,13 +8,13 @@ public class Post {
     private String timeStamp;
     private String topic;
     private String content;
-//    private String Neighbourhood;
+    private String Neighbourhood;
 
     public Post(){
     }
 
     public Post(String uID, String profilePic, String fullName, String postPic,
-                String timeStamp, String topic, String content) {
+                String timeStamp, String topic, String content, String Neighbourhood) {
         this.uID = uID;
         this.profilePic = profilePic;
         this.fullName = fullName;
@@ -22,7 +22,7 @@ public class Post {
         this.timeStamp = timeStamp;
         this.topic = topic;
         this.content = content;
-//        this.Neighbourhood = Neighbourhood;
+        this.Neighbourhood = Neighbourhood;
     }
 
     public String getUID() {
@@ -81,14 +81,12 @@ public class Post {
         this.content = content;
     }
 
-//    public String getNeighbourhood() {
-//        return Neighbourhood;
-//    }
-//
-//    public void setNeighbourhood(String neighbourhood) {
-//        Neighbourhood = neighbourhood;
-//    }
+    public String getNeighbourhood() {
+        return Neighbourhood;
+    }
 
-
+    public void setNeighbourhood(String neighbourhood) {
+        Neighbourhood = neighbourhood;
+    }
 
 }

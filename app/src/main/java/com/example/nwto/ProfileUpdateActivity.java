@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.nwto.adapter.PlaceAutoSuggestAdapter;
+import com.example.nwto.api.ResourceApi;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -64,7 +65,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     private ImageView mImageProfile, mImageCamera;
     private Button mButtonLogOut, mButtonSave, mButtonCancel;
     private AutoCompleteTextView mAutoCompleteAddress;
-    private String mUID, mAddress, mPostalCode, mRadius, mFrequency, mProfilePic;
+    private String mUID, mAddress, mPostalCode, mRadius, mFrequency, mProfilePic, mNeighbourhoodName;
     private double mLatitude, mLongitude;
     private Bitmap mImageBitmap;
     
@@ -229,26 +230,37 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         //check whether user did modified
         if(mImageBitmap != null) upload(mImageBitmap);
 
-        DocumentReference documentReference = db.collection("users").document(mUID);
-        Map<String, Object> userUpdate = new HashMap<>();
-        userUpdate.put("address", mAddress);
-        userUpdate.put("postalCode",mPostalCode);
-        userUpdate.put("coordinates", Arrays.asList(mLatitude,mLongitude));
-        userUpdate.put("radius", mRadius);
-        userUpdate.put("frequency",mFrequency);
+        new ResourceApi(){
+            @Override
+            public void processNeighbourhoodName(String neighbourhoodName) {
+                mNeighbourhoodName = neighbourhoodName.split("\\(")[0].trim();
+                Log.d("NeighbourhoodName:",mNeighbourhoodName);
 
-        documentReference.set(userUpdate,SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "Profile has been updated for user " + mUID);
-                startActivity(new Intent(ProfileUpdateActivity.this, ProfileActivity.class));
+                DocumentReference documentReference = db.collection("users").document(mUID);
+                Map<String, Object> userUpdate = new HashMap<>();
+                userUpdate.put("address", mAddress);
+                userUpdate.put("postalCode",mPostalCode);
+                userUpdate.put("coordinates", Arrays.asList(mLatitude,mLongitude));
+                userUpdate.put("radius", mRadius);
+                userUpdate.put("frequency",mFrequency);
+                userUpdate.put("neighbourhood",mNeighbourhoodName);
+
+                documentReference.set(userUpdate,SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Profile has been updated for user " + mUID);
+                        startActivity(new Intent(ProfileUpdateActivity.this, ProfileActivity.class));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfileUpdateActivity.this, "Failed in updating profile.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ProfileUpdateActivity.this, "Failed in updating profile.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }.getMappingResource(mLatitude, mLongitude, 3);
+
+
     }
 
 

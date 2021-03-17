@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment;
 import com.example.nwto.DiscussionActivity;
 import com.example.nwto.ProfileUpdateActivity;
 import com.example.nwto.R;
+import com.example.nwto.api.ResourceApi;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,7 +48,9 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DiscussionPostFragment extends Fragment {
@@ -62,7 +65,7 @@ public class DiscussionPostFragment extends Fragment {
     private EditText mEditTopic, mEditContent;
     private ImageView mImageUpload;
     private Button mButtonPost;
-    private String mUID, mFullName,mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent;
+    private String mUID, mFullName,mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName;
     private Bitmap mImageBitmap;
     private Uri postURI;
 
@@ -267,6 +270,8 @@ public class DiscussionPostFragment extends Fragment {
                 if (documentSnapshot.exists()) {
                     mFullName = documentSnapshot.getString("fullName");
                     mProfilePic = documentSnapshot.getString("displayPicPath");
+                    mNeighbourhoodName = documentSnapshot.getString("neighbourhood");
+
                     Map<String, Object> post = new HashMap<>();
 
                     //I don't use custom object post here because all field names are converted to lowercase automatically, like uid and timestamp
@@ -277,6 +282,7 @@ public class DiscussionPostFragment extends Fragment {
                     post.put("timeStamp", mTimeStamp);
                     post.put("topic", mTopic);
                     post.put("content", mContent);
+                    post.put("neighbourhood", mNeighbourhoodName);
 
                     //create a new post and store it in firestore
                     db.collection("posts")
@@ -297,5 +303,7 @@ public class DiscussionPostFragment extends Fragment {
             }
         });
     }
+
+
 
 }

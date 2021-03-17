@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nwto.adapter.PlaceAutoSuggestAdapter;
+import com.example.nwto.api.ResourceApi;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -59,14 +60,14 @@ public class RegisterUserActivity extends AppCompatActivity {
     private EditText editTextEmail, editTextPassword, editTextPassword2, editTextName;
     private AutoCompleteTextView autoCompleteTextView;
     private ProgressBar progressBar;
-    private String uID;
+    private String uID, mNeighbourhoodName;
     private String currentPhotoPath;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private Boolean noProfilePic = true;
     private Bitmap imageBitmap;
     private String email, name;
     private String autoCompleteAddress,  postalCode;
-    private double latitude, longitude;
+    private double mLatitude, mLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,8 +123,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         LatLng latLng = getLatLngFromAddress(autoCompleteAddress);
         if(latLng!=null) {
             Log.d("Lat Lng : ", " " + latLng.latitude + " " + latLng.longitude);
-            latitude = latLng.latitude;
-            longitude = latLng.longitude;
+            mLatitude = latLng.latitude;
+            mLongitude = latLng.longitude;
             Address address = getAddressFromLatLng(latLng);
             if(address!=null) {
                 postalCode = address.getPostalCode();
@@ -208,30 +209,40 @@ public class RegisterUserActivity extends AppCompatActivity {
                             //FirebaseUser user = mAuth.getCurrentUser();
                             uID = mAuth.getCurrentUser().getUid();
 
-                            DocumentReference documentReference = db.collection("users").document(uID);
-                            Map<String, Object> user = new HashMap<>();
-                            user.put("email",email);
-                            user.put("fullName",name);
-                            user.put("address",autoCompleteAddress);
-                            user.put("postalCode",postalCode);
-                            user.put("coordinates", Arrays.asList(latitude,longitude));
-                            user.put("radius","5");
-                            user.put("frequency","1");
-                            upload(imageBitmap);
-                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            new ResourceApi(){
                                 @Override
-                                public void onSuccess(Void aVoid) {
-                                    Intent intent = new Intent(RegisterUserActivity.this, ProfileActivity.class);
-                                    startActivity(intent);
-                                    Log.d(TAG, "createUserWithEmail: firestore success, user profile is created for"+uID);
+                                public void processNeighbourhoodName(String neighbourhoodName) {
+                                    mNeighbourhoodName = neighbourhoodName.split("\\(")[0].trim();
+                                    Log.d("NeighbourhoodName:",mNeighbourhoodName);
+
+                                    DocumentReference documentReference = db.collection("users").document(uID);
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("email",email);
+                                    user.put("fullName",name);
+                                    user.put("address",autoCompleteAddress);
+                                    user.put("postalCode",postalCode);
+                                    user.put("coordinates", Arrays.asList(mLatitude, mLongitude));
+                                    user.put("radius","5");
+                                    user.put("frequency","1");
+                                    user.put("neighbourhood",mNeighbourhoodName);
+                                    upload(imageBitmap);
+                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Intent intent = new Intent(RegisterUserActivity.this, ProfileActivity.class);
+                                            startActivity(intent);
+                                            Log.d(TAG, "createUserWithEmail: firestore success, user profile is created for"+uID);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "failure: "+e.toString());
+                                        }
+                                    });
+                                    progressBar.setVisibility(View.GONE);
                                 }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "failure: "+e.toString());
-                                }
-                            });
-                            progressBar.setVisibility(View.GONE);
+                            }.getMappingResource(mLatitude, mLongitude, 3);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -339,6 +350,16 @@ public class RegisterUserActivity extends AppCompatActivity {
             return null;
         }
 
+    }
+
+    private void getNeighbourhood(){
+        new ResourceApi(){
+            @Override
+            public void processNeighbourhoodName(String neighbourhoodName) {
+                mNeighbourhoodName = neighbourhoodName.split("\\(")[0];
+                Log.d("NeighbourhoodName:",mNeighbourhoodName);
+            }
+        }.getMappingResource(mLatitude, mLongitude, 3);
     }
 
 }
