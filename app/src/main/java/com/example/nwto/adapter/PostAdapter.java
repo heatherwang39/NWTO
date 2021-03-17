@@ -2,6 +2,7 @@ package com.example.nwto.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +39,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        Picasso.get().load(postList.get(position).getStorageRef()).into(holder.postView);
-//        Glide.with(this).load(postList.get(position).getStorageRef()).into(holder.postView);
+        String elapsedTime = getElapsedTime(postList.get(position).getTimeStamp());
+        Picasso.get().load(postList.get(position).getProfilePic()).into(holder.imageAvatar);
+        holder.topic.setText(postList.get(position).getTopic());
+        holder.area.setText("Area: " + postList.get(position).getNeighbourhood());
+        holder.name.setText(postList.get(position).getFullName());
+        holder.time.setText("Posted " + elapsedTime);
+        String content = postList.get(position).getContent();
+        if(content.length()>82){
+            holder.content.setText(content.substring(0, 82) + "...");
+        } else {
+            holder.content.setText(content);
+        }
+
 //        holder.postView.setOnClickListener(new View.OnClickListener() {
-        holder.topicAndArea.setText(postList.get(position).getTopic());
-//        holder.nameAndTime.setText(postList.get(position).getFullName());
-        holder.content.setText(postList.get(position).getContent());
 //            @Override
 //            public void onClick(View v) {
 //                Intent intent = new Intent(ctx, CommentActivity.class);
@@ -61,14 +70,37 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageAvatar;
-        TextView topicAndArea, nameAndTime, content;
+        TextView topic, area, name, time, content;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageAvatar = itemView.findViewById(R.id.image_avatar);
-            topicAndArea = itemView.findViewById(R.id.text_topic_and_area);
-            nameAndTime = itemView.findViewById(R.id.text_name_and_time);
+            topic = itemView.findViewById(R.id.text_topic);
+            area = itemView.findViewById(R.id.text_area);
+            name = itemView.findViewById(R.id.text_name);
+            time = itemView.findViewById(R.id.text_time);
             content = itemView.findViewById(R.id.text_content);
         }
+    }
+
+    private String getElapsedTime(String timeStamp){
+        String elapsedTime = "";
+        long milliseconds = System.currentTimeMillis() - Long.parseLong(timeStamp);
+        int seconds = (int) (milliseconds / 1000) % 60 ;
+        int minutes = (int) ((milliseconds / (1000*60)) % 60);
+        int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+        int days   = (int) ((milliseconds / (1000*60*60)) / 24);
+
+        if(seconds > 0 && minutes == 0 && hours == 0 && days == 0){
+            elapsedTime = String.valueOf(seconds) + " s ago";
+        } else if (minutes > 0 && hours == 0 && days == 0) {
+            elapsedTime = String.valueOf(minutes) + " m ago";
+        } else if (hours > 0 && days == 0) {
+            elapsedTime = String.valueOf(hours) + " h ago";
+        } else if (days > 0) {
+            elapsedTime = String.valueOf(days) + " d ago";
+        }
+
+        return elapsedTime;
     }
 }

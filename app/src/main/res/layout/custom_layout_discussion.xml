@@ -26,31 +26,51 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="5dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/text_topic_and_area"
+                    android:id="@+id/text_topic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="Breaking In - The Beach"
-                    android:textSize="22sp"
+                    android:text="Breaking In"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
-
                 <TextView
-                    android:id="@+id/text_name_and_time"
+                    android:id="@+id/text_area"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Don Cameron - 5h"
-                    android:textSize="18sp" />
+                    android:text="The Beach"
+                    android:textSize="16sp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/text_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Don Cameron"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/text_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="Posted 5h ago"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
             </LinearLayout>
         </LinearLayout>
         <TextView
             android:id="@+id/text_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:text="Is it just me, or have there been more car break-ins happening latelhy using stolen car Is it just me, or have there been more car break-ins happening latel using stolen car"
             android:maxLines = "2"
             android:minLines="1"
