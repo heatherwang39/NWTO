@@ -7,36 +7,22 @@
     android:orientation="vertical"
     tools:context=".RegisterUserActivity">
 
-    <TextView
-        android:id="@+id/text_banner"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:padding="10dp"
-        android:background="#C6CFD3"
-        android:gravity="center_vertical"
-        android:text="@string/sign_up_banner"
-        android:textColor="@color/white"
-        android:textSize="26sp" />
-
-
     <LinearLayout
-        android:orientation="horizontal"
         android:id="@+id/container_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_banner"
-        android:padding="20dp"
         android:gravity="center_vertical"
-        >
+        android:orientation="horizontal"
+        android:padding="20dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/image_profile"
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:src="@drawable/ic_avatar"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"/>
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
 
         <TextView
             android:id="@+id/text_take_picture"
@@ -44,21 +30,19 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="@string/add_profile_picture"
-            android:textColor="?attr/colorSecondaryVariant"
             android:textSize="20sp" />
 
     </LinearLayout>
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:id="@+id/userInfoForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/container_profile"
-        android:padding="20dp"
         android:gravity="center_vertical"
-        >
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <EditText
             android:id="@+id/edit_name"
@@ -67,7 +51,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Full Name"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/edit_email"
@@ -76,7 +60,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Email"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/edit_password"
@@ -94,7 +78,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Confirm Password"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword" />
 
         <AutoCompleteTextView
             android:id="@+id/auto_complete_address"
@@ -103,7 +87,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Street Address or Postal Code"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/button_sign_up"
@@ -120,8 +104,8 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

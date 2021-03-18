@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".DiscussionActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize"/>
+            android:label="Discussion Board"
+            android:parentActivityName=".NavigationActivity"/>
         <activity android:name=".SendSMSActivity" />
         <activity
             android:name=".CrimeStatsActivity"
@@ -32,11 +33,17 @@
         <activity android:name=".SendEmailActivity" />
         <activity android:name=".AddContactActivity" />
         <activity android:name=".NeighboursActivity" />
-        <activity android:name=".NavigationActivity" />
+        <activity android:name=".NavigationActivity"
+            android:label="Navigation"/>
         <activity android:name=".ProfileUpdateActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".RegisterUserActivity" />
+        <activity android:name=".LoginActivity"
+            android:label="Login to NWTO app"/>
+        <activity android:name=".ProfileActivity"
+            android:label="My Profile"
+            android:parentActivityName=".NavigationActivity"/>
+        <activity android:name=".RegisterUserActivity"
+            android:label="Register New Account"
+            android:parentActivityName=".LoginActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

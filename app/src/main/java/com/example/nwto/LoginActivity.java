@@ -1,6 +1,7 @@
 package com.example.nwto;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -36,9 +37,9 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // Check whether the user has been logged in
-        if(mAuth.getCurrentUser()!=null){
+        if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(this, ProfileActivity.class));
-        }else{
+        } else {
             mButtonSignUp = (Button) findViewById(R.id.button_sign_up);
             mButtonSignUp.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -61,22 +62,22 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void login(){
-        Log.i(TAG,"Login Button pressed!");
+    public void login() {
+        Log.i(TAG, "Login Button pressed!");
 
         String email = mEditEmail.getText().toString().trim();
         String password = mEditPassword.getText().toString();
         mProgressBar.setVisibility(View.VISIBLE);
-        Log.i(TAG,email+password);
+        Log.i(TAG, email + password);
 
-        if(email.isEmpty()){
+        if (email.isEmpty()) {
             mEditEmail.setError("Email is required!");
             mEditEmail.requestFocus();
             mProgressBar.setVisibility(View.INVISIBLE);
             return;
         }
 
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             mEditPassword.setError("Password is required!");
             mEditPassword.requestFocus();
             mProgressBar.setVisibility(View.INVISIBLE);
