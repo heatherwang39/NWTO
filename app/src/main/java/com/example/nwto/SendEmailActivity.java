@@ -55,7 +55,7 @@ public class SendEmailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendByEmail();
-                Log.d(TAG,"Send message via Email.");
+                Log.d(TAG, "Send message via Email.");
             }
         });
 
@@ -67,7 +67,7 @@ public class SendEmailActivity extends AppCompatActivity {
             }
         });
 
-        mEmailList = new ArrayList <String> ();
+        mEmailList = new ArrayList<String>();
     }
 
     private void sendByEmail() {
@@ -75,12 +75,12 @@ public class SendEmailActivity extends AppCompatActivity {
         String mBody = mEditBody.getText().toString();
 
         //The subject and body can't be empty
-        if(mSubject.isEmpty()){
+        if (mSubject.isEmpty()) {
             mEditSubject.setError("Please enter a subject.");
             mEditSubject.requestFocus();
             return;
         }
-        if(mBody.isEmpty()){
+        if (mBody.isEmpty()) {
             mEditBody.setError("Please enter the body");
             mEditBody.requestFocus();
             return;
@@ -90,7 +90,7 @@ public class SendEmailActivity extends AppCompatActivity {
         mEmailList.clear();
         CollectionReference collectionReference = db.collection("contacts");
         collectionReference.orderBy("fullName")
-                .whereEqualTo("ownerUID",mOwnerUID)
+                .whereEqualTo("ownerUID", mOwnerUID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -104,7 +104,7 @@ public class SendEmailActivity extends AppCompatActivity {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
 
-                        String emails[]=mEmailList.toArray(new String[mEmailList.size()]);
+                        String emails[] = mEmailList.toArray(new String[mEmailList.size()]);
                         Intent email = new Intent(Intent.ACTION_SENDTO);
                         email.putExtra(Intent.EXTRA_EMAIL, emails);
                         email.putExtra(Intent.EXTRA_SUBJECT, mSubject);
@@ -125,7 +125,7 @@ public class SendEmailActivity extends AppCompatActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i=new Intent(SendEmailActivity.this, NeighboursActivity.class);
+                                Intent i = new Intent(SendEmailActivity.this, NeighboursActivity.class);
                                 startActivity(i);
                             }
                         }, 2000);

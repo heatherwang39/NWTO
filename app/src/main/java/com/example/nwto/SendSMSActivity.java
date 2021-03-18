@@ -64,12 +64,12 @@ public class SendSMSActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if(checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                         sendBySMS();
-                        Log.d(TAG,"Sending message via SMS.");
+                        Log.d(TAG, "Sending message via SMS.");
                     } else {
-                        requestPermissions(new String[]{Manifest.permission.SEND_SMS},1);
+                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
                     }
                 }
             }
@@ -83,7 +83,7 @@ public class SendSMSActivity extends AppCompatActivity {
             }
         });
 
-        mReceiverList = new ArrayList <String> ();
+        mReceiverList = new ArrayList<String>();
     }
 
     private void sendBySMS() {
@@ -91,7 +91,7 @@ public class SendSMSActivity extends AppCompatActivity {
 
         CollectionReference collectionReference = db.collection("contacts");
         collectionReference.orderBy("fullName")
-                .whereEqualTo("ownerUID",mOwnerUID)
+                .whereEqualTo("ownerUID", mOwnerUID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -118,7 +118,7 @@ public class SendSMSActivity extends AppCompatActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i=new Intent(SendSMSActivity.this, NeighboursActivity.class);
+                                Intent i = new Intent(SendSMSActivity.this, NeighboursActivity.class);
                                 startActivity(i);
                             }
                         }, 2000);

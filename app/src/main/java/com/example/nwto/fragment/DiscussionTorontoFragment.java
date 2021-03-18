@@ -46,7 +46,7 @@ public class DiscussionTorontoFragment<GlobalPostAdapter> extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_discussion_toronto,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_discussion_toronto, container, false);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         mUID = mAuth.getCurrentUser().getUid();
@@ -55,9 +55,9 @@ public class DiscussionTorontoFragment<GlobalPostAdapter> extends Fragment {
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
 
-        mTorontoPostList = new ArrayList <Post> ();
+        mTorontoPostList = new ArrayList<Post>();
         mRecycleTorontoPostList = (RecyclerView) rootView.findViewById(R.id.recycler_discussion_toronto);
-        mGridLayoutManager = new GridLayoutManager(getActivity(), 1,GridLayoutManager.VERTICAL,false);
+        mGridLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
         mRecycleTorontoPostList.setLayoutManager(mGridLayoutManager);
 
         loadTorontoPosts();

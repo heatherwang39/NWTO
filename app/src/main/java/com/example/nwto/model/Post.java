@@ -10,7 +10,7 @@ public class Post {
     private String content;
     private String neighbourhood;
 
-    public Post(){
+    public Post() {
     }
 
     public Post(String uID, String profilePic, String fullName, String postPic,

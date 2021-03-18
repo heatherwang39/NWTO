@@ -79,13 +79,13 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ProfileActivity.this, ProfileUpdateActivity.class));
-                Log.d(TAG,"Editing Profile.");
+                Log.d(TAG, "Editing Profile.");
             }
         });
 
-        if(mAuth.getCurrentUser() == null){
+        if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-        }else{
+        } else {
             mUID = mAuth.getCurrentUser().getUid();
             showProfile();
         }
@@ -97,13 +97,13 @@ public class ProfileActivity extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(e != null){
-                    Toast.makeText(ProfileActivity.this,"Error while loading", Toast.LENGTH_SHORT);
-                    Log.d(TAG,"-->"+e.toString());
+                if (e != null) {
+                    Toast.makeText(ProfileActivity.this, "Error while loading", Toast.LENGTH_SHORT);
+                    Log.d(TAG, "-->" + e.toString());
                     return;
                 }
 
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     String fullName = documentSnapshot.getString("fullName");
                     mTextFullName.setText(fullName);
                     String email = documentSnapshot.getString("email");
@@ -118,7 +118,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String profilePic = documentSnapshot.getString("displayPicPath");
                     Glide.with(ProfileActivity.this).load(profilePic).into(mImageProfile);
 
-                    Log.i(TAG,"Show profile successfully"+fullName+" "+mUID);
+                    Log.i(TAG, "Show profile successfully" + fullName + " " + mUID);
                 }
             }
         });

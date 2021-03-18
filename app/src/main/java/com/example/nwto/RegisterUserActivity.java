@@ -66,7 +66,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     private Boolean noProfilePic = true;
     private Bitmap imageBitmap;
     private String email, name;
-    private String autoCompleteAddress,  postalCode;
+    private String autoCompleteAddress, postalCode;
     private double mLatitude, mLongitude;
 
     @Override
@@ -107,7 +107,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         autoCompleteTextView = findViewById(R.id.auto_complete_address);
-        autoCompleteTextView.setAdapter(new PlaceAutoSuggestAdapter(RegisterUserActivity.this,android.R.layout.simple_list_item_1));
+        autoCompleteTextView.setAdapter(new PlaceAutoSuggestAdapter(RegisterUserActivity.this, android.R.layout.simple_list_item_1));
 
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,23 +119,21 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private void convertAddress() {
         autoCompleteAddress = autoCompleteTextView.getText().toString();
-        Log.d("Address : ",autoCompleteAddress);
+        Log.d("Address : ", autoCompleteAddress);
         LatLng latLng = getLatLngFromAddress(autoCompleteAddress);
-        if(latLng!=null) {
+        if (latLng != null) {
             Log.d("Lat Lng : ", " " + latLng.latitude + " " + latLng.longitude);
             mLatitude = latLng.latitude;
             mLongitude = latLng.longitude;
             Address address = getAddressFromLatLng(latLng);
-            if(address!=null) {
+            if (address != null) {
                 postalCode = address.getPostalCode();
-                Log.d("Pin Code : ",""+postalCode);
+                Log.d("Pin Code : ", "" + postalCode);
+            } else {
+                Log.d("Address", "Address Not Found");
             }
-            else {
-                Log.d("Address","Address Not Found");
-            }
-        }
-        else {
-            Log.d("Lat Lng","Lat Lng Not Found");
+        } else {
+            Log.d("Lat Lng", "Lat Lng Not Found");
         }
     }
 
@@ -158,37 +156,37 @@ public class RegisterUserActivity extends AppCompatActivity {
             noProfilePic = false;
         } else {
             Log.i(TAG, "takePictureIntent onActivityResult: RESULT CANCELLED");
-            Toast.makeText(RegisterUserActivity.this, "Take Picture Cancelled.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterUserActivity.this, "Take Picture Cancelled.", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    private void signUp(){
+    private void signUp() {
 
         email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString();
         String password2 = editTextPassword2.getText().toString();
         name = editTextName.getText().toString().trim();
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Valid Email Address is required!");
             editTextEmail.requestFocus();
             return;
         }
 
-        if(password.length()<6){
+        if (password.length() < 6) {
             editTextPassword.setError("Password should be at least 6 characters.");
             editTextPassword.requestFocus();
             return;
         }
 
-        if(!password.equals(password2)){
+        if (!password.equals(password2)) {
             editTextPassword2.setError("The password you entered doesn't match!");
             editTextPassword2.requestFocus();
             return;
         }
 
-        if(noProfilePic){
+        if (noProfilePic) {
             textViewTakePicture.setError("Profile picture is required!");
             textViewTakePicture.requestFocus();
             return;
@@ -205,38 +203,38 @@ public class RegisterUserActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:firebase success");
-                            Toast.makeText(RegisterUserActivity.this, "User created.",Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterUserActivity.this, "User created.", Toast.LENGTH_LONG).show();
                             //FirebaseUser user = mAuth.getCurrentUser();
                             uID = mAuth.getCurrentUser().getUid();
 
-                            new ResourceApi(){
+                            new ResourceApi() {
                                 @Override
                                 public void processNeighbourhoodName(String neighbourhoodName) {
                                     mNeighbourhoodName = neighbourhoodName.split("\\(")[0].trim();
-                                    Log.d("NeighbourhoodName:",mNeighbourhoodName);
+                                    Log.d("NeighbourhoodName:", mNeighbourhoodName);
 
                                     DocumentReference documentReference = db.collection("users").document(uID);
                                     Map<String, Object> user = new HashMap<>();
-                                    user.put("email",email);
-                                    user.put("fullName",name);
-                                    user.put("address",autoCompleteAddress);
-                                    user.put("postalCode",postalCode);
+                                    user.put("email", email);
+                                    user.put("fullName", name);
+                                    user.put("address", autoCompleteAddress);
+                                    user.put("postalCode", postalCode);
                                     user.put("coordinates", Arrays.asList(mLatitude, mLongitude));
-                                    user.put("radius","5");
-                                    user.put("frequency","1");
-                                    user.put("neighbourhood",mNeighbourhoodName);
+                                    user.put("radius", "5");
+                                    user.put("frequency", "1");
+                                    user.put("neighbourhood", mNeighbourhoodName);
                                     upload(imageBitmap);
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Intent intent = new Intent(RegisterUserActivity.this, ProfileActivity.class);
                                             startActivity(intent);
-                                            Log.d(TAG, "createUserWithEmail: firestore success, user profile is created for"+uID);
+                                            Log.d(TAG, "createUserWithEmail: firestore success, user profile is created for" + uID);
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "failure: "+e.toString());
+                                            Log.d(TAG, "failure: " + e.toString());
                                         }
                                     });
                                     progressBar.setVisibility(View.GONE);
@@ -246,7 +244,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterUserActivity.this, "Authentication failed.",Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterUserActivity.this, "Authentication failed.", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }
@@ -259,7 +257,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        StorageReference reference = storage.getReference().child("profileImages").child(uID+".jpeg");
+        StorageReference reference = storage.getReference().child("profileImages").child(uID + ".jpeg");
 
         reference.putBytes(baos.toByteArray()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -267,7 +265,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.d(TAG, "onSuccess: upload profile pic to storage"+uri);
+                        Log.d(TAG, "onSuccess: upload profile pic to storage" + uri);
                         updateProfilePic(uri);
                     }
                 });
@@ -280,7 +278,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         });
     }
 
-    private void updateProfilePic(Uri uri){
+    private void updateProfilePic(Uri uri) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder().setPhotoUri(uri).build();
         currentUser.updateProfile(request).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -309,55 +307,51 @@ public class RegisterUserActivity extends AppCompatActivity {
         });
     }
 
-    private LatLng getLatLngFromAddress(String address){
+    private LatLng getLatLngFromAddress(String address) {
 
-        Geocoder geocoder=new Geocoder(RegisterUserActivity.this);
+        Geocoder geocoder = new Geocoder(RegisterUserActivity.this);
         List<Address> addressList;
 
         try {
             addressList = geocoder.getFromLocationName(address, 1);
-            if(addressList!=null){
-                Address singleAddress=addressList.get(0);
-                LatLng latLng = new LatLng(singleAddress.getLatitude(),singleAddress.getLongitude());
+            if (addressList != null) {
+                Address singleAddress = addressList.get(0);
+                LatLng latLng = new LatLng(singleAddress.getLatitude(), singleAddress.getLongitude());
                 return latLng;
-            }
-            else{
+            } else {
                 return null;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
     }
 
-    private Address getAddressFromLatLng(LatLng latLng){
-        Geocoder geocoder=new Geocoder(RegisterUserActivity.this);
+    private Address getAddressFromLatLng(LatLng latLng) {
+        Geocoder geocoder = new Geocoder(RegisterUserActivity.this);
         List<Address> addresses;
         try {
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 5);
-            if(addresses!=null){
-                Address address=addresses.get(0);
+            if (addresses != null) {
+                Address address = addresses.get(0);
                 return address;
-            }
-            else{
+            } else {
                 return null;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
     }
 
-    private void getNeighbourhood(){
-        new ResourceApi(){
+    private void getNeighbourhood() {
+        new ResourceApi() {
             @Override
             public void processNeighbourhoodName(String neighbourhoodName) {
                 mNeighbourhoodName = neighbourhoodName.split("\\(")[0];
-                Log.d("NeighbourhoodName:",mNeighbourhoodName);
+                Log.d("NeighbourhoodName:", mNeighbourhoodName);
             }
         }.getMappingResource(mLatitude, mLongitude, 3);
     }

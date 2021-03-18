@@ -98,9 +98,9 @@ public class NeighboursActivity extends AppCompatActivity {
         });
 
         //Set GridLayoutManager
-        mContactList = new ArrayList <Contact> ();
+        mContactList = new ArrayList<Contact>();
         mRecycleContactList = (RecyclerView) findViewById(R.id.recycler_contact_list);
-        mGridLayoutManager = new GridLayoutManager(this, 1,GridLayoutManager.VERTICAL,false);
+        mGridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         mRecycleContactList.setLayoutManager(mGridLayoutManager);
         loadContacts();
     }
@@ -109,7 +109,7 @@ public class NeighboursActivity extends AppCompatActivity {
         mContactList.clear();
         CollectionReference collectionReference = db.collection("contacts");
         collectionReference.orderBy("fullName")
-                .whereEqualTo("ownerUID",mOwnerUID)
+                .whereEqualTo("ownerUID", mOwnerUID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

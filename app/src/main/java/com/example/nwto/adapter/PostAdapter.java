@@ -18,12 +18,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     List<Post> postList;
     LayoutInflater inflater;
     Context ctx;
 
-    public PostAdapter(Context ctx, List<Post> postList){
+    public PostAdapter(Context ctx, List<Post> postList) {
         this.ctx = ctx;
         this.postList = postList;
         this.inflater = LayoutInflater.from(ctx);
@@ -32,7 +32,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.custom_layout_discussion,parent,false);
+        View view = inflater.inflate(R.layout.custom_layout_discussion, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -46,7 +46,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         holder.name.setText(postList.get(position).getFullName());
         holder.time.setText("Posted " + elapsedTime);
         String content = postList.get(position).getContent();
-        if(content.length()>82){
+        if (content.length() > 82) {
             holder.content.setText(content.substring(0, 82) + "...");
         } else {
             holder.content.setText(content);
@@ -68,7 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         return postList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageAvatar;
         TextView topic, area, name, time, content;
 
@@ -83,15 +83,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         }
     }
 
-    private String getElapsedTime(String timeStamp){
+    private String getElapsedTime(String timeStamp) {
         String elapsedTime = "";
         long milliseconds = System.currentTimeMillis() - Long.parseLong(timeStamp);
-        int seconds = (int) (milliseconds / 1000) % 60 ;
-        int minutes = (int) ((milliseconds / (1000*60)) % 60);
-        int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
-        int days   = (int) ((milliseconds / (1000*60*60)) / 24);
+        int seconds = (int) (milliseconds / 1000) % 60;
+        int minutes = (int) ((milliseconds / (1000 * 60)) % 60);
+        int hours = (int) ((milliseconds / (1000 * 60 * 60)) % 24);
+        int days = (int) ((milliseconds / (1000 * 60 * 60)) / 24);
 
-        if(seconds > 0 && minutes == 0 && hours == 0 && days == 0){
+        if (seconds > 0 && minutes == 0 && hours == 0 && days == 0) {
             elapsedTime = String.valueOf(seconds) + " s ago";
         } else if (minutes > 0 && hours == 0 && days == 0) {
             elapsedTime = String.valueOf(minutes) + " m ago";

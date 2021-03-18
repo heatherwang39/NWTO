@@ -6,7 +6,7 @@ public class Contact {
     private String mEmail = "";
     private String mPhoneNumber = "";
 
-    public Contact(){
+    public Contact() {
     }
 
     public Contact(String ownerUID, String fullName, String email, String phoneNumber) {

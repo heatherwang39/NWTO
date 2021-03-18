@@ -68,7 +68,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     private String mUID, mAddress, mPostalCode, mRadius, mFrequency, mProfilePic, mNeighbourhoodName;
     private double mLatitude, mLongitude;
     private Bitmap mImageBitmap;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +124,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
 
         mAutoCompleteAddress = findViewById(R.id.auto_complete_address);
-        mAutoCompleteAddress.setAdapter(new PlaceAutoSuggestAdapter(ProfileUpdateActivity.this,android.R.layout.simple_list_item_1));
+        mAutoCompleteAddress.setAdapter(new PlaceAutoSuggestAdapter(ProfileUpdateActivity.this, android.R.layout.simple_list_item_1));
         mAutoCompleteAddress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -160,7 +160,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveUpdates();
-                Log.d(TAG,"SAVE");
+                Log.d(TAG, "SAVE");
             }
         });
 
@@ -172,9 +172,9 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             }
         });
 
-        if(mAuth.getCurrentUser() == null){
+        if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(ProfileUpdateActivity.this, MainActivity.class));
-        }else{
+        } else {
             mCurrentUser = mAuth.getCurrentUser();
             mUID = mAuth.getCurrentUser().getUid();
             loadProfile();
@@ -188,13 +188,13 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(e != null){
-                    Toast.makeText(ProfileUpdateActivity.this,"Error while loading", Toast.LENGTH_SHORT);
-                    Log.d(TAG,"-->"+e.toString());
+                if (e != null) {
+                    Toast.makeText(ProfileUpdateActivity.this, "Error while loading", Toast.LENGTH_SHORT);
+                    Log.d(TAG, "-->" + e.toString());
                     return;
                 }
 
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     String fullName = documentSnapshot.getString("fullName");
                     mTextFullName.setText(fullName);
                     String email = documentSnapshot.getString("email");
@@ -220,7 +220,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     mProfilePic = documentSnapshot.getString("displayPicPath");
                     Glide.with(ProfileUpdateActivity.this).load(mProfilePic).into(mImageProfile);
 
-                    Log.i(TAG,"Load profile successfully"+fullName+" "+mUID);
+                    Log.i(TAG, "Load profile successfully" + fullName + " " + mUID);
                 }
             }
         });
@@ -228,24 +228,24 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
     private void saveUpdates() {
         //check whether user did modified
-        if(mImageBitmap != null) upload(mImageBitmap);
+        if (mImageBitmap != null) upload(mImageBitmap);
 
-        new ResourceApi(){
+        new ResourceApi() {
             @Override
             public void processNeighbourhoodName(String neighbourhoodName) {
                 mNeighbourhoodName = neighbourhoodName.split("\\(")[0].trim();
-                Log.d("NeighbourhoodName:",mNeighbourhoodName);
+                Log.d("NeighbourhoodName:", mNeighbourhoodName);
 
                 DocumentReference documentReference = db.collection("users").document(mUID);
                 Map<String, Object> userUpdate = new HashMap<>();
                 userUpdate.put("address", mAddress);
-                userUpdate.put("postalCode",mPostalCode);
-                userUpdate.put("coordinates", Arrays.asList(mLatitude,mLongitude));
+                userUpdate.put("postalCode", mPostalCode);
+                userUpdate.put("coordinates", Arrays.asList(mLatitude, mLongitude));
                 userUpdate.put("radius", mRadius);
-                userUpdate.put("frequency",mFrequency);
-                userUpdate.put("neighbourhood",mNeighbourhoodName);
+                userUpdate.put("frequency", mFrequency);
+                userUpdate.put("neighbourhood", mNeighbourhoodName);
 
-                documentReference.set(userUpdate,SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                documentReference.set(userUpdate, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Profile has been updated for user " + mUID);
@@ -282,7 +282,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             mImageProfile.setImageBitmap(mImageBitmap);
         } else {
             Log.i(TAG, "takePictureIntent onActivityResult: RESULT CANCELLED");
-            Toast.makeText(ProfileUpdateActivity.this, "Take Picture Cancelled.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileUpdateActivity.this, "Take Picture Cancelled.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -290,7 +290,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        StorageReference reference = storage.getReference().child("profileImages").child(mUID+".jpeg");
+        StorageReference reference = storage.getReference().child("profileImages").child(mUID + ".jpeg");
 
         reference.putBytes(baos.toByteArray()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -298,7 +298,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                 reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.d(TAG, "onSuccess: upload profile pic to storage"+uri);
+                        Log.d(TAG, "onSuccess: upload profile pic to storage" + uri);
                         updateProfilePic(uri);
                     }
                 });
@@ -321,7 +321,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                 DocumentReference documentReference = db.collection("users").document(mUID);
                 Map<String, Object> userUpdate = new HashMap<>();
                 userUpdate.put("displayPicPath", profilePic);
-                documentReference.set(userUpdate,SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                documentReference.set(userUpdate, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Profile Pic has been updated for user " + mUID);
@@ -338,63 +338,57 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
     private void convertAddress() {
         mAddress = mAutoCompleteAddress.getText().toString();
-        Log.d("Address : ",mAddress);
+        Log.d("Address : ", mAddress);
         LatLng latLng = getLatLngFromAddress(mAddress);
-        if(latLng!=null) {
+        if (latLng != null) {
             Log.d("Lat Lng : ", " " + latLng.latitude + " " + latLng.longitude);
             mLatitude = latLng.latitude;
             mLongitude = latLng.longitude;
             Address address = getAddressFromLatLng(latLng);
-            if(address!=null) {
+            if (address != null) {
                 mPostalCode = address.getPostalCode();
-                Log.d("Pin Code : ",""+mPostalCode);
+                Log.d("Pin Code : ", "" + mPostalCode);
+            } else {
+                Log.d("Address", "Address Not Found");
             }
-            else {
-                Log.d("Address","Address Not Found");
-            }
-        }
-        else {
-            Log.d("Lat Lng","Lat Lng Not Found");
+        } else {
+            Log.d("Lat Lng", "Lat Lng Not Found");
         }
     }
 
-    private LatLng getLatLngFromAddress(String address){
+    private LatLng getLatLngFromAddress(String address) {
 
-        Geocoder geocoder=new Geocoder(ProfileUpdateActivity.this);
+        Geocoder geocoder = new Geocoder(ProfileUpdateActivity.this);
         List<Address> addressList;
 
         try {
             addressList = geocoder.getFromLocationName(address, 1);
-            if(addressList!=null){
-                Address singleAddress=addressList.get(0);
-                LatLng latLng = new LatLng(singleAddress.getLatitude(),singleAddress.getLongitude());
+            if (addressList != null) {
+                Address singleAddress = addressList.get(0);
+                LatLng latLng = new LatLng(singleAddress.getLatitude(), singleAddress.getLongitude());
                 return latLng;
-            }
-            else{
+            } else {
                 return null;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
     }
 
-    private Address getAddressFromLatLng(LatLng latLng){
-        Geocoder geocoder=new Geocoder(ProfileUpdateActivity.this);
+    private Address getAddressFromLatLng(LatLng latLng) {
+        Geocoder geocoder = new Geocoder(ProfileUpdateActivity.this);
         List<Address> addresses;
         try {
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 5);
-            if(addresses!=null){
-                Address address=addresses.get(0);
+            if (addresses != null) {
+                Address address = addresses.get(0);
                 return address;
-            }
-            else{
+            } else {
                 return null;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

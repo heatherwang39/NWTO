@@ -65,14 +65,14 @@ public class DiscussionPostFragment extends Fragment {
     private EditText mEditTopic, mEditContent;
     private ImageView mImageUpload;
     private Button mButtonPost;
-    private String mUID, mFullName,mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName;
+    private String mUID, mFullName, mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName;
     private Bitmap mImageBitmap;
     private Uri postURI;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView =  inflater.inflate(R.layout.fragment_discussion_post,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_discussion_post, container, false);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         mUID = mAuth.getCurrentUser().getUid();
@@ -84,7 +84,7 @@ public class DiscussionPostFragment extends Fragment {
         // Initialize Storage
         storage = FirebaseStorage.getInstance();
 
-        mImageUpload = (ImageView) rootView.findViewById(R.id.image_upload) ;
+        mImageUpload = (ImageView) rootView.findViewById(R.id.image_upload);
         mEditTopic = (EditText) rootView.findViewById(R.id.edit_topic);
         mEditContent = (EditText) rootView.findViewById(R.id.edit_content);
         mButtonPost = (Button) rootView.findViewById(R.id.button_post);
@@ -123,7 +123,7 @@ public class DiscussionPostFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
             }
             if (photoFile != null) {
-                postURI = FileProvider.getUriForFile(getActivity(),"com.example.android.fileprovider",photoFile);
+                postURI = FileProvider.getUriForFile(getActivity(), "com.example.android.fileprovider", photoFile);
 //                getCtx().setPostUri(postURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, postURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -134,7 +134,7 @@ public class DiscussionPostFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: Make Post Image Capture RESULT OK");
             try {
                 mImageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), postURI);
@@ -144,9 +144,10 @@ public class DiscussionPostFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i(TAG, "onActivityResult ok: get postBitmap unsuccessfully");
-            }}else if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_CANCELED){
+            }
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_CANCELED) {
             Log.i(TAG, "onActivityResult: Make Post Image Capture RESULT CANCELLED");
-        }else{
+        } else {
         }
     }
 
@@ -168,19 +169,19 @@ public class DiscussionPostFragment extends Fragment {
         //check the topic is not empty
         mTopic = mEditTopic.getText().toString();
         mContent = mEditContent.getText().toString();
-        if(mTopic.length()<1){
+        if (mTopic.length() < 1) {
             mEditTopic.setError("Please enter a topic.");
             mEditTopic.requestFocus();
             return;
         }
-        if(mContent.length()<1){
+        if (mContent.length() < 1) {
             mEditContent.setError("Please enter the content.");
             mEditContent.requestFocus();
             return;
         }
 
         //check if postBitmap exists
-        if(mImageBitmap != null){
+        if (mImageBitmap != null) {
             // crop the picture to square
             Bitmap square = cropToSquare(mImageBitmap);
 
@@ -190,7 +191,7 @@ public class DiscussionPostFragment extends Fragment {
                     ExifInterface.ORIENTATION_NORMAL);
             Bitmap rotatedBitmap = null;
             Matrix matrix = new Matrix();
-            switch(orientation) {
+            switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     matrix.postRotate(90);
                     break;
@@ -213,7 +214,7 @@ public class DiscussionPostFragment extends Fragment {
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
             mTimeStamp = String.valueOf(System.currentTimeMillis());
-            final StorageReference postReference = storage.getReference().child("photos").child(mUID+"/"+mTimeStamp+".jpeg");
+            final StorageReference postReference = storage.getReference().child("photos").child(mUID + "/" + mTimeStamp + ".jpeg");
 
             postReference.putBytes(baos.toByteArray()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -223,7 +224,7 @@ public class DiscussionPostFragment extends Fragment {
                     postReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            Log.d(TAG, "onSuccess: get uri "+uri);
+                            Log.d(TAG, "onSuccess: get uri " + uri);
                             addToUserPosts(uri);
                             Intent intent = new Intent(getActivity(), DiscussionActivity.class);
                             startActivity(intent);
@@ -236,26 +237,26 @@ public class DiscussionPostFragment extends Fragment {
                     Log.e(TAG, "OnFailure: ", e.getCause());
                 }
             });
-        }else{
+        } else {
             Toast.makeText(getActivity(), "Please upload an image!",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static Bitmap cropToSquare(Bitmap bitmap){
+    public static Bitmap cropToSquare(Bitmap bitmap) {
         Bitmap cropImg;
-        if (bitmap.getWidth() >= bitmap.getHeight()){
-            cropImg = Bitmap.createBitmap(bitmap,bitmap.getWidth()/2 - bitmap.getHeight()/2,0,
-                    bitmap.getHeight(),bitmap.getHeight());
-        }else{
-            cropImg = Bitmap.createBitmap(bitmap,0,bitmap.getHeight()/2 - bitmap.getWidth()/2,
-                    bitmap.getWidth(),bitmap.getWidth());
+        if (bitmap.getWidth() >= bitmap.getHeight()) {
+            cropImg = Bitmap.createBitmap(bitmap, bitmap.getWidth() / 2 - bitmap.getHeight() / 2, 0,
+                    bitmap.getHeight(), bitmap.getHeight());
+        } else {
+            cropImg = Bitmap.createBitmap(bitmap, 0, bitmap.getHeight() / 2 - bitmap.getWidth() / 2,
+                    bitmap.getWidth(), bitmap.getWidth());
         }
         return cropImg;
     }
 
 
-    private void addToUserPosts(Uri uri){
+    private void addToUserPosts(Uri uri) {
         //get user info, including fullName, profilePic
         DocumentReference documentReference = db.collection("users").document(mUID);
         documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
@@ -303,7 +304,6 @@ public class DiscussionPostFragment extends Fragment {
             }
         });
     }
-
 
 
 }
