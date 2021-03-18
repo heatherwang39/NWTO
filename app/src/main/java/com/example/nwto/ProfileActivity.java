@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,9 +32,9 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "Profile";
 
     private TextView mTextFullName, mTextEmail, mTextAddress, mTextRadius, mTextFrequency;
-    private ImageView mImageProfile, mImageNav;
+    private ImageView mImageProfile;
     private String mUID;
-    private Button mButtonLogOut, mButtonEdit;
+    private Button mButtonEdit;
 
 
     @Override
@@ -56,28 +58,6 @@ public class ProfileActivity extends AppCompatActivity {
         mTextRadius = (TextView) findViewById(R.id.text_radius);
         mTextFrequency = (TextView) findViewById(R.id.text_frequency);
         mImageProfile = (ImageView) findViewById(R.id.image_profile);
-        mImageNav = (ImageView) findViewById(R.id.image_nav);
-
-        mImageNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ProfileActivity.this, NavigationActivity.class));
-            }
-        });
-
-        mButtonLogOut = (Button) findViewById(R.id.button_log_out);
-        mButtonLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    // Sign out and then go to login page
-                    mAuth.signOut();
-                    startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
         mButtonEdit = (Button) findViewById(R.id.button_edit);
         mButtonEdit.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         if (mAuth.getCurrentUser() == null) {
-            startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+            startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
         } else {
             mUID = mAuth.getCurrentUser().getUid();
             showProfile();
@@ -129,4 +109,25 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.button_log_out) {
+            try {
+                // Sign out and then go to login page
+                mAuth.signOut();
+                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

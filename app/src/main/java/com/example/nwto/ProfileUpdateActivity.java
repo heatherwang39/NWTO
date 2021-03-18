@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -141,19 +143,6 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             }
         });
 
-        mButtonLogOut = (Button) findViewById(R.id.button_log_out);
-        mButtonLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    // Sign out and then go to login page
-                    mAuth.signOut();
-                    startActivity(new Intent(ProfileUpdateActivity.this, MainActivity.class));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
         mButtonSave = (Button) findViewById(R.id.button_save);
         mButtonSave.setOnClickListener(new View.OnClickListener() {
@@ -392,5 +381,27 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.button_log_out) {
+            try {
+                // Sign out and then go to login page
+                mAuth.signOut();
+                startActivity(new Intent(ProfileUpdateActivity.this, LoginActivity.class));
+                Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

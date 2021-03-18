@@ -7,16 +7,6 @@
     android:orientation="vertical"
     tools:context=".SendEmailActivity">
     <TextView
-        android:id="@+id/text_banner"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:padding="10dp"
-        android:background="#C6CFD3"
-        android:gravity="center_vertical"
-        android:text="Write a New Message"
-        android:textColor="@color/white"
-        android:textSize="26sp" />
-    <TextView
         android:id="@+id/text_subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -6,28 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ProfileUpdateActivity">
 
-    <TextView
-        android:id="@+id/text_banner"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:padding="10dp"
-        android:background="#C6CFD3"
-        android:gravity="center_vertical"
-        android:text="Profile Update"
-        android:textColor="@color/white"
-        android:textSize="26sp" />
-    <Button
-        android:id="@+id/button_log_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Log Out"
-        android:drawableRight="@drawable/ic_logout"
-        />
-
     <LinearLayout
         android:id="@+id/container_profile"
         android:layout_below="@+id/text_banner"

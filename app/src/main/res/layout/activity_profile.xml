@@ -6,40 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
-    <TextView
-        android:id="@+id/text_banner"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:padding="10dp"
-        android:background="#C6CFD3"
-        android:gravity="center_vertical"
-        android:text="          Profile"
-        android:textColor="@color/white"
-        android:textSize="26sp" />
-    <ImageView
-        android:id="@+id/image_nav"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_nav"/>
-    <Button
-        android:id="@+id/button_log_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Log Out"
-        android:drawableRight="@drawable/ic_logout"
-        />
-
-
     <LinearLayout
         android:id="@+id/container_profile"
-        android:layout_below="@+id/text_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/text_banner"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="20dp">
@@ -60,20 +31,23 @@
             android:text="FirstName LastName"
             android:textSize="24sp"
             android:textStyle="bold" />
+
         <TextView
             android:id="@+id/text_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="user@gmail.com"
-            android:textSize="22sp"/>
+            android:textSize="22sp" />
+
         <TextView
             android:id="@+id/text_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="44 St Joseph St, Toronto, ON, Canada"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/text_crime_updates"
             android:layout_width="wrap_content"
@@ -82,18 +56,21 @@
             android:text="Crime Updates"
             android:textSize="24sp"
             android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="Radius"
-                android:textSize="22sp"/>
+                android:textSize="22sp" />
+
             <TextView
                 android:id="@+id/text_radius"
                 android:layout_width="match_parent"
@@ -102,7 +79,8 @@
                 android:layout_weight="1.5"
                 android:gravity="center"
                 android:text="3"
-                android:textSize="22sp"/>
+                android:textSize="22sp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,20 +88,23 @@
                 android:layout_weight="1.5"
                 android:gravity="center"
                 android:text="km"
-                android:textSize="22sp"/>
+                android:textSize="22sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="Every"
-                android:textSize="22sp"/>
+                android:textSize="22sp" />
+
             <TextView
                 android:id="@+id/text_frequency"
                 android:layout_width="match_parent"
@@ -132,7 +113,8 @@
                 android:layout_weight="1.5"
                 android:gravity="center"
                 android:text="1"
-                android:textSize="22sp"/>
+                android:textSize="22sp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -140,21 +122,21 @@
                 android:layout_weight="1.5"
                 android:gravity="center"
                 android:text="day(s)"
-                android:textSize="22sp"/>
+                android:textSize="22sp" />
         </LinearLayout>
 
     </LinearLayout>
 
 
     <Button
-            android:id="@+id/button_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_below="@+id/container_profile"
+        android:id="@+id/button_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/container_profile"
         android:layout_centerHorizontal="true"
-            android:text="Edit"
-            android:textAllCaps="true"
-            android:drawableRight="@drawable/ic_edit"/>
+        android:layout_margin="10dp"
+        android:drawableRight="@drawable/ic_edit"
+        android:text="Edit"
+        android:textAllCaps="true" />
 
 </RelativeLayout>

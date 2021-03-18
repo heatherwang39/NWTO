@@ -20,7 +20,9 @@
         <activity android:name=".DiscussionActivity"
             android:label="Discussion Board"
             android:parentActivityName=".NavigationActivity"/>
-        <activity android:name=".SendSMSActivity" />
+        <activity android:name=".SendSMSActivity"
+            android:label="Write a new Message"
+            android:parentActivityName=".NeighboursActivity"/>
         <activity
             android:name=".CrimeStatsActivity"
             android:label="Crime Stats"
@@ -30,12 +32,20 @@
             android:name=".ResourcesActivity"
             android:label="Resources"
             android:parentActivityName=".NavigationActivity" />
-        <activity android:name=".SendEmailActivity" />
-        <activity android:name=".AddContactActivity" />
-        <activity android:name=".NeighboursActivity" />
+        <activity android:name=".SendEmailActivity"
+            android:label="Write a new Email"
+            android:parentActivityName=".NeighboursActivity"/>
+        <activity android:name=".AddContactActivity"
+            android:label="Add a new Contact"
+            android:parentActivityName=".NeighboursActivity"/>
+        <activity android:name=".NeighboursActivity"
+            android:label="My Neighbours"
+            android:parentActivityName=".NavigationActivity"/>
         <activity android:name=".NavigationActivity"
             android:label="Navigation"/>
-        <activity android:name=".ProfileUpdateActivity" />
+        <activity android:name=".ProfileUpdateActivity"
+            android:label="Update / Settings"
+            android:parentActivityName=".ProfileActivity"/>
         <activity android:name=".LoginActivity"
             android:label="Login to NWTO app"/>
         <activity android:name=".ProfileActivity"

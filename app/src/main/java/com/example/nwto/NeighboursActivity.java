@@ -8,9 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.nwto.adapter.ContactAdapter;
 import com.example.nwto.model.Contact;
@@ -31,8 +34,7 @@ public class NeighboursActivity extends AppCompatActivity {
     private static final String TAG = "Neighbours";
 
     private String mOwnerUID;
-    private Button mButtonLogOut, mButtonAddContact, mButtonSendSMS, mButtonSendEmail;
-    private ImageView mImageNav;
+    private Button mButtonAddContact, mButtonSendSMS, mButtonSendEmail;
 
     private RecyclerView mRecycleContactList;
     private ArrayList<Contact> mContactList;
@@ -51,27 +53,6 @@ public class NeighboursActivity extends AppCompatActivity {
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
 
-        mImageNav = (ImageView) findViewById(R.id.image_nav);
-        mImageNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(NeighboursActivity.this, NavigationActivity.class));
-            }
-        });
-
-        mButtonLogOut = (Button) findViewById(R.id.button_log_out);
-        mButtonLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    // Sign out and then go to login page
-                    mAuth.signOut();
-                    startActivity(new Intent(NeighboursActivity.this, MainActivity.class));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
         mButtonAddContact = (Button) findViewById(R.id.button_add_contact);
         mButtonAddContact.setOnClickListener(new View.OnClickListener() {
@@ -129,5 +110,27 @@ public class NeighboursActivity extends AppCompatActivity {
                         mRecycleContactList.setHasFixedSize(true);
                     }
                 });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.button_log_out) {
+            try {
+                // Sign out and then go to login page
+                mAuth.signOut();
+                startActivity(new Intent(NeighboursActivity.this, LoginActivity.class));
+                Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
