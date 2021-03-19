@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Neighbours"
+                android:text="My Neighbours"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -96,11 +96,11 @@
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_tips_custom"/>
+                android:src="@drawable/ic_resources_custom"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tips"
+                android:text="Resources"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -118,11 +118,11 @@
                 android:id="@+id/image_nav_resources"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_resources_custom"/>
+                android:src="@drawable/ic_phone_custom"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Resources"
+                android:text="Contacts"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
         </LinearLayout>

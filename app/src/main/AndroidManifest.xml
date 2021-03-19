@@ -30,7 +30,7 @@
             android:parentActivityName=".NavigationActivity" />
         <activity
             android:name=".ResourcesActivity"
-            android:label="Resources"
+            android:label="Contacts"
             android:parentActivityName=".NavigationActivity" />
         <activity android:name=".SendEmailActivity"
             android:label="Write a new Email"
@@ -42,7 +42,7 @@
             android:label="My Neighbours"
             android:parentActivityName=".NavigationActivity"/>
         <activity android:name=".NavigationActivity"
-            android:label="Navigation"/>
+            android:label="Home"/>
         <activity android:name=".ProfileUpdateActivity"
             android:label="Update / Settings"
             android:parentActivityName=".ProfileActivity"/>
