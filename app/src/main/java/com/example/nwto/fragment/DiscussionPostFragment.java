@@ -15,11 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +68,9 @@ public class DiscussionPostFragment extends Fragment {
     private EditText mEditTopic, mEditContent;
     private ImageView mImageUpload;
     private Button mButtonPost;
+    private Spinner mSpinnerCrimeType;
     private String mUID, mFullName, mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName;
+    private String mCrimeType = "N/A";
     private Bitmap mImageBitmap;
     private Uri postURI;
 
@@ -88,6 +93,7 @@ public class DiscussionPostFragment extends Fragment {
         mEditTopic = (EditText) rootView.findViewById(R.id.edit_topic);
         mEditContent = (EditText) rootView.findViewById(R.id.edit_content);
         mButtonPost = (Button) rootView.findViewById(R.id.button_post);
+        mSpinnerCrimeType = (Spinner) rootView.findViewById(R.id.spinner_crime_type);
 
         mImageUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +113,21 @@ public class DiscussionPostFragment extends Fragment {
             }
         });
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.crime_types_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerCrimeType.setAdapter(adapter);
+        mSpinnerCrimeType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                mCrimeType = parent.getItemAtPosition(position).toString();
+                Toast.makeText(parent.getContext(), mCrimeType, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         return rootView;
     }
@@ -284,6 +305,7 @@ public class DiscussionPostFragment extends Fragment {
                     post.put("topic", mTopic);
                     post.put("content", mContent);
                     post.put("neighbourhood", mNeighbourhoodName);
+                    post.put("crimeType",mCrimeType);
 
                     //create a new post and store it in firestore
                     db.collection("posts")

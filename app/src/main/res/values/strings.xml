@@ -17,6 +17,19 @@
     <string name="firestore_users_postalCode">postalCode</string>
     <string name="firestore_users_coordinates">coordinates</string>
 
+    <!--    Crime types    -->
+    <string-array name="crime_types_array">
+        <item>N/A</item>
+        <item>Assault</item>
+        <item>Auto Theft</item>
+        <item>Break and Enter</item>
+        <item>Homicide</item>
+        <item>Robbery</item>
+        <item>Sexual Violation</item>
+        <item>Shooting</item>
+        <item>Theft Over</item>
+    </string-array>
+
     <!--    Crime List Filter Strings   -->
     <string name="crimefilter_radius">radius</string>
     <string name="crimefilter_frequency">frequency</string>

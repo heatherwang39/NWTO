@@ -9,12 +9,13 @@ public class Post {
     private String topic;
     private String content;
     private String neighbourhood;
+    private String crimeType;
 
     public Post() {
     }
 
     public Post(String uID, String profilePic, String fullName, String postPic,
-                String timeStamp, String topic, String content, String neighbourhood) {
+                String timeStamp, String topic, String content, String neighbourhood, String crimeType) {
         this.uID = uID;
         this.profilePic = profilePic;
         this.fullName = fullName;
@@ -23,6 +24,7 @@ public class Post {
         this.topic = topic;
         this.content = content;
         this.neighbourhood = neighbourhood;
+        this.crimeType = crimeType;
     }
 
     public String getUID() {
@@ -89,4 +91,11 @@ public class Post {
         this.neighbourhood = neighbourhood;
     }
 
+    public String getCrimeType() {
+        return crimeType;
+    }
+
+    public void setCrimeType(String crimeType) {
+        this.crimeType = crimeType;
+    }
 }
