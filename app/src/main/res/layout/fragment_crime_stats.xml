@@ -34,7 +34,6 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/crimestats_mode1"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -48,12 +47,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/crimestats_mode2"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:backgroundTint="@color/white"
         android:text="Mode 2"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/crimestats_mode1"
         app:layout_constraintStart_toEndOf="@+id/crimestats_mode1"
         app:layout_constraintTop_toTopOf="@+id/crimestats_mode1" />
@@ -70,7 +70,6 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/crimestats_byTable"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:text="Table"
@@ -82,12 +81,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/crimestats_byGraph"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:backgroundTint="@color/white"
         android:text="Graph"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/crimestats_byTable"
         app:layout_constraintStart_toEndOf="@+id/crimestats_byTable"
         app:layout_constraintTop_toTopOf="@+id/crimestats_byTable" />
