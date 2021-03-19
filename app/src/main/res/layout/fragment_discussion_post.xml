@@ -15,27 +15,14 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_camera_custom" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/checkbox_neighbourhood"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="horizontal">
+            android:layout_marginLeft="10dp"
+            android:text="POST TO: "
+            android:textSize="14sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Neighbourhood: "
-                android:textAllCaps="true"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/text_neighbourhood"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
-
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="20dp" />
 
         </LinearLayout>
 
@@ -72,8 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="Enter the topic here..."
-            android:textSize="18sp" />
+            android:hint="Enter the topic here..." />
 
 
         <TextView
@@ -96,6 +82,7 @@
             android:maxLines="6"
             android:minLines="3"
             android:scrollbars="vertical" />
+
 
         <Button
             android:id="@+id/button_post"

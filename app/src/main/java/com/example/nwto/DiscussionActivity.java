@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -15,10 +16,16 @@ import com.example.nwto.fragment.DiscussionPostFragment;
 import com.example.nwto.fragment.DiscussionTorontoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class DiscussionActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    public static String mUID, mFullName, mProfilePic, mNeighbourhoodName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +35,17 @@ public class DiscussionActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        // Initialize Cloud FireStore
+        db = FirebaseFirestore.getInstance();
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else {
+            mUID = mAuth.getCurrentUser().getUid();
+            loadProfile();
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -38,7 +54,7 @@ public class DiscussionActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment = null;
 
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
                         case R.id.nav_toronto:
                             selectedFragment = new DiscussionTorontoFragment();
                             break;
@@ -76,5 +92,26 @@ public class DiscussionActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadProfile() {
+        //get user info, including fullName, profilePic
+        DocumentReference documentReference = db.collection("users").document(mUID);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("Discussion", "-->" + e.toString());
+                    return;
+                }
+
+                if (documentSnapshot.exists()) {
+                    mFullName = documentSnapshot.getString("fullName");
+                    mProfilePic = documentSnapshot.getString("displayPicPath");
+                    mNeighbourhoodName = documentSnapshot.getString("neighbourhood");
+                    Log.d("Post:", mNeighbourhoodName);
+                }
+            }
+        });
     }
 }

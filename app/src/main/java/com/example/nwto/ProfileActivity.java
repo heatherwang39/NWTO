@@ -72,12 +72,12 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
         } else {
             mUID = mAuth.getCurrentUser().getUid();
-            showProfile();
+            loadProfile();
         }
     }
 
 
-    private void showProfile() {
+    private void loadProfile() {
         DocumentReference documentReference = db.collection("users").document(mUID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override

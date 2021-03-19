@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -32,6 +34,8 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.nwto.DiscussionActivity;
+import com.example.nwto.LoginActivity;
+import com.example.nwto.ProfileActivity;
 import com.example.nwto.ProfileUpdateActivity;
 import com.example.nwto.R;
 import com.example.nwto.api.ResourceApi;
@@ -57,9 +61,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DiscussionPostFragment extends Fragment {
-    private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseUser mCurrentUser;
     private FirebaseStorage storage;
 
     private static final String TAG = "Post Discussion";
@@ -69,7 +71,8 @@ public class DiscussionPostFragment extends Fragment {
     private ImageView mImageUpload;
     private Button mButtonPost;
     private Spinner mSpinnerCrimeType;
-    private String mUID, mFullName, mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName;
+    private CheckBox mCheckBoxNeighbourhood;
+    private String mUID, mFullName, mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName, mPostNeighbourhoodName;
     private String mCrimeType = "N/A";
     private Bitmap mImageBitmap;
     private Uri postURI;
@@ -78,10 +81,6 @@ public class DiscussionPostFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_discussion_post, container, false);
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-        mUID = mAuth.getCurrentUser().getUid();
-        mFullName = mAuth.getCurrentUser().getDisplayName();
 
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
@@ -94,6 +93,13 @@ public class DiscussionPostFragment extends Fragment {
         mEditContent = (EditText) rootView.findViewById(R.id.edit_content);
         mButtonPost = (Button) rootView.findViewById(R.id.button_post);
         mSpinnerCrimeType = (Spinner) rootView.findViewById(R.id.spinner_crime_type);
+        mCheckBoxNeighbourhood = (CheckBox) rootView.findViewById(R.id.checkbox_neighbourhood);
+
+        // Get the variable from DiscussionActivity
+        mFullName = DiscussionActivity.mFullName;
+        mProfilePic = DiscussionActivity.mProfilePic;
+        mNeighbourhoodName = DiscussionActivity.mNeighbourhoodName;
+        mCheckBoxNeighbourhood.setText("Post to: " + mNeighbourhoodName);
 
         mImageUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,8 +135,43 @@ public class DiscussionPostFragment extends Fragment {
             }
         });
 
+        mCheckBoxNeighbourhood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (((CompoundButton) view).isChecked()) {
+                    mPostNeighbourhoodName = mNeighbourhoodName;
+                } else {
+                    mPostNeighbourhoodName = "Toronto";
+                }
+            }
+        });
+
+
         return rootView;
     }
+
+//    private void loadProfile() {
+//        //get user info, including fullName, profilePic
+//        DocumentReference documentReference = db.collection("users").document(mUID);
+//        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+//                if (e != null) {
+//                    Toast.makeText(getActivity(), "Error while loading the profile", Toast.LENGTH_SHORT);
+//                    Log.d(TAG, "-->" + e.toString());
+//                    return;
+//                }
+//
+//                if (documentSnapshot.exists()) {
+//                    mFullName = documentSnapshot.getString("fullName");
+//                    mProfilePic = documentSnapshot.getString("displayPicPath");
+//                    mNeighbourhoodName = documentSnapshot.getString("neighbourhood");
+//                    mCheckBoxNeighbourhood.setText("Post to: " + mNeighbourhoodName);
+//                    Log.d("Post:",mNeighbourhoodName);
+//                }
+//            }
+//        });
+//    }
 
 
     private void takePicture() {
@@ -264,7 +305,7 @@ public class DiscussionPostFragment extends Fragment {
         }
     }
 
-    public static Bitmap cropToSquare(Bitmap bitmap) {
+    private Bitmap cropToSquare(Bitmap bitmap) {
         Bitmap cropImg;
         if (bitmap.getWidth() >= bitmap.getHeight()) {
             cropImg = Bitmap.createBitmap(bitmap, bitmap.getWidth() / 2 - bitmap.getHeight() / 2, 0,
@@ -278,54 +319,49 @@ public class DiscussionPostFragment extends Fragment {
 
 
     private void addToUserPosts(Uri uri) {
-        //get user info, including fullName, profilePic
-        DocumentReference documentReference = db.collection("users").document(mUID);
-        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Toast.makeText(getActivity(), "Error while loading the profile", Toast.LENGTH_SHORT);
-                    Log.d(TAG, "-->" + e.toString());
-                    return;
-                }
+        Map<String, Object> post = new HashMap<>();
 
-                if (documentSnapshot.exists()) {
-                    mFullName = documentSnapshot.getString("fullName");
-                    mProfilePic = documentSnapshot.getString("displayPicPath");
-                    mNeighbourhoodName = documentSnapshot.getString("neighbourhood");
+        //I don't use custom object post here because all field names are converted to lowercase automatically, like uid and timestamp
+        post.put("uID", mUID);
+        post.put("fullName", mFullName);
+        post.put("profilePic", mProfilePic);
+        post.put("postPic", String.valueOf(uri));
+        post.put("timeStamp", mTimeStamp);
+        post.put("topic", mTopic);
+        post.put("content", mContent);
+        post.put("neighbourhood", mPostNeighbourhoodName);
+        post.put("crimeType", mCrimeType);
 
-                    Map<String, Object> post = new HashMap<>();
-
-                    //I don't use custom object post here because all field names are converted to lowercase automatically, like uid and timestamp
-                    post.put("uID", mUID);
-                    post.put("fullName", mFullName);
-                    post.put("profilePic", mProfilePic);
-                    post.put("postPic", String.valueOf(uri));
-                    post.put("timeStamp", mTimeStamp);
-                    post.put("topic", mTopic);
-                    post.put("content", mContent);
-                    post.put("neighbourhood", mNeighbourhoodName);
-                    post.put("crimeType",mCrimeType);
-
-                    //create a new post and store it in firestore
-                    db.collection("posts")
-                            .add(post)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d(TAG, "On Success: addToUserPosts" + documentReference.getId());
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error addToUserPosts", e);
-                                }
-                            });
-                }
-            }
-        });
+        //create a new post and store it in firestore
+        db.collection("posts")
+                .add(post)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "On Success: addToUserPosts" + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error addToUserPosts", e);
+                    }
+                });
     }
+
+//    public void onCheckboxClicked(View view) {
+//        // Is the view now checked?
+//        boolean checked = ((CheckBox) view).isChecked();
+//
+//        if (view.getId() == R.id.checkbox_neighbourhood) {
+//            if (checked) {
+//                mPostNeighbourhoodName = mNeighbourhoodName;
+//            } else {
+//                mPostNeighbourhoodName = "Toronto";
+//            }
+//        }
+//
+//    }
 
 
 }
