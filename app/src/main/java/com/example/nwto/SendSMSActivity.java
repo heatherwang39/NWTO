@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.nwto.model.Contact;
+import com.example.nwto.model.Neighbour;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,8 +98,8 @@ public class SendSMSActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Contact contact = document.toObject(Contact.class);
-                                String phoneNumber = contact.getPhoneNumber();
+                                Neighbour neighbour = document.toObject(Neighbour.class);
+                                String phoneNumber = neighbour.getPhoneNumber();
                                 try {
                                     SmsManager mySmsManager = SmsManager.getDefault();
                                     mySmsManager.sendTextMessage(phoneNumber, null, message, null, null);

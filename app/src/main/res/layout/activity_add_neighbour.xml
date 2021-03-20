@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:layout_margin="0dp"
     android:orientation="vertical"
-    tools:context=".AddContactActivity">
+    tools:context=".AddNeighbourActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

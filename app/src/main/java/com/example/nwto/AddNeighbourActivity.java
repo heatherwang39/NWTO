@@ -11,18 +11,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.nwto.model.Contact;
+import com.example.nwto.model.Neighbour;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class AddContactActivity extends AppCompatActivity {
+public class AddNeighbourActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
-    private static final String TAG = "Add Contact";
+    private static final String TAG = "Add Neighbour";
 
     private String mOwnerUID;
     private EditText mEditFullName, mEditEmail, mEditPhoneNumber;
@@ -31,7 +31,7 @@ public class AddContactActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_contact);
+        setContentView(R.layout.activity_add_neighbour);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -85,16 +85,16 @@ public class AddContactActivity extends AppCompatActivity {
             return;
         }
 
-        Contact contact = new Contact(mOwnerUID, mFullName, mEmail, mPhoneNumber);
+        Neighbour neighbour = new Neighbour(mOwnerUID, mFullName, mEmail, mPhoneNumber);
 
         db.collection("contacts")
-                .add(contact)
+                .add(neighbour)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "Successfully added new contact!");
                         //go back to Neighbours page
-                        startActivity(new Intent(AddContactActivity.this, NeighboursActivity.class));
+                        startActivity(new Intent(AddNeighbourActivity.this, NeighboursActivity.class));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

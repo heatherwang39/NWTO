@@ -1,51 +1,61 @@
 package com.example.nwto.model;
 
-public class Contact {
-    private String mOwnerUID = "";
-    private String mFullName = "";
-    private String mEmail = "";
-    private String mPhoneNumber = "";
+public class Contact implements Comparable<Contact> {
+    private int order;
+    private String title, name, email, phoneNumb;
 
-    public Contact() {
+    public Contact(int order, String title, String name, String email, String phoneNumb) {
+        this.order = order;
+        this.title = title;
+        this.name = name;
+        this.email = email;
+        this.phoneNumb = phoneNumb;
     }
 
-    public Contact(String ownerUID, String fullName, String email, String phoneNumber) {
-        this.mOwnerUID = ownerUID;
-        this.mFullName = fullName;
-        this.mEmail = email;
-        this.mPhoneNumber = phoneNumber;
+    public int getOrder() {
+        return order;
     }
 
-    public String getOwnerUID() {
-        return mOwnerUID;
+    public void setOrder(int order) {
+        this.order = order;
     }
 
-    public void setOwnerUID(String ownerUID) {
-        this.mOwnerUID = ownerUID;
+    public String getTitle() {
+        return title;
     }
 
-    public String getFullName() {
-        return mFullName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setFullName(String fullName) {
-        this.mFullName = fullName;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
-        return mEmail;
+        return email;
     }
 
     public void setEmail(String email) {
-        this.mEmail = email;
+        this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return mPhoneNumber;
+    public String getPhoneNumb() {
+        return phoneNumb;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.mPhoneNumber = phoneNumber;
+    public void setPhoneNumb(String phoneNumb) {
+        this.phoneNumb = phoneNumb;
     }
 
+    @Override
+    public int compareTo(Contact o) {
+        if (this.order > o.order) return 1;
+        else if (this.order < o.order) return -1;
+        else return 0;
+    }
 }

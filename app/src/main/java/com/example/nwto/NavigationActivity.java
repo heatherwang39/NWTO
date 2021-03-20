@@ -1,6 +1,5 @@
 package com.example.nwto;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -45,7 +44,7 @@ public class NavigationActivity extends AppCompatActivity {
         mImageNavResources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(NavigationActivity.this, ResourcesActivity.class));
+                startActivity(new Intent(NavigationActivity.this, ContactsActivity.class));
             }
         });
 

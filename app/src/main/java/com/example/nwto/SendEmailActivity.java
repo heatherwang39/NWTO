@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.nwto.model.Contact;
+import com.example.nwto.model.Neighbour;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -97,8 +97,8 @@ public class SendEmailActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Contact contact = document.toObject(Contact.class);
-                                mEmailList.add(contact.getEmail());
+                                Neighbour neighbour = document.toObject(Neighbour.class);
+                                mEmailList.add(neighbour.getEmail());
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

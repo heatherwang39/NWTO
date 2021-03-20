@@ -29,13 +29,13 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".NavigationActivity" />
         <activity
-            android:name=".ResourcesActivity"
+            android:name=".ContactsActivity"
             android:label="Contacts"
             android:parentActivityName=".NavigationActivity" />
         <activity android:name=".SendEmailActivity"
             android:label="Write a new Email"
             android:parentActivityName=".NeighboursActivity"/>
-        <activity android:name=".AddContactActivity"
+        <activity android:name=".AddNeighbourActivity"
             android:label="Add a new Contact"
             android:parentActivityName=".NeighboursActivity"/>
         <activity android:name=".NeighboursActivity"

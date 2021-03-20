@@ -13,9 +13,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nwto.adapter.ResourceAdapter;
+import com.example.nwto.adapter.ContactAdapter;
 import com.example.nwto.api.ResourceApi;
-import com.example.nwto.model.Resource;
+import com.example.nwto.model.Contact;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ResourcesActivity extends AppCompatActivity {
-    private static final String TAG = "TAG: " + ResourcesActivity.class.getSimpleName();
+public class ContactsActivity extends AppCompatActivity {
+    private static final String TAG = "TAG: " + ContactsActivity.class.getSimpleName();
 
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
@@ -36,8 +36,8 @@ public class ResourcesActivity extends AppCompatActivity {
     private String mUserPostalCode;
     private double mUserLatitude;
     private double mUserLongitude;
-    private ResourceAdapter mResourceAdapter;
-    private List<Resource> mResources;
+    private ContactAdapter mContactAdapter;
+    private List<Contact> mContacts;
 
     private ProgressBar mProgressBar;
     private CardView mTitleCardView;
@@ -47,7 +47,7 @@ public class ResourcesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resources);
+        setContentView(R.layout.activity_contacts);
 
         // Initializes Firebase Variables
         mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -62,9 +62,9 @@ public class ResourcesActivity extends AppCompatActivity {
         startLoading(); // sets RecyclerView and CardView invisible and starts the progress bar
 
         // Initializes Resources Adapter
-        mResources = new ArrayList<>();
-        mResourceAdapter = new ResourceAdapter(this ,mResources);
-        mRecyclerView.setAdapter(mResourceAdapter);
+        mContacts = new ArrayList<>();
+        mContactAdapter = new ContactAdapter(this , mContacts);
+        mRecyclerView.setAdapter(mContactAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getUserLocation(); // reads user location and updates the contact cards information
@@ -77,8 +77,8 @@ public class ResourcesActivity extends AppCompatActivity {
     }
 
     private void stopLoading() {
-        Collections.sort(mResources);
-        mResourceAdapter.notifyDataSetChanged();
+        Collections.sort(mContacts);
+        mContactAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
         mTitleCardView.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
@@ -147,8 +147,8 @@ public class ResourcesActivity extends AppCompatActivity {
                         order = 4;
                         break;
                 }
-                mResources.add(new Resource(order, title, name, email, phoneNumb));
-                mResourceAdapter.notifyDataSetChanged();
+                mContacts.add(new Contact(order, title, name, email, phoneNumb));
+                mContactAdapter.notifyDataSetChanged();
             }
         }.getOfficialResource(mUserPostalCode);
     }
@@ -176,8 +176,8 @@ public class ResourcesActivity extends AppCompatActivity {
                                 String officerName = (String) document.get(documentField_officerName);
                                 String officerEmail = (String) document.get(documentField_officerEmail);
                                 String officerPhone = (String) document.get(documentField_officerPhone);
-                                mResources.add(new Resource(0, "Division " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
-                                mResources.add(new Resource(1, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
+                                mContacts.add(new Contact(0, "Division " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
+                                mContacts.add(new Contact(1, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
                                 Log.d(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Success");
                             }
                         }
