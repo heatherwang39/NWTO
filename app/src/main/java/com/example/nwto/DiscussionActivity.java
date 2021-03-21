@@ -50,7 +50,7 @@ public class DiscussionActivity extends AppCompatActivity {
 
         // Display the neighbourhood page when first open the discussion page
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new DiscussionNeighbourhoodFragment()).commit();
+                new DiscussionTorontoFragment()).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

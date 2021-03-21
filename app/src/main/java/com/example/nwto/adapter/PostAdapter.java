@@ -2,7 +2,6 @@ package com.example.nwto.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nwto.DiscussionDetailActivity;
 import com.example.nwto.R;
 import com.example.nwto.model.Post;
 import com.squareup.picasso.Picasso;
@@ -42,7 +43,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         String elapsedTime = getElapsedTime(postList.get(position).getTimeStamp());
         Picasso.get().load(postList.get(position).getProfilePic()).into(holder.imageAvatar);
         holder.topic.setText(postList.get(position).getTopic());
-        holder.area.setText("Area: " + postList.get(position).getNeighbourhood());
+        holder.neighbourhood.setText("Neighbourhood: " + postList.get(position).getNeighbourhood());
         holder.name.setText(postList.get(position).getFullName());
         holder.time.setText("Posted " + elapsedTime);
         String content = postList.get(position).getContent();
@@ -52,15 +53,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             holder.content.setText(content);
         }
 
-//        holder.postView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(ctx, CommentActivity.class);
-//                intent.putExtra("postURL", postList.get(position).getStorageRef());
-//                intent.putExtra("uID", postList.get(position).getUID());
-//                intent.putExtra("caption", postList.get(position).getCaption());
-//                ctx.startActivity(intent);
-//            }
+        holder.cardPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, DiscussionDetailActivity.class);
+                intent.putExtra("topic", postList.get(position).getTopic());
+                intent.putExtra("content", postList.get(position).getContent());
+                intent.putExtra("crimeType", postList.get(position).getCrimeType());
+                intent.putExtra("neighbourhood", postList.get(position).getNeighbourhood());
+                intent.putExtra("nameAndTime", postList.get(position).getFullName()+" " + elapsedTime);
+                intent.putExtra("postPic",postList.get(position).getPostPic());
+                ctx.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -69,14 +74,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        CardView cardPost;
         ImageView imageAvatar;
-        TextView topic, area, name, time, content;
+        TextView topic, neighbourhood, name, time, content;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardPost = itemView.findViewById(R.id.card_discussion_post);
             imageAvatar = itemView.findViewById(R.id.image_avatar);
             topic = itemView.findViewById(R.id.text_topic);
-            area = itemView.findViewById(R.id.text_area);
+            neighbourhood = itemView.findViewById(R.id.text_area);
             name = itemView.findViewById(R.id.text_name);
             time = itemView.findViewById(R.id.text_time);
             content = itemView.findViewById(R.id.text_content);
