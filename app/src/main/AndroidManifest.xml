@@ -17,43 +17,54 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DiscussionActivity"
+        <activity android:name=".DiscussionDetailActivity"></activity>
+        <activity
+            android:name=".DiscussionActivity"
             android:label="Discussion Board"
-            android:parentActivityName=".NavigationActivity"/>
-        <activity android:name=".SendSMSActivity"
+            android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".SendSMSActivity"
             android:label="Write a new Message"
-            android:parentActivityName=".NeighboursActivity"/>
+            android:parentActivityName=".NeighboursActivity" />
         <activity
             android:name=".CrimeStatsActivity"
             android:label="Crime Stats"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".NavigationActivity" />
+            android:parentActivityName=".NavigationActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ContactsActivity"
             android:label="Contacts"
             android:parentActivityName=".NavigationActivity" />
-        <activity android:name=".SendEmailActivity"
+        <activity
+            android:name=".SendEmailActivity"
             android:label="Write a new Email"
-            android:parentActivityName=".NeighboursActivity"/>
-        <activity android:name=".AddNeighbourActivity"
+            android:parentActivityName=".NeighboursActivity" />
+        <activity
+            android:name=".AddNeighbourActivity"
             android:label="Add a new Contact"
-            android:parentActivityName=".NeighboursActivity"/>
-        <activity android:name=".NeighboursActivity"
+            android:parentActivityName=".NeighboursActivity" />
+        <activity
+            android:name=".NeighboursActivity"
             android:label="My Neighbours"
-            android:parentActivityName=".NavigationActivity"/>
-        <activity android:name=".NavigationActivity"
-            android:label="Home"/>
-        <activity android:name=".ProfileUpdateActivity"
+            android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".NavigationActivity"
+            android:label="Home" />
+        <activity
+            android:name=".ProfileUpdateActivity"
             android:label="Update / Settings"
-            android:parentActivityName=".ProfileActivity"/>
-        <activity android:name=".LoginActivity"
-            android:label="Login to NWTO app"/>
-        <activity android:name=".ProfileActivity"
+            android:parentActivityName=".ProfileActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="Login to NWTO app" />
+        <activity
+            android:name=".ProfileActivity"
             android:label="My Profile"
-            android:parentActivityName=".NavigationActivity"/>
-        <activity android:name=".RegisterUserActivity"
+            android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".RegisterUserActivity"
             android:label="Register New Account"
-            android:parentActivityName=".LoginActivity"/>
+            android:parentActivityName=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,6 +72,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
