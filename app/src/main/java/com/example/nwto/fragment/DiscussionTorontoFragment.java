@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nwto.DiscussionActivity;
 import com.example.nwto.R;
 import com.example.nwto.adapter.PostAdapter;
 import com.example.nwto.model.Post;
@@ -47,10 +50,13 @@ public class DiscussionTorontoFragment<GlobalPostAdapter> extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_discussion_toronto, container, false);
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-        mUID = mAuth.getCurrentUser().getUid();
-        mFullName = mAuth.getCurrentUser().getDisplayName();
+
+        // Set the title of Action Bar
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle("Toronto");
+
+        mUID = DiscussionActivity.mUID;
+        mFullName = DiscussionActivity.mFullName;
 
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();

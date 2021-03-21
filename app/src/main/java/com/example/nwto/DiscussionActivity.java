@@ -40,12 +40,17 @@ public class DiscussionActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+
         if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(this, LoginActivity.class));
         } else {
             mUID = mAuth.getCurrentUser().getUid();
             loadProfile();
         }
+
+        // Display the neighbourhood page when first open the discussion page
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new DiscussionNeighbourhoodFragment()).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -69,7 +74,6 @@ public class DiscussionActivity extends AppCompatActivity {
                             selectedFragment).commit();
                     return true;
                 }
-
             };
 
     @Override
