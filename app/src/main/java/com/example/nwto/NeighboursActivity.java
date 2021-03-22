@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.nwto.adapter.NeighbourAdapter;
+import com.example.nwto.adapter.NeighbourSwipeAdapter;
 import com.example.nwto.model.Neighbour;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,8 +36,9 @@ public class NeighboursActivity extends AppCompatActivity {
     private Button mButtonAddNeighbour, mButtonSendSMS, mButtonSendEmail;
 
     private RecyclerView mRecycleNeighbourList;
+    private NeighbourSwipeAdapter mNeighbourSwipeAdapter;
     private ArrayList<Neighbour> mNeighbourList;
-    private NeighbourAdapter mNeighbourAdapter;
+//    private NeighbourAdapter mNeighbourAdapter;
     private GridLayoutManager mGridLayoutManager;
 
     @Override
@@ -47,7 +48,6 @@ public class NeighboursActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        mOwnerUID = mAuth.getCurrentUser().getUid();
 
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
@@ -82,10 +82,17 @@ public class NeighboursActivity extends AppCompatActivity {
         mRecycleNeighbourList = (RecyclerView) findViewById(R.id.recycler_neighbour_list);
         mGridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         mRecycleNeighbourList.setLayoutManager(mGridLayoutManager);
-        loadContacts();
+        loadNeighbours();
+
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else {
+            mOwnerUID = mAuth.getCurrentUser().getUid();
+            loadNeighbours();
+        }
     }
 
-    private void loadContacts() {
+    private void loadNeighbours() {
         mNeighbourList.clear();
         CollectionReference collectionReference = db.collection("neighbours");
         collectionReference.orderBy("fullName")
@@ -104,8 +111,11 @@ public class NeighboursActivity extends AppCompatActivity {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                         Log.d(TAG, "all neighbours:" + mNeighbourList.toString());
-                        mNeighbourAdapter = new NeighbourAdapter(NeighboursActivity.this, mNeighbourList);
-                        mRecycleNeighbourList.setAdapter(mNeighbourAdapter);
+                        mNeighbourSwipeAdapter = new NeighbourSwipeAdapter(NeighboursActivity.this, mNeighbourList);
+                        mRecycleNeighbourList.setAdapter(mNeighbourSwipeAdapter);
+                        mNeighbourSwipeAdapter.setNeighbours(mNeighbourList);
+//                        mNeighbourAdapter = new NeighbourAdapter(NeighboursActivity.this, mNeighbourList);
+//                        mRecycleNeighbourList.setAdapter(mNeighbourAdapter);
                         mRecycleNeighbourList.setHasFixedSize(true);
                     }
                 });

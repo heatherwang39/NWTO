@@ -67,4 +67,7 @@ dependencies {
 
     //To use GraphView
     implementation 'com.jjoe64:graphview:4.2.2'
+
+    //To use swipe layout
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 }

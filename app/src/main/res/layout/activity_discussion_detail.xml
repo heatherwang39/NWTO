@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".DiscussionDetailActivity">
 
     <ScrollView
+        android:id="@+id/scroll_post"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/container_send_comment"
+        android:scrollbars="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,19 +68,18 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_camera_custom" />
-
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_comment_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
+                android:layout_below="@+id/scroll_post"
                 android:scrollbars="vertical" />
-
         </LinearLayout>
     </ScrollView>
 
+
     <LinearLayout
-        android:id="@+id/typeCommentContainer"
+        android:id="@+id/container_send_comment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="5dp"
