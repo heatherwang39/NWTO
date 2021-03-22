@@ -1,5 +1,6 @@
 package com.example.nwto;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -43,9 +44,9 @@ import java.util.Random;
 public class CrimeStatsActivity extends AppCompatActivity {
     private static final String TAG = "TAG: " + CrimeStatsActivity.class.getSimpleName();
     private int colorWhite, colorGreen, colorYellow, colorRed, colorBlack, colorAccent;
-    public static final String[] STUB = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
+    public static final String[] STUB = new String[]{"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
     public static final int NUMB_COL_MODE1 = 4;
-    public static final int[] COLUMN_MODE2 = new int[] {2016, 2017, 2018, 2019}; // years
+    public static final int[] COLUMN_MODE2 = new int[]{2016, 2017, 2018, 2019}; // years
     public static final int NUMB_COL_MODE2 = COLUMN_MODE2.length + 1;
 
     private FirebaseUser mUser;
@@ -103,17 +104,23 @@ public class CrimeStatsActivity extends AppCompatActivity {
         mTable_mode2 = new ArrayList<>();
         mTableAdapter_mode2 = new TableAdapter(this, mTable_mode2);
 
-        initializeColor();
-        readUserInfo(); // for Recent Crimes Fragment
-        readPoliceBoundaries(); // for Crime Map Fragment
+        // Go to Login page if not logged in
+        if (mUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else {
+            initializeColor();
+            readUserInfo(); // for Recent Crimes Fragment
+            readPoliceBoundaries(); // for Crime Map Fragment
 //        readStats_Testing(); // for Testing
+        }
+
     }
 
     private class NavigationListener implements BottomNavigationView.OnNavigationItemSelectedListener {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.nav_crime_recent_events:
                     selectedFragment = new CrimeRecentEventsFragment();
                     break;
@@ -131,7 +138,8 @@ public class CrimeStatsActivity extends AppCompatActivity {
 
     // GETTERS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public GeoPoint getStartingPoint() {
-        if (!mFilterByLocation && mCrimes.size() != 0) return new GeoPoint(mCrimes.get(0).getLatitude(), mCrimes.get(0).getLongitude());
+        if (!mFilterByLocation && mCrimes.size() != 0)
+            return new GeoPoint(mCrimes.get(0).getLatitude(), mCrimes.get(0).getLongitude());
         else return new GeoPoint(mUserLatitude, mUserLongitude);
     }
 
@@ -218,15 +226,14 @@ public class CrimeStatsActivity extends AppCompatActivity {
                                 String radius = (String) document.get(documentField_radius);
                                 mUserLatitude = coordinates.get(0);
                                 mUserLongitude = coordinates.get(1);
-                                mUserFrequency =  Integer.parseInt(frequency);
+                                mUserFrequency = Integer.parseInt(frequency);
                                 mUserRadius = Integer.parseInt(radius);
                             }
-                            Log.d(TAG, "readUserInfo: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", Frequency:" + mUserFrequency + ", Radius:"+ mUserRadius);
+                            Log.d(TAG, "readUserInfo: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", Frequency:" + mUserFrequency + ", Radius:" + mUserRadius);
                             readRecentCrimes(); // reads and updates the recent crime info
                             readStatsMode1(STUB); // reads and updates for Crime Stats table mode 1
                             readStatsMode2(STUB, COLUMN_MODE2);
-                        }
-                        else Log.e(TAG, "readUserInfo: onComplete -> Fail", task.getException());
+                        } else Log.e(TAG, "readUserInfo: onComplete -> Fail", task.getException());
                     }
                 });
     }
@@ -264,9 +271,8 @@ public class CrimeStatsActivity extends AppCompatActivity {
                     mCrimeAdapter.notifyDataSetChanged();
                 }
             }.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
-        }
-        else { // search by the selected Police Division Number
-            new CrimeApi(){
+        } else { // search by the selected Police Division Number
+            new CrimeApi() {
                 @Override
                 public void processCrimes_YTD(List<Crime> crimes) {
                     if (crimes.size() == 0)
@@ -283,7 +289,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
     }
 
     private void readPoliceBoundaries() {
-        new ResourceApi(){
+        new ResourceApi() {
             @Override
             public void processPoliceDivisionBoundaries(List<Record> records) {
                 for (Record record : records) {
@@ -303,10 +309,10 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private void readStatsMode1(String[] crimeTypes_YE) {
         // YTD_CRIME={Assault, Auto Theft, Break and Enter, Homicide, Robbery, Sexual Violation, Shooting, Theft Over}
         // String[] crimeTypes_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
-        String[] header = new String[] {"2018-19 Average", "Growth", "Last Month"}; // excluding (0, 0)
+        String[] header = new String[]{"2018-19 Average", "Growth", "Last Month"}; // excluding (0, 0)
 
         int[] lmPeriod = getLastMonthPeriod();
-        int[] avgPeriod = new int[] {2018, 1, 1, 2019, 12, 31};
+        int[] avgPeriod = new int[]{2018, 1, 1, 2019, 12, 31};
         int duration = 24;
         int totalNumbTableBoxes = NUMB_COL_MODE1 * (crimeTypes_YE.length + 1);
         mTable_mode1.clear();
@@ -344,10 +350,11 @@ public class CrimeStatsActivity extends AppCompatActivity {
                         mTable_mode1.add(new TableBox(colIndex + NUMB_COL_MODE1 * (j + 1), String.format("%.2f", monthlyAvg), colorWhite));
                     }
 
-                    if (mTable_mode1.size() == totalNumbTableBoxes) calculateGrowth(crimeTypes_YE.length);
+                    if (mTable_mode1.size() == totalNumbTableBoxes)
+                        calculateGrowth(crimeTypes_YE.length);
                 }
             }.queryYE(mUserRadius, mUserLatitude, mUserLongitude, -1, -1,
-                      avgPeriod[0], avgPeriod[1], avgPeriod[2], avgPeriod[3], avgPeriod[4], avgPeriod[5], null, null);
+                    avgPeriod[0], avgPeriod[1], avgPeriod[2], avgPeriod[3], avgPeriod[4], avgPeriod[5], null, null);
 
             // Col 3: Last Month count for each crime type TODO: handle January's last month
             new CrimeApi() {
@@ -365,12 +372,12 @@ public class CrimeStatsActivity extends AppCompatActivity {
                     for (int j = 0; j < crimeCounts.length; j++)
                         mTable_mode1.add(new TableBox(colIndex + NUMB_COL_MODE1 * (j + 1), Integer.toString(crimeCounts[j]), colorWhite));
 
-                    if (mTable_mode1.size() == totalNumbTableBoxes) calculateGrowth(crimeTypes_YE.length);
+                    if (mTable_mode1.size() == totalNumbTableBoxes)
+                        calculateGrowth(crimeTypes_YE.length);
                 }
             }.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1,
-                       lmPeriod[0], lmPeriod[1], lmPeriod[2], lmPeriod[3], lmPeriod[4], lmPeriod[5], null, null);
-        }
-        else {
+                    lmPeriod[0], lmPeriod[1], lmPeriod[2], lmPeriod[3], lmPeriod[4], lmPeriod[5], null, null);
+        } else {
             // case for filtering by division
             // include this method in setFilterParams() to update as the User changes filter params
         }
@@ -430,9 +437,8 @@ public class CrimeStatsActivity extends AppCompatActivity {
                     navigationView.setSelectedItemId(R.id.nav_crime_recent_events);
                 }
             }.queryYE(mUserRadius, mUserLatitude, mUserLongitude, -1, -1,
-                      years[0], 1, 1, years[years.length - 1], 12, 31, null, null);
-        }
-        else {
+                    years[0], 1, 1, years[years.length - 1], 12, 31, null, null);
+        } else {
             // case for filtering by division
             // include this method in setFilterParams() to update as the User changes filter params
         }
@@ -467,7 +473,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
         int startDay = Integer.parseInt(startDate.substring(3, 5));
         int startYear = Integer.parseInt(startDate.substring(6));
 
-        return new int[] {startYear, startMonth, startDay, endYear, endMonth, endDay};
+        return new int[]{startYear, startMonth, startDay, endYear, endMonth, endDay};
     }
 
     private void calculateGrowth(int numbOfRows) {

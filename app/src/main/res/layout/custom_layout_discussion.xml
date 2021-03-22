@@ -48,6 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="The Beach"
+                    android:textColor="#88ADBD"
                     android:textSize="16sp" />
 
                 <RelativeLayout
@@ -59,6 +60,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Don Cameron"
+                        android:textColor="#03A9F4"
                         android:textSize="16sp" />
 
                     <TextView
@@ -67,6 +69,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:text="Posted 5h ago"
+                        android:textColor="#03A9F4"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
@@ -79,6 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:maxLines="2"
             android:minLines="1"
             android:text="Is it just me, or have there been more car break-ins happening latelhy using stolen car Is it just me, or have there been more car break-ins happening latel using stolen car"

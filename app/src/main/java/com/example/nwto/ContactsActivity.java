@@ -1,5 +1,6 @@
 package com.example.nwto;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -63,11 +64,16 @@ public class ContactsActivity extends AppCompatActivity {
 
         // Initializes Resources Adapter
         mContacts = new ArrayList<>();
-        mContactAdapter = new ContactAdapter(this , mContacts);
+        mContactAdapter = new ContactAdapter(this, mContacts);
         mRecyclerView.setAdapter(mContactAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        getUserLocation(); // reads user location and updates the contact cards information
+        // Go to Login page if not logged in
+        if (mUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else {
+            getUserLocation(); // reads user location and updates the contact cards information
+        }
     }
 
     private void startLoading() {
@@ -102,19 +108,18 @@ public class ContactsActivity extends AppCompatActivity {
                                 String postalCode = (String) document.get(documentField_postalCode);
                                 mUserLatitude = coordinates.get(0);
                                 mUserLongitude = coordinates.get(1);
-                                mUserPostalCode =  postalCode.replaceAll("\\s+","");
+                                mUserPostalCode = postalCode.replaceAll("\\s+", "");
                             }
-                            Log.d(TAG, "getLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", PostalCode:"+mUserPostalCode);
+                            Log.d(TAG, "getLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", PostalCode:" + mUserPostalCode);
                             updateResourceCards(); // reads and updates the contact cards information
-                        }
-                        else Log.e(TAG, "getLocation: onComplete -> Fail", task.getException());
+                        } else Log.e(TAG, "getLocation: onComplete -> Fail", task.getException());
                     }
                 });
     }
 
     private void updateResourceCards() {
         // updates Ward Number & Ward Name
-        new ResourceApi(){
+        new ResourceApi() {
             @Override
             public void updateWardInfoCard(String wardNumb, String wardName) {
                 mTextWardNumb.setText("Ward" + wardNumb); // updates the TextViews
@@ -124,7 +129,7 @@ public class ContactsActivity extends AppCompatActivity {
         }.getMappingResource(mUserLatitude, mUserLongitude, 1);
 
         // updates Crime Prevention Officer & Police Division contact info
-        new ResourceApi(){
+        new ResourceApi() {
             @Override
             public void updatePoliceDivisionContactCard(String divisionNumb) {
                 readPoliceContactInfoFromFireStore(divisionNumb);
@@ -132,7 +137,7 @@ public class ContactsActivity extends AppCompatActivity {
         }.getMappingResource(mUserLatitude, mUserLongitude, 2);
 
         // updates Government Officials' contact info
-        new ResourceApi(){
+        new ResourceApi() {
             @Override
             public void updateOfficialContactCard(String title, String name, String email, String phoneNumb) {
                 int order = 0;
@@ -180,8 +185,8 @@ public class ContactsActivity extends AppCompatActivity {
                                 mContacts.add(new Contact(1, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
                                 Log.d(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Success");
                             }
-                        }
-                        else Log.e(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Fail", task.getException());
+                        } else
+                            Log.e(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Fail", task.getException());
                         stopLoading();
                     }
                 });
