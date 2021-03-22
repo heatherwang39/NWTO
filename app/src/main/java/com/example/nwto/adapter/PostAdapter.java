@@ -57,6 +57,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ctx, DiscussionDetailActivity.class);
+                intent.putExtra("uID", postList.get(position).getUID());
                 intent.putExtra("topic", postList.get(position).getTopic());
                 intent.putExtra("content", postList.get(position).getContent());
                 intent.putExtra("crimeType", postList.get(position).getCrimeType());

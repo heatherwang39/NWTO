@@ -30,13 +30,14 @@ import java.util.ArrayList;
 
 public class DiscussionNeighbourhoodFragment extends Fragment {
     private FirebaseFirestore db;
+
+    private static final String TAG = "Neighbour Discussion";
+
     private String mUID, mFullName, mNeighbourhoodName;
     private RecyclerView mRecycleNeighbourhoodPostList;
     private PostAdapter mPostAdapter;
     private GridLayoutManager mGridLayoutManager;
     private ArrayList<Post> mNeighbourhoodPostList;
-    private static final String TAG = "Neighbour Discussion";
-
 
     @Nullable
     @Override
@@ -44,7 +45,7 @@ public class DiscussionNeighbourhoodFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_discussion_neigbourhood, container, false);
 
         // Set the title of Action Bar
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle("Neighbourhood");
 
         mUID = DiscussionActivity.mUID;
@@ -68,7 +69,7 @@ public class DiscussionNeighbourhoodFragment extends Fragment {
         mNeighbourhoodPostList.clear();
         CollectionReference collectionReference = db.collection("posts");
         collectionReference.orderBy("timeStamp", Query.Direction.DESCENDING)
-                .whereEqualTo("neighbourhood",mNeighbourhoodName)
+                .whereEqualTo("neighbourhood", mNeighbourhoodName)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

@@ -1,7 +1,7 @@
 package com.example.nwto.model;
 
 public class Comment {
-    private String uID;
+    private String postOwnerUID;
     private String profilePic;
     private String fullName;
     private String timeStamp;
@@ -10,20 +10,20 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String uID, String profilePic, String fullName, String timeStamp, String content) {
-        this.uID = uID;
+    public Comment(String postOwnerUID, String profilePic, String fullName, String timeStamp, String content) {
+        this.postOwnerUID = postOwnerUID;
         this.profilePic = profilePic;
         this.fullName = fullName;
         this.timeStamp = timeStamp;
         this.content = content;
     }
 
-    public String getUID() {
-        return uID;
+    public String getPostOwnerUID() {
+        return postOwnerUID;
     }
 
-    public void setUID(String uID) {
-        this.uID = uID;
+    public void setPostOwnerUID(String uID) {
+        this.postOwnerUID = uID;
     }
 
     public String getProfilePic() {
