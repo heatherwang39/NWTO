@@ -242,28 +242,30 @@ public class CrimeApi {
 
     private void parseResponse_YE(JsonObject response) {
         List<Crime> crimes = new ArrayList<>();
-        JsonArray features = response.getAsJsonArray("features");
+        if (!response.has("features")) Log.e("TAG: CrimeApi", "parseResponse_YE: Check URL Output");
+        else { // TODO: do in more fault tolerant way
+            JsonArray features = response.getAsJsonArray("features");
 
-        for (int i = 0; i < features.size(); i++) {
-            JsonObject feature = (JsonObject) features.get(i);
-            JsonObject attributes = feature.getAsJsonObject("attributes");
-            JsonObject geometry = feature.getAsJsonObject("geometry");
+            for (int i = 0; i < features.size(); i++) {
+                JsonObject feature = (JsonObject) features.get(i);
+                JsonObject attributes = feature.getAsJsonObject("attributes");
+                JsonObject geometry = feature.getAsJsonObject("geometry");
 
-            String uniqueID = attributes.getAsJsonPrimitive("event_unique_id").getAsString();
-            String division = attributes.getAsJsonPrimitive("Division").getAsString();
-            long occurrencedate = attributes.getAsJsonPrimitive("occurrencedate").getAsLong();
-            String premisetype = attributes.getAsJsonPrimitive("premisetype").getAsString();
-            String category = attributes.getAsJsonPrimitive("MCI").getAsString();
-            double latitude = geometry.getAsJsonPrimitive("y").getAsDouble();
-            double longitude = geometry.getAsJsonPrimitive("x").getAsDouble();
+                String uniqueID = attributes.getAsJsonPrimitive("event_unique_id").getAsString();
+                String division = attributes.getAsJsonPrimitive("Division").getAsString();
+                long occurrencedate = attributes.getAsJsonPrimitive("occurrencedate").getAsLong();
+                String premisetype = attributes.getAsJsonPrimitive("premisetype").getAsString();
+                String category = attributes.getAsJsonPrimitive("MCI").getAsString();
+                double latitude = geometry.getAsJsonPrimitive("y").getAsDouble();
+                double longitude = geometry.getAsJsonPrimitive("x").getAsDouble();
 
-            Date date = new Date(occurrencedate);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-            String convertedDate = dateFormat.format(date);
+                Date date = new Date(occurrencedate);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                String convertedDate = dateFormat.format(date);
 
-            crimes.add(new Crime(i, uniqueID, division, premisetype, category, convertedDate, latitude, longitude));
+                crimes.add(new Crime(i, uniqueID, division, premisetype, category, convertedDate, latitude, longitude));
+            }
         }
-
         processCrimes_YE(crimes);
     }
 }
