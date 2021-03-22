@@ -18,21 +18,37 @@
             android:id="@+id/image_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginRight="5dp"
+            android:layout_margin="5dp"
             android:src="@drawable/ic_avatar" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_margin="5dp"
             android:gravity="left"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_full_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="firstname lastname"
-                android:textStyle="bold" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Don Cameron"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:text="Posted 5h ago"
+                    android:textColor="#03A9F4" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/text_content"

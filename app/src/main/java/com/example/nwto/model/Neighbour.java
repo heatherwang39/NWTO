@@ -1,10 +1,10 @@
 package com.example.nwto.model;
 
 public class Neighbour {
-    private String mOwnerUID = "";
-    private String mFullName = "";
-    private String mEmail = "";
-    private String mPhoneNumber = "";
+    private String mOwnerUID;
+    private String mFullName;
+    private String mEmail;
+    private String mPhoneNumber;
 
     public Neighbour() {
     }

@@ -82,10 +82,10 @@ public class NeighboursActivity extends AppCompatActivity {
         mRecycleNeighbourList = (RecyclerView) findViewById(R.id.recycler_neighbour_list);
         mGridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         mRecycleNeighbourList.setLayoutManager(mGridLayoutManager);
-        loadNeighbours();
+        loadContacts();
     }
 
-    private void loadNeighbours() {
+    private void loadContacts() {
         mNeighbourList.clear();
         CollectionReference collectionReference = db.collection("neighbours");
         collectionReference.orderBy("fullName")
