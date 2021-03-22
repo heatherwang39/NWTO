@@ -103,6 +103,7 @@ public class DiscussionPostFragment extends Fragment {
         mCheckBoxNeighbourhood = (CheckBox) rootView.findViewById(R.id.checkbox_neighbourhood);
 
         // Get the variable from DiscussionActivity
+        mUID = DiscussionActivity.mUID;
         mFullName = DiscussionActivity.mFullName;
         mProfilePic = DiscussionActivity.mProfilePic;
         mNeighbourhoodName = DiscussionActivity.mNeighbourhoodName;
@@ -329,7 +330,7 @@ public class DiscussionPostFragment extends Fragment {
         Map<String, Object> post = new HashMap<>();
 
         //I don't use custom object post here because all field names are converted to lowercase automatically, like uid and timestamp
-        post.put("uID", mUID);
+        post.put("ownerUID", mUID);
         post.put("fullName", mFullName);
         post.put("profilePic", mProfilePic);
         post.put("postPic", String.valueOf(uri));

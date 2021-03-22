@@ -2,6 +2,7 @@ package com.example.nwto.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ctx, DiscussionDetailActivity.class);
-                intent.putExtra("uID", postList.get(position).getUID());
+                intent.putExtra("ownerUID", postList.get(position).getOwnerUID());
+                intent.putExtra("postTimeStamp", postList.get(position).getTimeStamp());
                 intent.putExtra("topic", postList.get(position).getTopic());
                 intent.putExtra("content", postList.get(position).getContent());
                 intent.putExtra("crimeType", postList.get(position).getCrimeType());
@@ -99,7 +101,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         int hours = (int) ((milliseconds / (1000 * 60 * 60)) % 24);
         int days = (int) ((milliseconds / (1000 * 60 * 60)) / 24);
 
-        if (seconds > 0 && minutes == 0 && hours == 0 && days == 0) {
+        if (seconds >= 0 && minutes == 0 && hours == 0 && days == 0) {
             elapsedTime = String.valueOf(seconds) + " s";
         } else if (minutes > 0 && hours == 0 && days == 0) {
             String value = String.valueOf(minutes);

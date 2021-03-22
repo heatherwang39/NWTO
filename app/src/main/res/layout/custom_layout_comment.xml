@@ -23,7 +23,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="left"
             android:orientation="vertical">
@@ -54,7 +54,7 @@
                 android:id="@+id/text_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Proin sed volutpat arcu. Phasellus accumsan velit nec tellus elementum, ac dapibus justo lobortis. Etiam diam augue, malesuada eu ultricies et, vulputate quis nibh. " />
+                android:text="Here's the content!" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

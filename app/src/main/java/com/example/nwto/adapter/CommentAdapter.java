@@ -34,7 +34,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_layout_comment, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        return null;
+        return viewHolder;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return 0;
+        return commentList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -72,7 +72,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         int hours = (int) ((milliseconds / (1000 * 60 * 60)) % 24);
         int days = (int) ((milliseconds / (1000 * 60 * 60)) / 24);
 
-        if (seconds > 0 && minutes == 0 && hours == 0 && days == 0) {
+        if (seconds >= 0 && minutes == 0 && hours == 0 && days == 0) {
             elapsedTime = String.valueOf(seconds) + " s";
         } else if (minutes > 0 && hours == 0 && days == 0) {
             String value = String.valueOf(minutes);

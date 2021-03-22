@@ -6,18 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nwto.adapter.CommentAdapter;
 import com.example.nwto.adapter.PostAdapter;
@@ -55,7 +58,7 @@ public class DiscussionDetailActivity extends AppCompatActivity {
     private GridLayoutManager mGridLayoutManager;
     private ArrayList<Comment> mCommentList;
 
-    private String mPostOwnerUID, mCommenterUID, mFullName, mContent, mProfilePic, mTimeStamp;
+    private String mPostOwnerUID, mCommenterUID, mFullName, mContent, mProfilePic, mTimeStamp, mPostTimeStamp;
 
 
     @Override
@@ -99,11 +102,18 @@ public class DiscussionDetailActivity extends AppCompatActivity {
 
     private void showDiscussionDetail() {
         //show discussion details
-        if (getIntent().hasExtra("uID")) {
-            mPostOwnerUID = getIntent().getStringExtra("uID");
+        //ownerUID AND postTimeStamp will be used to filter comment
+        //I don't use the postPic as identifier cuz postPic is optional
+        if (getIntent().hasExtra("ownerUID")) {
+            mPostOwnerUID = getIntent().getStringExtra("ownerUID");
+            Log.d(TAG,mPostOwnerUID);
+        }
+        if (getIntent().hasExtra("postTimeStamp")) {
+            mPostTimeStamp = getIntent().getStringExtra("postTimeStamp");
         }
         if (getIntent().hasExtra("nameAndTime")) {
             mTextNameAndTime.setText("Posted by: " + getIntent().getStringExtra("nameAndTime") + " ago");
+            Log.d(TAG,getIntent().getStringExtra("nameAndTime"));
         }
         if (getIntent().hasExtra("topic")) {
             mTextTopic.setText(getIntent().getStringExtra("topic"));
@@ -127,7 +137,8 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         mCommentList.clear();
         CollectionReference collectionReference = db.collection("comments");
         collectionReference.orderBy("timeStamp", Query.Direction.DESCENDING)
-                .whereEqualTo("postOwnerUID", mPostOwnerUID)
+                .whereEqualTo("postOwnerUID",mPostOwnerUID)
+                .whereEqualTo("postTimeStamp",mPostTimeStamp)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -153,21 +164,27 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         String mContent = mEditComment.getText().toString();
 
         if(mContent.length()<1){
-            mEditComment.setError("Full Name can't be empty.");
+            mEditComment.setError("Content can't be empty.");
             mEditComment.requestFocus();
             return;
         }
 
         mTimeStamp = String.valueOf(System.currentTimeMillis());
 
-        Comment comment = new Comment(mPostOwnerUID, mProfilePic, mFullName, mTimeStamp, mContent);
+        Comment comment = new Comment(mPostOwnerUID, mProfilePic, mFullName, mTimeStamp, mContent, mPostTimeStamp);
         db.collection("comments")
                 .add(comment)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Successfully added a new comment!");
-                        //go back to Neighbours page
+                        mEditComment.setText("");
+                        Toast.makeText(DiscussionDetailActivity.this,"Comment added!",Toast.LENGTH_SHORT).show();
+                        //hide the keyboard
+                        InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                                InputMethodManager.HIDE_NOT_ALWAYS);
+
+                        //reload comments
                         showComments();
                     }
                 })

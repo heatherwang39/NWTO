@@ -6,16 +6,18 @@ public class Comment {
     private String fullName;
     private String timeStamp;
     private String content;
+    private String postTimeStamp;
 
     public Comment() {
     }
 
-    public Comment(String postOwnerUID, String profilePic, String fullName, String timeStamp, String content) {
+    public Comment(String postOwnerUID, String profilePic, String fullName, String timeStamp, String content, String postTimeStamp) {
         this.postOwnerUID = postOwnerUID;
         this.profilePic = profilePic;
         this.fullName = fullName;
         this.timeStamp = timeStamp;
         this.content = content;
+        this.postTimeStamp = postTimeStamp;
     }
 
     public String getPostOwnerUID() {
@@ -56,5 +58,13 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPostTimeStamp() {
+        return postTimeStamp;
+    }
+
+    public void setPostTimeStamp(String postTimeStamp) {
+        this.postTimeStamp = postTimeStamp;
     }
 }
