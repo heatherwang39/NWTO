@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,92 +7,99 @@
     android:orientation="vertical"
     tools:context=".DiscussionDetailActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/text_name_and_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Posted By: firstname lastname 3h ago"
-            android:textColor="#AFA9A9"
-            android:textColorHint="#736969"
-            android:textStyle="bold|italic" />
-
-        <TextView
-            android:id="@+id/text_topic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="This is a topic"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/text_neighbourhood"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="#B4F6F1F1"
-            android:text="Neighbourhood: Neighbourhood Name"
-            android:textColor="#03A9F4" />
-
-        <TextView
-            android:id="@+id/text_crime_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="#B4F6F1F1"
-            android:text="Crime Type: Crime Type"
-            android:textColor="#03A9F4" />
-        <TextView
-            android:id="@+id/text_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras lacinia in lorem at pretium. Praesent tellus ipsum, imperdiet finibus consectetur ut, ullamcorper vitae diam. Integer fermentum in metus in gravida. Vivamus at nibh sed justo vestibulum ullamcorper. Fusce tortor elit, suscipit vitae est at, tincidunt mattis mauris. Sed eget ultrices lacus. Duis mauris purus, bibendum vel urna sit amet, vehicula sagittis augue."/>
-
-        <ImageView
-            android:id="@+id/image_post_pic"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/ic_camera_custom" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_comment_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
-
+        android:layout_height="wrap_content">
         <LinearLayout
-            android:id="@+id/typeCommentContainer"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="5dp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edit_comment"
+            <TextView
+                android:id="@+id/text_name_and_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Posted By: firstname lastname 3h ago"
+                android:textColor="#AFA9A9"
+                android:textColorHint="#736969"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/text_topic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Enter new comment here"/>
+                android:layout_marginTop="5dp"
+                android:text="This is a topic"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_neighbourhood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="#B4F6F1F1"
+                android:text="Neighbourhood: Neighbourhood Name"
+                android:textColor="#03A9F4" />
+
+            <TextView
+                android:id="@+id/text_crime_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="#B4F6F1F1"
+                android:text="Crime Type: Crime Type"
+                android:textColor="#03A9F4" />
+            <TextView
+                android:id="@+id/text_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras lacinia in lorem at pretium. Praesent tellus ipsum, imperdiet finibus consectetur ut, ullamcorper vitae diam. Integer fermentum in metus in gravida. Vivamus at nibh sed justo vestibulum ullamcorper. Fusce tortor elit, suscipit vitae est at, tincidunt mattis mauris. Sed eget ultrices lacus. Duis mauris purus, bibendum vel urna sit amet, vehicula sagittis augue."/>
 
             <ImageView
-                android:id="@+id/button_send_comment"
+                android:id="@+id/image_post_pic"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_camera_custom" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_comment_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:src="@drawable/ic_send_custom" />
+                android:scrollbars="vertical" />
+
         </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/typeCommentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter new comment here"/>
+
+        <ImageView
+            android:id="@+id/button_send_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:src="@drawable/ic_send_custom" />
     </LinearLayout>
-</ScrollView>
+
+</RelativeLayout>
