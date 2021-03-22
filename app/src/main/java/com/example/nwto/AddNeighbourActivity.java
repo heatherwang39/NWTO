@@ -49,7 +49,7 @@ public class AddNeighbourActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addContact();
-                Log.d(TAG,"Added new contact.");
+                Log.d(TAG,"Added new neighbour.");
             }
         });
 
@@ -87,12 +87,12 @@ public class AddNeighbourActivity extends AppCompatActivity {
 
         Neighbour neighbour = new Neighbour(mOwnerUID, mFullName, mEmail, mPhoneNumber);
 
-        db.collection("contacts")
+        db.collection("neighbours")
                 .add(neighbour)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Successfully added new contact!");
+                        Log.d(TAG, "Successfully added a new neighbour!");
                         //go back to Neighbours page
                         startActivity(new Intent(AddNeighbourActivity.this, NeighboursActivity.class));
                     }
@@ -100,7 +100,7 @@ public class AddNeighbourActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding a new contact", e);
+                        Log.w(TAG, "Error adding a new neighbour", e);
                     }
                 });
 

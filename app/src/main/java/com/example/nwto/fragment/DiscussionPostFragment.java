@@ -74,8 +74,9 @@ public class DiscussionPostFragment extends Fragment {
     private Button mButtonPost;
     private Spinner mSpinnerCrimeType;
     private CheckBox mCheckBoxNeighbourhood;
-    private String mUID, mFullName, mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName, mPostNeighbourhoodName;
+    private String mUID, mFullName, mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName;
     private String mCrimeType = "N/A";
+    private String mPostNeighbourhoodName = "Toronto";
     private Bitmap mImageBitmap;
     private Uri postURI;
 

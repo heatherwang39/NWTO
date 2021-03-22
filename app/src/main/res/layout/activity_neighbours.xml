@@ -7,7 +7,7 @@
     tools:context=".NeighboursActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_contact_list"
+        android:id="@+id/recycler_neighbour_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/container_buttons"
@@ -21,7 +21,7 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/button_add_contact"
+            android:id="@+id/button_add_neighbour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

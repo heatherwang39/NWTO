@@ -33,9 +33,9 @@ public class NeighboursActivity extends AppCompatActivity {
     private static final String TAG = "Neighbours";
 
     private String mOwnerUID;
-    private Button mButtonAddContact, mButtonSendSMS, mButtonSendEmail;
+    private Button mButtonAddNeighbour, mButtonSendSMS, mButtonSendEmail;
 
-    private RecyclerView mRecycleContactList;
+    private RecyclerView mRecycleNeighbourList;
     private ArrayList<Neighbour> mNeighbourList;
     private NeighbourAdapter mNeighbourAdapter;
     private GridLayoutManager mGridLayoutManager;
@@ -53,8 +53,8 @@ public class NeighboursActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
 
-        mButtonAddContact = (Button) findViewById(R.id.button_add_contact);
-        mButtonAddContact.setOnClickListener(new View.OnClickListener() {
+        mButtonAddNeighbour = (Button) findViewById(R.id.button_add_neighbour);
+        mButtonAddNeighbour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(NeighboursActivity.this, AddNeighbourActivity.class));
@@ -79,15 +79,15 @@ public class NeighboursActivity extends AppCompatActivity {
 
         //Set GridLayoutManager
         mNeighbourList = new ArrayList<Neighbour>();
-        mRecycleContactList = (RecyclerView) findViewById(R.id.recycler_contact_list);
+        mRecycleNeighbourList = (RecyclerView) findViewById(R.id.recycler_neighbour_list);
         mGridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
-        mRecycleContactList.setLayoutManager(mGridLayoutManager);
-        loadContacts();
+        mRecycleNeighbourList.setLayoutManager(mGridLayoutManager);
+        loadNeighbours();
     }
 
-    private void loadContacts() {
+    private void loadNeighbours() {
         mNeighbourList.clear();
-        CollectionReference collectionReference = db.collection("contacts");
+        CollectionReference collectionReference = db.collection("neighbours");
         collectionReference.orderBy("fullName")
                 .whereEqualTo("ownerUID", mOwnerUID)
                 .get()
@@ -103,10 +103,10 @@ public class NeighboursActivity extends AppCompatActivity {
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-                        Log.d(TAG, "all contacts:" + mNeighbourList.toString());
+                        Log.d(TAG, "all neighbours:" + mNeighbourList.toString());
                         mNeighbourAdapter = new NeighbourAdapter(NeighboursActivity.this, mNeighbourList);
-                        mRecycleContactList.setAdapter(mNeighbourAdapter);
-                        mRecycleContactList.setHasFixedSize(true);
+                        mRecycleNeighbourList.setAdapter(mNeighbourAdapter);
+                        mRecycleNeighbourList.setHasFixedSize(true);
                     }
                 });
     }
