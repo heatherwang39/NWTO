@@ -10,8 +10,8 @@ public class Neighbour {
     public Neighbour() {
     }
 
-    public Neighbour(String mNeighbourID, String ownerUID, String fullName, String email, String phoneNumber) {
-        this.mNeighbourID = mNeighbourID;
+    public Neighbour(String neighbourID, String ownerUID, String fullName, String email, String phoneNumber) {
+        this.mNeighbourID = neighbourID;
         this.mOwnerUID = ownerUID;
         this.mFullName = fullName;
         this.mEmail = email;

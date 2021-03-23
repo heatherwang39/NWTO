@@ -109,7 +109,7 @@ public class EditNeighbourActivity extends AppCompatActivity {
         Map<String, Object> neighbourUpdate = new HashMap<>();
         neighbourUpdate.put("fullName", mFullName);
         neighbourUpdate.put("email", mEmail);
-        neighbourUpdate.put("mPhoneNumber", mFullName);
+        neighbourUpdate.put("phoneNumber", mPhoneNumber);
 
         documentReference.set(neighbourUpdate, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

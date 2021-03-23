@@ -88,7 +88,7 @@ public class SendEmailActivity extends AppCompatActivity {
 
         //Get emails of the User's neighbours
         mEmailList.clear();
-        CollectionReference collectionReference = db.collection("contacts");
+        CollectionReference collectionReference = db.collection("neighbours");
         collectionReference.orderBy("fullName")
                 .whereEqualTo("ownerUID", mOwnerUID)
                 .get()
@@ -116,19 +116,17 @@ public class SendEmailActivity extends AppCompatActivity {
 
                         if (email.resolveActivity(getPackageManager()) != null) {
                             startActivity(email);
-                            Toast.makeText(SendEmailActivity.this, "Email sent!",
-                                    Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(SendEmailActivity.this, "There is no application that support this email action",
                                     Toast.LENGTH_SHORT).show();
                         }
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(SendEmailActivity.this, NeighboursActivity.class);
-                                startActivity(i);
-                            }
-                        }, 2000);
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Intent i = new Intent(SendEmailActivity.this, NeighboursActivity.class);
+//                                startActivity(i);
+//                            }
+//                        }, 2000);
                     }
                 });
 

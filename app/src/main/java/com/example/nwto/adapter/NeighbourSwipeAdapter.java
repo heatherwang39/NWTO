@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
-import com.example.nwto.DiscussionDetailActivity;
 import com.example.nwto.EditNeighbourActivity;
 import com.example.nwto.NeighboursActivity;
 import com.example.nwto.R;
@@ -58,7 +56,7 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
     @NonNull
     @Override
     public SwipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(ctx).inflate(R.layout.item_neighbour_swipe,parent,false);
+        View view = LayoutInflater.from(ctx).inflate(R.layout.custom_layout_neighbour_swipe,parent,false);
         return new SwipeViewHolder(view);
     }
 
@@ -126,8 +124,6 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
         TextView textFullName;
         TextView textEmail;
         TextView textPhoneNumber;
-        ImageView imageEdit;
-        ImageView imageDelete;
 
         public SwipeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -137,10 +133,6 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
             textFullName = itemView.findViewById(R.id.text_full_name);
             textEmail = itemView.findViewById(R.id.text_email);
             textPhoneNumber = itemView.findViewById(R.id.text_phone_number);
-            imageEdit = itemView.findViewById(R.id.image_edit);
-            imageDelete = itemView.findViewById(R.id.image_delete);
-
-
         }
 
         void bindData(Neighbour neighbour){
