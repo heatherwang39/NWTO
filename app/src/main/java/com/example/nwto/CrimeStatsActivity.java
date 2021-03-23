@@ -46,7 +46,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private int colorWhite, colorGreen, colorYellow, colorRed, colorBlack, colorAccent;
     public static final String[] STUB = new String[]{"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
     public static final int NUMB_COL_MODE1 = 4;
-    public static final int[] COLUMN_MODE2 = new int[]{2016, 2017, 2018, 2019}; // years
+    public static final int[] COLUMN_MODE2 = new int[]{2018, 2019, 2020}; // years
     public static final int NUMB_COL_MODE2 = COLUMN_MODE2.length + 1;
 
     private FirebaseUser mUser;
@@ -309,10 +309,10 @@ public class CrimeStatsActivity extends AppCompatActivity {
     private void readStatsMode1(String[] crimeTypes_YE) {
         // YTD_CRIME={Assault, Auto Theft, Break and Enter, Homicide, Robbery, Sexual Violation, Shooting, Theft Over}
         // String[] crimeTypes_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
-        String[] header = new String[]{"2018-19 Average", "Growth", "Last Month"}; // excluding (0, 0)
+        String[] header = new String[]{"2018-20 Average", "Growth", "Last Month"}; // excluding (0, 0)
 
         int[] lmPeriod = getLastMonthPeriod();
-        int[] avgPeriod = new int[]{2018, 1, 1, 2019, 12, 31};
+        int[] avgPeriod = new int[]{2018, 1, 1, 2020, 12, 31};
         int duration = 24;
         int totalNumbTableBoxes = NUMB_COL_MODE1 * (crimeTypes_YE.length + 1);
         mTable_mode1.clear();

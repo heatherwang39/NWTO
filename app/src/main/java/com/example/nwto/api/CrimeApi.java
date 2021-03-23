@@ -18,7 +18,7 @@ import java.util.Map;
 public class CrimeApi {
     private static final String TPS_ENDPOINT = "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/";
     private static final String YTD = "YTD_Crime/FeatureServer/0/query";
-    private static final String YE = "MCI_2014_to_2019/FeatureServer/0/query";
+    private static final String YE = "Major_Crime_Indicators/FeatureServer/0/query";
 
     /**
      * Queries TPS Year-to-Date (2021) API to retrieve necessary information
@@ -254,7 +254,7 @@ public class CrimeApi {
                 String uniqueID = attributes.getAsJsonPrimitive("event_unique_id").getAsString();
                 String division = attributes.getAsJsonPrimitive("Division").getAsString();
                 long occurrencedate = attributes.getAsJsonPrimitive("occurrencedate").getAsLong();
-                String premisetype = attributes.getAsJsonPrimitive("premisetype").getAsString();
+                String premisetype = attributes.getAsJsonPrimitive("premises_type").getAsString();
                 String category = attributes.getAsJsonPrimitive("MCI").getAsString();
                 double latitude = geometry.getAsJsonPrimitive("y").getAsDouble();
                 double longitude = geometry.getAsJsonPrimitive("x").getAsDouble();

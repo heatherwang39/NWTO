@@ -103,7 +103,7 @@ public class CrimeStatsFragment extends Fragment {
         // plot 1
         LineGraphSeries<DataPoint> dataEntry_monthlyAvg = new LineGraphSeries<>(monthlyAvgDataPoints);
         dataEntry_monthlyAvg.setColor(colors[0]);
-        dataEntry_monthlyAvg.setTitle("2018-19 Monthly Avg");
+        dataEntry_monthlyAvg.setTitle("2018-20 Monthly Avg");
         dataEntry_monthlyAvg.setDrawDataPoints(true);
         mGraphView_mode1.addSeries(dataEntry_monthlyAvg);
 

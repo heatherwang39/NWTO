@@ -23,13 +23,13 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mode"
+        android:text="Compare"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintVertical_bias="0.15" />
 
     <com.google.android.material.button.MaterialButton
@@ -39,7 +39,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:backgroundTint="@color/colorAccent"
-        android:text="Mode 1"
+        android:text="Average"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintStart_toEndOf="@+id/textView"
@@ -52,7 +52,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:backgroundTint="@color/white"
-        android:text="Mode 2"
+        android:text="History"
         android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/crimestats_mode1"
         app:layout_constraintStart_toEndOf="@+id/crimestats_mode1"
