@@ -46,6 +46,10 @@
             android:label="Add a new Contact"
             android:parentActivityName=".NeighboursActivity" />
         <activity
+            android:name=".EditNeighbourActivity"
+            android:label="Editing Neighbour"
+            android:parentActivityName=".NeighboursActivity"/>
+        <activity
             android:name=".NeighboursActivity"
             android:label="My Neighbours"
             android:parentActivityName=".NavigationActivity" />

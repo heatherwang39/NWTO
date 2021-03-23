@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+import com.example.nwto.DiscussionDetailActivity;
+import com.example.nwto.EditNeighbourActivity;
 import com.example.nwto.NeighboursActivity;
 import com.example.nwto.R;
 import com.example.nwto.model.Neighbour;
@@ -31,7 +33,6 @@ import java.util.List;
 
 public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAdapter.SwipeViewHolder> {
 
-    // 1. Making swipe adaper constructor and implement the methods
     private List<Neighbour> neighbourList;
     private LayoutInflater inflater;
     private Context ctx;
@@ -69,19 +70,23 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
         holder.bindData(neighbourList.get(position));
 
         // Handling the click events
-
         holder.textEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(ctx,"Edit is clicked",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ctx, EditNeighbourActivity.class);
+                intent.putExtra("neighbourID",neighbourList.get(position).getNeighbourID());
+                intent.putExtra("fullName",neighbourList.get(position).getFullName());
+                intent.putExtra("email",neighbourList.get(position).getEmail());
+                intent.putExtra("phoneNumber",neighbourList.get(position).getPhoneNumber());
+                ctx.startActivity(intent);
             }
         });
         holder.textDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ctx,"delete is clicked",Toast.LENGTH_SHORT).show();
-                //delete the contact
-                db.collection("neighbours")
+                //delete the neighbour
+                db.collection("neighbours") //TODO: this check is not enough
                         .whereEqualTo("email", neighbourList.get(position).getEmail())
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -110,7 +115,6 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
     }
 
 
-    // 2. ViewHolder: SwipeViewHolder
     class SwipeViewHolder extends RecyclerView.ViewHolder{
         SwipeRevealLayout swipeRevealLayout;
 

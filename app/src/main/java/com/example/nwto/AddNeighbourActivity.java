@@ -85,13 +85,14 @@ public class AddNeighbourActivity extends AppCompatActivity {
             return;
         }
 
-        Neighbour neighbour = new Neighbour(mOwnerUID, mFullName, mEmail, mPhoneNumber);
+        String neighbourID = mOwnerUID + String.valueOf(System.currentTimeMillis()); //set custom id
+        Neighbour neighbour = new Neighbour(neighbourID, mOwnerUID, mFullName, mEmail, mPhoneNumber);
 
-        db.collection("neighbours")
-                .add(neighbour)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("neighbours").document(neighbourID)
+                .set(neighbour)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Successfully added a new neighbour!");
                         //go back to Neighbours page
                         startActivity(new Intent(AddNeighbourActivity.this, NeighboursActivity.class));

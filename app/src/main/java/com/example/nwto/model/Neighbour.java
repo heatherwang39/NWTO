@@ -1,6 +1,7 @@
 package com.example.nwto.model;
 
 public class Neighbour {
+    private String mNeighbourID;
     private String mOwnerUID;
     private String mFullName;
     private String mEmail;
@@ -9,11 +10,20 @@ public class Neighbour {
     public Neighbour() {
     }
 
-    public Neighbour(String ownerUID, String fullName, String email, String phoneNumber) {
+    public Neighbour(String mNeighbourID, String ownerUID, String fullName, String email, String phoneNumber) {
+        this.mNeighbourID = mNeighbourID;
         this.mOwnerUID = ownerUID;
         this.mFullName = fullName;
         this.mEmail = email;
         this.mPhoneNumber = phoneNumber;
+    }
+
+    public String getNeighbourID() {
+        return mNeighbourID;
+    }
+
+    public void setNeighbourID(String mNeighbourID) {
+        this.mNeighbourID = mNeighbourID;
     }
 
     public String getOwnerUID() {
