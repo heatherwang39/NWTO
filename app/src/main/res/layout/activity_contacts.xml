@@ -27,9 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/resourceCard1"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="1dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -48,24 +47,48 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginLeft="16dp"
                         android:layout_marginTop="16dp"
-                        android:textSize="40dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="Ward 19"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:text="("
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/resources_textView_wardNumber"
+                        app:layout_constraintStart_toEndOf="@+id/resources_textView_wardNumber"
+                        app:layout_constraintTop_toTopOf="@+id/resources_textView_wardNumber" />
 
                     <TextView
                         android:id="@+id/resources_textView_areaName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:textSize="40dp"
+                        android:text="Beaches-East York"
+                        android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/resources_textView_wardNumber"
+                        app:layout_constraintStart_toEndOf="@+id/textView2"
+                        app:layout_constraintTop_toTopOf="@+id/resources_textView_wardNumber"
                         app:layout_constraintVertical_bias="0" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=")"
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/resources_textView_areaName"
+                        app:layout_constraintStart_toEndOf="@+id/resources_textView_areaName"
+                        app:layout_constraintTop_toTopOf="@+id/resources_textView_areaName" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 

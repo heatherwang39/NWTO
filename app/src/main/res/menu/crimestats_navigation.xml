@@ -11,7 +11,7 @@
         android:title="Map" />
 
     <item
-        android:id="@+id/nav_crime_stats"
-        android:icon="@drawable/ic_static_custom"
-        android:title="Statistics" />
+        android:id="@+id/nav_crime_comparisons"
+        android:icon="@drawable/ic_baseline_compare_arrows_24"
+        android:title="Comparisons" />
 </menu>

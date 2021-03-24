@@ -127,7 +127,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                 case R.id.nav_crime_map:
                     selectedFragment = new CrimeMapFragment();
                     break;
-                case R.id.nav_crime_stats:
+                case R.id.nav_crime_comparisons:
                     selectedFragment = new CrimeStatsFragment();
                     break;
             }
@@ -313,7 +313,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
 
         int[] lmPeriod = getLastMonthPeriod();
         int[] avgPeriod = new int[]{2018, 1, 1, 2020, 12, 31};
-        int duration = 24;
+        int duration = (avgPeriod[3] - avgPeriod[0] + 1) * 12;
         int totalNumbTableBoxes = NUMB_COL_MODE1 * (crimeTypes_YE.length + 1);
         mTable_mode1.clear();
 
@@ -347,7 +347,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                     int colIndex = 1;
                     for (int j = 0; j < crimeCounts.length; j++) {
                         double monthlyAvg = crimeCounts[j] / ((double) duration);
-                        mTable_mode1.add(new TableBox(colIndex + NUMB_COL_MODE1 * (j + 1), String.format("%.2f", monthlyAvg), colorWhite));
+                        mTable_mode1.add(new TableBox(colIndex + NUMB_COL_MODE1 * (j + 1), String.format("%.1f", monthlyAvg), colorWhite));
                     }
 
                     if (mTable_mode1.size() == totalNumbTableBoxes)
@@ -427,7 +427,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                             double monthlyAvg = crimeCounts[i][j] / ((double) duration);
                             int colIndex = i + 1;
                             int rowIndex = j + 1;
-                            mTable_mode2.add(new TableBox(colIndex + NUMB_COL_MODE2 * (rowIndex), String.format("%.2f", monthlyAvg), colorWhite));
+                            mTable_mode2.add(new TableBox(colIndex + NUMB_COL_MODE2 * (rowIndex), String.format("%.1f", monthlyAvg), colorWhite));
                         }
                     }
 

@@ -43,12 +43,29 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         holder.mName.setText(contact.getName());
         holder.mEmail.setText(contact.getEmail());
         holder.mPhoneNumb.setText(contact.getPhoneNumb());
-        if (position % 2 == 0) holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.resourceCard2));
-        else holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.resourceCard1));
+//        if (position % 2 == 0) holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.crimeCard2));
+//        else holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.crimeCard1));
 
         // opens Android system's default email or phone features
         holder.mEmailButton.setOnClickListener(new OpenEmail(contact.getEmail()));
         holder.mPhoneButton.setOnClickListener(new OpenPhone(contact.getPhoneNumb()));
+        holder.mShowMoreInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.mName.getVisibility() == View.GONE) {
+                    holder.mName.setVisibility(View.VISIBLE);
+                    holder.mEmail.setVisibility(View.VISIBLE);
+                    holder.mPhoneNumb.setVisibility(View.VISIBLE);
+                    holder.mShowMoreInfo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_expand_less_24));
+                }
+                else {
+                    holder.mName.setVisibility(View.GONE);
+                    holder.mEmail.setVisibility(View.GONE);
+                    holder.mPhoneNumb.setVisibility(View.GONE);
+                    holder.mShowMoreInfo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_baseline_expand_more_24));
+                }
+            }
+        });
     }
 
     @Override
@@ -60,7 +77,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView mTitle, mName, mEmail, mPhoneNumb;
         public CardView mCardView;
-        public FloatingActionButton mEmailButton, mPhoneButton;
+        public FloatingActionButton mEmailButton, mPhoneButton, mShowMoreInfo;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -71,6 +88,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             mCardView = (CardView) itemView.findViewById(R.id.resources_cardView);
             mEmailButton = (FloatingActionButton) itemView.findViewById(R.id.floatingActionButton_email);
             mPhoneButton = (FloatingActionButton) itemView.findViewById(R.id.floatingActionButton_phoneNumb);
+            mShowMoreInfo = (FloatingActionButton) itemView.findViewById(R.id.floatingActionButton_moreInfo);
         }
     }
 

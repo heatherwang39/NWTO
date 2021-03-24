@@ -12,10 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:cardBackgroundColor="#DAE9F4"
         app:cardUseCompatPadding="true"
-        app:cardElevation="1dp"
-        app:cardCornerRadius="10dp">
+        app:cardElevation="3dp"
+        app:cardCornerRadius="12dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -29,7 +28,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Date"
-                android:textSize="20dp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,10 +38,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="["
+                android:text="("
                 app:layout_constraintBottom_toBottomOf="@+id/crime_date"
-                app:layout_constraintStart_toEndOf="@+id/crime_date"
-                app:layout_constraintTop_toTopOf="@+id/crime_date" />
+                app:layout_constraintStart_toEndOf="@+id/crime_date" />
 
             <TextView
                 android:id="@+id/crime_division"
@@ -66,8 +64,6 @@
                 android:id="@+id/crime_uniqueID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:text="Crime ID"
                 app:layout_constraintBottom_toBottomOf="@+id/crime_textView9"
                 app:layout_constraintStart_toEndOf="@+id/crime_textView9"
@@ -77,10 +73,20 @@
                 android:id="@+id/crime_textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="]"
+                android:text=")"
                 app:layout_constraintBottom_toBottomOf="@+id/crime_uniqueID"
                 app:layout_constraintStart_toEndOf="@+id/crime_uniqueID"
                 app:layout_constraintTop_toTopOf="@+id/crime_uniqueID" />
+
+            <TextView
+                android:id="@+id/crime_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Crime Type"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintStart_toStartOf="@+id/crime_date"
+                app:layout_constraintTop_toBottomOf="@+id/crime_date" />
 
             <TextView
                 android:id="@+id/crime_premise"
@@ -90,19 +96,8 @@
                 android:layout_marginBottom="16dp"
                 android:text="Premise Type"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/crime_date"
-                app:layout_constraintTop_toBottomOf="@+id/crime_date" />
-
-            <TextView
-                android:id="@+id/crime_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:text="Crime Type"
-                app:layout_constraintBottom_toBottomOf="@+id/crime_premise"
-                app:layout_constraintStart_toEndOf="@+id/crime_premise"
-                app:layout_constraintTop_toTopOf="@+id/crime_premise" />
+                app:layout_constraintStart_toStartOf="@+id/crime_category"
+                app:layout_constraintTop_toBottomOf="@+id/crime_category" />
 
             <TextView
                 android:id="@+id/crime_textView6"
@@ -111,9 +106,9 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
                 android:text="near"
-                app:layout_constraintBottom_toBottomOf="@+id/crime_category"
-                app:layout_constraintStart_toEndOf="@+id/crime_category"
-                app:layout_constraintTop_toTopOf="@+id/crime_category" />
+                app:layout_constraintBottom_toBottomOf="@+id/crime_premise"
+                app:layout_constraintStart_toEndOf="@+id/crime_premise"
+                app:layout_constraintTop_toTopOf="@+id/crime_premise" />
 
             <TextView
                 android:id="@+id/crime_geometry"

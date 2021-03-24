@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -109,6 +110,7 @@ public class ContactsActivity extends AppCompatActivity {
                                 mUserLatitude = coordinates.get(0);
                                 mUserLongitude = coordinates.get(1);
                                 mUserPostalCode = postalCode.replaceAll("\\s+", "");
+                                Log.e(TAG, "onComplete: " + mUserLatitude + "," + mUserLongitude + ", " + postalCode);
                             }
                             Log.d(TAG, "getLocation: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", PostalCode:" + mUserPostalCode);
                             updateResourceCards(); // reads and updates the contact cards information
@@ -144,6 +146,7 @@ public class ContactsActivity extends AppCompatActivity {
                 switch (title) {
                     case "Councillor":
                         order = 2;
+                        title = "City Councillor";
                         break;
                     case "MPP":
                         order = 3;
@@ -181,8 +184,8 @@ public class ContactsActivity extends AppCompatActivity {
                                 String officerName = (String) document.get(documentField_officerName);
                                 String officerEmail = (String) document.get(documentField_officerEmail);
                                 String officerPhone = (String) document.get(documentField_officerPhone);
-                                mContacts.add(new Contact(0, "Division " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
-                                mContacts.add(new Contact(1, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
+                                mContacts.add(new Contact(0, "Police Division " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
+                                mContacts.add(new Contact(1, "Crime Prevention", officerName, officerEmail, officerPhone));
                                 Log.d(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Success");
                             }
                         } else
@@ -191,4 +194,6 @@ public class ContactsActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 }
