@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check whether the user has been logged in
         if (mAuth.getCurrentUser() != null) {
-            startActivity(new Intent(this, ProfileActivity.class));
+            startActivity(new Intent(this, NavigationActivity.class));
         } else {
             mButtonSignUp = (Button) findViewById(R.id.button_sign_up);
             mButtonSignUp.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
                             startActivity(intent);
                             Log.d(TAG, "successfully logged in");
                             mProgressBar.setVisibility(View.INVISIBLE);

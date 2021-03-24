@@ -7,7 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class NavigationActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
 
     private ImageView mImageNavProfile, mImageNavNeighbours, mImageNavDiscussion, mImageNavResources, mImageNavCrimeStats;
 
@@ -15,6 +19,13 @@ public class NavigationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
 
         mImageNavProfile = (ImageView) findViewById(R.id.image_nav_profile);
         mImageNavProfile.setOnClickListener(new View.OnClickListener() {
