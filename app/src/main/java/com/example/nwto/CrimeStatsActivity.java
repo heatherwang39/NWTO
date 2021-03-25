@@ -42,7 +42,7 @@ import java.util.Random;
 
 public class CrimeStatsActivity extends AppCompatActivity {
     private static final String TAG = "TAG: " + CrimeStatsActivity.class.getSimpleName();
-    private int colorWhite, colorGreen, colorYellow, colorRed, colorBlack, colorAccent;
+    private int colorWhite, colorGreen, colorYellow, colorRed, colorHeader, colorBody;
 
     public static final String[] HEADER_MODE1 = new String[] {"Types", "2018-20 Average", "Growth", "Last Month"};
     public static final String[] HEADER_MODE2 = new String[] {"Types", "2018 Avg", "2019 Avg", "2020 Avg", "Last Month"};
@@ -317,9 +317,9 @@ public class CrimeStatsActivity extends AppCompatActivity {
         for (int row = 0; row < rowNumb_mode1; row++) {
             for (int col = 0; col < colNumb_mode1; col++) {
                 int index = row * colNumb_mode1 + col;
-                if (row == 0) mTable_mode1.add(new TableBox(index, header_mode1[col], colorWhite));
-                else if (col == 0) mTable_mode1.add(new TableBox(index, stub_mode1[row - 1], colorWhite));
-                else mTable_mode1.add(new TableBox(index, "0.0", colorWhite));
+                if (row == 0) mTable_mode1.add(new TableBox(index, header_mode1[col], colorHeader));
+                else if (col == 0) mTable_mode1.add(new TableBox(index, stub_mode1[row - 1], colorHeader));
+                else mTable_mode1.add(new TableBox(index, "0.0", colorBody));
             }
         }
 
@@ -329,9 +329,9 @@ public class CrimeStatsActivity extends AppCompatActivity {
         for (int row = 0; row < rowNumb_mode2; row++) {
             for (int col = 0; col < colNumb_mode2; col++) {
                 int index = row * colNumb_mode2 + col;
-                if (row == 0) mTable_mode2.add(new TableBox(index, header_mode2[col], colorWhite));
-                else if (col == 0) mTable_mode2.add(new TableBox(index, stub_mode2[row - 1], colorWhite));
-                else mTable_mode2.add(new TableBox(index, "0.0", colorWhite));
+                if (row == 0) mTable_mode2.add(new TableBox(index, header_mode2[col], colorHeader));
+                else if (col == 0) mTable_mode2.add(new TableBox(index, stub_mode2[row - 1], colorHeader));
+                else mTable_mode2.add(new TableBox(index, "0.0", colorBody));
             }
         }
 
@@ -439,11 +439,11 @@ public class CrimeStatsActivity extends AppCompatActivity {
 
     private void initializeColor() {
         colorWhite = getResources().getColor(R.color.white);
+        colorHeader = getResources().getColor(R.color.white3);
+        colorBody = getResources().getColor(R.color.white2);
         colorGreen = getResources().getColor(R.color.green);
         colorYellow = getResources().getColor(R.color.yellow);
         colorRed = getResources().getColor(R.color.red);
-        colorBlack = getResources().getColor(R.color.black);
-        colorAccent = getResources().getColor(R.color.colorAccent);
     }
 
     private int[] getLastMonthPeriod() {

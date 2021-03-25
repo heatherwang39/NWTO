@@ -1,10 +1,7 @@
 package com.example.nwto.adapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nwto.R;
 import com.example.nwto.model.TableBox;
-import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
@@ -42,7 +38,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.MyViewHolder
         TableBox tableBox = table.get(position);
         holder.mTextBox.setText(tableBox.getText());
 //        if (tableBox.getBackgroundColor() != context.getResources().getColor(R.color.white))
-            holder.mTextBox.getBackground().setTint(tableBox.getBackgroundColor());
+        holder.mTextBox.getBackground().setTint(tableBox.getBackgroundColor());
 //        else {
 //            holder.mTextBox.setBackground(context.getDrawable(R.drawable.tablebox_border));
 //        }
