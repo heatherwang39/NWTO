@@ -32,6 +32,7 @@ public class SendEmailActivity extends AppCompatActivity {
 
     private String mOwnerUID, mSubject, mBody;
     private ArrayList<String> mEmailList;
+    private ArrayList<Neighbour> mNeighbourList = NeighboursActivity.mNeighbourList;
     private EditText mEditSubject, mEditBody;
     private Button mButtonCancel, mButtonSend;
 
@@ -67,7 +68,7 @@ public class SendEmailActivity extends AppCompatActivity {
             }
         });
 
-        //mEmailList = new ArrayList<String>();
+        mEmailList = new ArrayList<String>();
     }
 
     private void sendByEmail() {
@@ -88,38 +89,60 @@ public class SendEmailActivity extends AppCompatActivity {
 
         //Get emails of the User's neighbours
         mEmailList.clear();
-        CollectionReference collectionReference = db.collection("neighbours");
-        collectionReference.orderBy("fullName")
-                .whereEqualTo("ownerUID", mOwnerUID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Neighbour neighbour = document.toObject(Neighbour.class);
-                                mEmailList.add(neighbour.getEmail());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
+        for (Neighbour neighbour : mNeighbourList) {
+            mEmailList.add(neighbour.getEmail());
+            Log.d(TAG, neighbour.getEmail());
+        }
+        String emails[] = mEmailList.toArray(new String[mEmailList.size()]);
+        Intent email = new Intent(Intent.ACTION_SENDTO);
+        email.putExtra(Intent.EXTRA_EMAIL, emails);
+        email.putExtra(Intent.EXTRA_SUBJECT, mSubject);
+        email.putExtra(Intent.EXTRA_TEXT, mBody);
+        //        email.setType("message/rfc822");
+        email.setData(Uri.parse("mailto:"));
 
-                        String emails[] = mEmailList.toArray(new String[mEmailList.size()]);
-                        Intent email = new Intent(Intent.ACTION_SENDTO);
-                        email.putExtra(Intent.EXTRA_EMAIL, emails);
-                        email.putExtra(Intent.EXTRA_SUBJECT, mSubject);
-                        email.putExtra(Intent.EXTRA_TEXT, mBody);
-                        //        email.setType("message/rfc822");
-                        email.setData(Uri.parse("mailto:"));
+        Log.d(TAG, "all emails:" + emails);
 
-                        Log.d(TAG, "all emails:" + emails);
+        if (email.resolveActivity(getPackageManager()) != null) {
+            startActivity(email);
+        } else {
+            Toast.makeText(SendEmailActivity.this, "There is no application that support this email action",
+                    Toast.LENGTH_SHORT).show();
+        }
 
-                        if (email.resolveActivity(getPackageManager()) != null) {
-                            startActivity(email);
-                        } else {
-                            Toast.makeText(SendEmailActivity.this, "There is no application that support this email action",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+
+//        CollectionReference collectionReference = db.collection("neighbours");
+//        collectionReference.orderBy("fullName")
+//                .whereEqualTo("ownerUID", mOwnerUID)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Neighbour neighbour = document.toObject(Neighbour.class);
+//                                mEmailList.add(neighbour.getEmail());
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//
+//                        String emails[] = mEmailList.toArray(new String[mEmailList.size()]);
+//                        Intent email = new Intent(Intent.ACTION_SENDTO);
+//                        email.putExtra(Intent.EXTRA_EMAIL, emails);
+//                        email.putExtra(Intent.EXTRA_SUBJECT, mSubject);
+//                        email.putExtra(Intent.EXTRA_TEXT, mBody);
+//                        //        email.setType("message/rfc822");
+//                        email.setData(Uri.parse("mailto:"));
+//
+//                        Log.d(TAG, "all emails:" + emails);
+//
+//                        if (email.resolveActivity(getPackageManager()) != null) {
+//                            startActivity(email);
+//                        } else {
+//                            Toast.makeText(SendEmailActivity.this, "There is no application that support this email action",
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
 //                        new Handler().postDelayed(new Runnable() {
 //                            @Override
 //                            public void run() {
@@ -127,9 +150,9 @@ public class SendEmailActivity extends AppCompatActivity {
 //                                startActivity(i);
 //                            }
 //                        }, 2000);
-                    }
-                });
+//    }
+//});
 
 
-    }
-}
+        }
+        }

@@ -35,7 +35,8 @@ public class SendSMSActivity extends AppCompatActivity {
     private static final String TAG = "Send Message via SMS";
 
     private String mOwnerUID, mMessage;
-    private ArrayList<String> mReceiverList;
+    private ArrayList<Neighbour> mNeighbourList = NeighboursActivity.mNeighbourList;
+//    private ArrayList<String> mReceiverList;
     private EditText mEditMessage;
     private Button mButtonCancel, mButtonSend;
 
@@ -83,47 +84,63 @@ public class SendSMSActivity extends AppCompatActivity {
             }
         });
 
-        mReceiverList = new ArrayList<String>();
+//        mReceiverList = new ArrayList<String>();
     }
 
     private void sendBySMS() {
         String message = mEditMessage.getText().toString();
 
-        CollectionReference collectionReference = db.collection("contacts");
-        collectionReference.orderBy("fullName")
-                .whereEqualTo("ownerUID", mOwnerUID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Neighbour neighbour = document.toObject(Neighbour.class);
-                                String phoneNumber = neighbour.getPhoneNumber();
-                                try {
-                                    SmsManager mySmsManager = SmsManager.getDefault();
-                                    mySmsManager.sendTextMessage(phoneNumber, null, message, null, null);
-                                    Log.d(TAG, "Sending message to: " + phoneNumber + message);
-                                    Toast.makeText(SendSMSActivity.this, "Message is sent.", Toast.LENGTH_SHORT).show();
+        for (Neighbour neighbour : mNeighbourList) {
+            Log.d(TAG, neighbour.getPhoneNumber());
+            String phoneNumber = neighbour.getPhoneNumber();
+            try {
+                SmsManager mySmsManager = SmsManager.getDefault();
+                mySmsManager.sendTextMessage(phoneNumber, null, message, null, null);
+                Log.d(TAG, "Sending message to: " + phoneNumber + message);
+                Toast.makeText(SendSMSActivity.this, "Message is sent.", Toast.LENGTH_SHORT).show();
 
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(SendSMSActivity.this, "Failed to send message.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(SendSMSActivity.this, "Failed to send message.", Toast.LENGTH_SHORT).show();
+            }
+        }
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(SendSMSActivity.this, NeighboursActivity.class);
-                                startActivity(i);
-                            }
-                        }, 2000);
-                    }
-                });
+
+//        CollectionReference collectionReference = db.collection("contacts");
+//        collectionReference.orderBy("fullName")
+//                .whereEqualTo("ownerUID", mOwnerUID)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Neighbour neighbour = document.toObject(Neighbour.class);
+//                                String phoneNumber = neighbour.getPhoneNumber();
+//                                try {
+//                                    SmsManager mySmsManager = SmsManager.getDefault();
+//                                    mySmsManager.sendTextMessage(phoneNumber, null, message, null, null);
+//                                    Log.d(TAG, "Sending message to: " + phoneNumber + message);
+//                                    Toast.makeText(SendSMSActivity.this, "Message is sent.", Toast.LENGTH_SHORT).show();
+//
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                    Toast.makeText(SendSMSActivity.this, "Failed to send message.", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Intent i = new Intent(SendSMSActivity.this, NeighboursActivity.class);
+//                                startActivity(i);
+//                            }
+//                        }, 2000);
+//                    }
+//                });
 
     }
 

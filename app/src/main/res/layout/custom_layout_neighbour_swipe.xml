@@ -46,7 +46,7 @@
             android:id="@+id/text_full_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="First Lastname"
+            android:text="Firstname Lastname"
             android:textSize="20sp"
             android:textStyle="bold" />
 
