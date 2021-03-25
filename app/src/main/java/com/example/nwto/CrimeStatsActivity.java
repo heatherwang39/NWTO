@@ -483,7 +483,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
 
 
             TableBox growthBox = mTable_mode1.get(rowIndex + 2);
-            if (Double.isNaN(growth)) growthBox.setText("N/A");
+            if (avgMonthlyCount == 0) growthBox.setText("N/A");
             else {
                 growthBox.setText(String.format("%.0f", growth) + "%");
                 growthBox.setBackgroundColor(color);
