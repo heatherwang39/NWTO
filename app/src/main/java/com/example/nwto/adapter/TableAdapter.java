@@ -1,12 +1,17 @@
 package com.example.nwto.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nwto.R;
@@ -31,11 +36,17 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.MyViewHolder
         return new MyViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TableBox tableBox = table.get(position);
         holder.mTextBox.setText(tableBox.getText());
-        holder.mTextBox.setBackgroundColor(tableBox.getBackgroundColor());
+//        if (tableBox.getBackgroundColor() != context.getResources().getColor(R.color.white))
+            holder.mTextBox.getBackground().setTint(tableBox.getBackgroundColor());
+//        else {
+//            holder.mTextBox.setBackground(context.getDrawable(R.drawable.tablebox_border));
+//        }
+
     }
 
     @Override
@@ -45,11 +56,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.MyViewHolder
 
     // Class for one grid (single table box)
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public MaterialButton mTextBox;
+        public TextView mTextBox;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            mTextBox = (MaterialButton) itemView.findViewById(R.id.crimestats_textBox);
+            mTextBox = (TextView) itemView.findViewById(R.id.crimestats_textBox);
         }
     }
 }
