@@ -14,17 +14,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.nwto.adapter.NeighbourSwipeAdapter;
 import com.example.nwto.model.Neighbour;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 public class NeighboursActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -33,11 +40,12 @@ public class NeighboursActivity extends AppCompatActivity {
     private static final String TAG = "Neighbours";
 
     private String mOwnerUID;
+    private boolean isAdmin;
     private Button mButtonAddNeighbour, mButtonSendSMS, mButtonSendEmail;
 
     private RecyclerView mRecycleNeighbourList;
     private NeighbourSwipeAdapter mNeighbourSwipeAdapter;
-    private ArrayList<Neighbour> mNeighbourList;
+    public static ArrayList<Neighbour> mNeighbourList;
 //    private NeighbourAdapter mNeighbourAdapter;
     private GridLayoutManager mGridLayoutManager;
 
@@ -82,43 +90,92 @@ public class NeighboursActivity extends AppCompatActivity {
         mRecycleNeighbourList = (RecyclerView) findViewById(R.id.recycler_neighbour_list);
         mGridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         mRecycleNeighbourList.setLayoutManager(mGridLayoutManager);
-        loadNeighbours();
 
         if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(this, LoginActivity.class));
         } else {
             mOwnerUID = mAuth.getCurrentUser().getUid();
+            Log.d(TAG,mOwnerUID);
             loadNeighbours();
         }
     }
 
     private void loadNeighbours() {
-        mNeighbourList.clear();
-        CollectionReference collectionReference = db.collection("neighbours");
-        collectionReference.orderBy("fullName")
-                .whereEqualTo("ownerUID", mOwnerUID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Neighbour neighbour = document.toObject(Neighbour.class);
-                                mNeighbourList.add(neighbour);
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                        Log.d(TAG, "all neighbours:" + mNeighbourList.toString());
-                        mNeighbourSwipeAdapter = new NeighbourSwipeAdapter(NeighboursActivity.this, mNeighbourList);
-                        mRecycleNeighbourList.setAdapter(mNeighbourSwipeAdapter);
-                        mNeighbourSwipeAdapter.setNeighbours(mNeighbourList);
+
+        DocumentReference documentReference = db.collection("users").document(mOwnerUID);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(NeighboursActivity.this, "Error while loading", Toast.LENGTH_SHORT);
+                    Log.d(TAG, "-->" + e.toString());
+                    return;
+                }
+
+                if (documentSnapshot.exists()) {
+                    //check admin
+                    isAdmin = documentSnapshot.getBoolean("isAdmin");
+                    Log.i(TAG, "Show isAdmin successfully " + isAdmin);
+
+                    //load neighbours
+                    mNeighbourList.clear();
+                    CollectionReference collectionReference = db.collection("neighbours");
+
+                    //load all neighbours for admin
+                    if (isAdmin) {
+                        collectionReference.orderBy("fullName")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Neighbour neighbour = document.toObject(Neighbour.class);
+                                                mNeighbourList.add(neighbour);
+                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+                                        Log.d(TAG, "all neighbours:" + mNeighbourList.toString());
+                                        mNeighbourSwipeAdapter = new NeighbourSwipeAdapter(NeighboursActivity.this, mNeighbourList);
+                                        mRecycleNeighbourList.setAdapter(mNeighbourSwipeAdapter);
+                                        mNeighbourSwipeAdapter.setNeighbours(mNeighbourList);
 //                        mNeighbourAdapter = new NeighbourAdapter(NeighboursActivity.this, mNeighbourList);
 //                        mRecycleNeighbourList.setAdapter(mNeighbourAdapter);
-                        mRecycleNeighbourList.setHasFixedSize(true);
+                                        mRecycleNeighbourList.setHasFixedSize(true);
+                                    }
+                                });
+                    } else {
+                        //load owned neighbours if not admin
+                        collectionReference.orderBy("fullName")
+                                .whereEqualTo("ownerUID", mOwnerUID)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Neighbour neighbour = document.toObject(Neighbour.class);
+                                                mNeighbourList.add(neighbour);
+                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+                                        Log.d(TAG, "all neighbours:" + mNeighbourList.toString());
+                                        mNeighbourSwipeAdapter = new NeighbourSwipeAdapter(NeighboursActivity.this, mNeighbourList);
+                                        mRecycleNeighbourList.setAdapter(mNeighbourSwipeAdapter);
+                                        mNeighbourSwipeAdapter.setNeighbours(mNeighbourList);
+//                        mNeighbourAdapter = new NeighbourAdapter(NeighboursActivity.this, mNeighbourList);
+//                        mRecycleNeighbourList.setAdapter(mNeighbourAdapter);
+                                        mRecycleNeighbourList.setHasFixedSize(true);
+                                    }
+                                });
                     }
-                });
+                }
+            }
+        });
     }
 
     @Override

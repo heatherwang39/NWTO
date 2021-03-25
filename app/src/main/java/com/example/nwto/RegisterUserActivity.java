@@ -223,6 +223,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                                     user.put("radius", "5");
                                     user.put("frequency", "1");
                                     user.put("neighbourhood", mNeighbourhoodName);
+                                    user.put("isAdmin", false);
                                     upload(imageBitmap);
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override

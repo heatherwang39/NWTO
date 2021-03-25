@@ -67,7 +67,7 @@ public class SendEmailActivity extends AppCompatActivity {
             }
         });
 
-        mEmailList = new ArrayList<String>();
+        //mEmailList = new ArrayList<String>();
     }
 
     private void sendByEmail() {
