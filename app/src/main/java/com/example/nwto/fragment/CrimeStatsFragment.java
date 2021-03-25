@@ -50,9 +50,9 @@ public class CrimeStatsFragment extends Fragment {
 
         // Assigns adapters to recycler views for Display By Table
         mTableRecyclerView_mode1.setAdapter(mCrimeStatsActivity.getTableAdapter_mode1());
-        mTableRecyclerView_mode1.setLayoutManager(new GridLayoutManager(mCrimeStatsActivity, CrimeStatsActivity.NUMB_COL_MODE1));
+        mTableRecyclerView_mode1.setLayoutManager(new GridLayoutManager(mCrimeStatsActivity, CrimeStatsActivity.HEADER_MODE1.length));
         mTableRecyclerView_mode2.setAdapter(mCrimeStatsActivity.getTableAdapter_mode2());
-        mTableRecyclerView_mode2.setLayoutManager(new GridLayoutManager(mCrimeStatsActivity, CrimeStatsActivity.NUMB_COL_MODE2));
+        mTableRecyclerView_mode2.setLayoutManager(new GridLayoutManager(mCrimeStatsActivity, CrimeStatsActivity.HEADER_MODE2.length));
 
         // Assigns on click listeners to buttons
         mMode1Button.setOnClickListener(view1 -> clickMode1());
@@ -67,6 +67,7 @@ public class CrimeStatsFragment extends Fragment {
                 view.getResources().getColor(R.color.grey),
                 view.getResources().getColor(R.color.yellow),
                 view.getResources().getColor(R.color.red),
+                view.getResources().getColor(R.color.black),
                 view.getResources().getColor(R.color.crimeCard1)
         };
 
@@ -77,7 +78,7 @@ public class CrimeStatsFragment extends Fragment {
 
     private void displayGraphMode1(int[] colors) {//
         List<TableBox> table = mCrimeStatsActivity.getTable_mode1();
-        int rowNumb = table.size() / CrimeStatsActivity.NUMB_COL_MODE1 - 1; // excluding the header row
+        int rowNumb = table.size() / CrimeStatsActivity.HEADER_MODE1.length - 1; // excluding the header row
         DataPoint[] monthlyAvgDataPoints = new DataPoint[rowNumb];
         DataPoint[] lastMonthDataPoints = new DataPoint[rowNumb];
         String[] xLabel = new String[rowNumb];
@@ -90,7 +91,7 @@ public class CrimeStatsFragment extends Fragment {
 
         // builds plots
         for (int i = 0; i < rowNumb; i++) {
-            int rowIndex = CrimeStatsActivity.NUMB_COL_MODE1 * (i + 1);
+            int rowIndex = CrimeStatsActivity.HEADER_MODE1.length * (i + 1);
             xLabel[i] = table.get(rowIndex).getText(); // finds x label (Crime Types)
 
             TableBox monthlyAvg = table.get(rowIndex + 1); // plot 1
@@ -103,20 +104,20 @@ public class CrimeStatsFragment extends Fragment {
         // plot 1
         LineGraphSeries<DataPoint> dataEntry_monthlyAvg = new LineGraphSeries<>(monthlyAvgDataPoints);
         dataEntry_monthlyAvg.setColor(colors[0]);
-        dataEntry_monthlyAvg.setTitle("2018-20 Monthly Avg");
+        dataEntry_monthlyAvg.setTitle(CrimeStatsActivity.HEADER_MODE1[1]);
         dataEntry_monthlyAvg.setDrawDataPoints(true);
         mGraphView_mode1.addSeries(dataEntry_monthlyAvg);
 
         // plot 2
         LineGraphSeries<DataPoint> dataEntry_lastMonth = new LineGraphSeries<>(lastMonthDataPoints);
         dataEntry_monthlyAvg.setColor(colors[1]);
-        dataEntry_lastMonth.setTitle("Last Month");
+        dataEntry_lastMonth.setTitle(CrimeStatsActivity.HEADER_MODE1[3]);
         dataEntry_lastMonth.setDrawDataPoints(true);
         mGraphView_mode1.addSeries(dataEntry_lastMonth);
 
         // sets renderers settings
         gridRenderer.setLabelFormatter(staticLabelsFormatter);
-        gridRenderer.setLabelsSpace(15);
+        gridRenderer.setLabelsSpace(20);
         gridRenderer.setHorizontalLabelsAngle(120);
         legendRenderer.setVisible(true);
         legendRenderer.setBackgroundColor(colors[colors.length - 1]);
@@ -126,14 +127,18 @@ public class CrimeStatsFragment extends Fragment {
     private void displayGraphMode2(int[] colors) {
         List<TableBox> table = mCrimeStatsActivity.getTable_mode2();
         String[] crimeTypes = CrimeStatsActivity.STUB; // Y- Axis
-        int[] years = CrimeStatsActivity.COLUMN_MODE2; // X - Axis
+        int[] years = CrimeStatsActivity.YEARS; // X - Axis
         int rowLength = crimeTypes.length;
-        int colLength = years.length + 1;
+        int colLength = CrimeStatsActivity.HEADER_MODE2.length - 1; // excluding "Types" col
 
         // finds x labels
         String[] xLabel = new String[colLength];
-        for (int i = 0; i < colLength - 1; i++) xLabel[i] = Integer.toString(years[i]);
-        xLabel[colLength  -1] = "Last Month";
+        for (int i = 0; i < colLength; i++) {
+            if (i == colLength - 1)
+                xLabel[i] = CrimeStatsActivity.HEADER_MODE2[4];
+            else
+                xLabel[i] = Integer.toString(years[i]); // 2018, 2019, 2020
+        }
 
         // initializes renderers
         GridLabelRenderer gridRenderer = mGraphView_mode2.getGridLabelRenderer();

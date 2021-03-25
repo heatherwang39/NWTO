@@ -33,9 +33,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,11 +43,13 @@ import java.util.Random;
 public class CrimeStatsActivity extends AppCompatActivity {
     private static final String TAG = "TAG: " + CrimeStatsActivity.class.getSimpleName();
     private int colorWhite, colorGreen, colorYellow, colorRed, colorBlack, colorAccent;
-    public static final String[] STUB = new String[]{"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
-    public static final int NUMB_COL_MODE1 = 4;
-    public static final int[] COLUMN_MODE2 = new int[]{2018, 2019, 2020}; // years
-//    public static final int NUMB_COL_MODE2 = COLUMN_MODE2.length + 1;
-    public static final int NUMB_COL_MODE2 = COLUMN_MODE2.length + 2;
+
+    public static final String[] HEADER_MODE1 = new String[] {"Types", "2018-20 Average", "Growth", "Last Month"};
+    public static final String[] HEADER_MODE2 = new String[] {"Types", "2018 Avg", "2019 Avg", "2020 Avg", "Last Month"};
+    public static final String[] STUB = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over", "Sexual Violation", "Shooting"};
+    public static final int[] YEARS = new int[] {2018, 2019, 2020};
+    public static final String[] CRIMETYPES_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"};
+    public static final String[] CRIMETYPES_YTD = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over", "Sexual Violation", "Shooting"};
 
     private boolean calculationYE = false, calculationYTD = false;
 
@@ -113,10 +113,9 @@ public class CrimeStatsActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
         } else {
             initializeColor();
-//            readUserInfo(); // for Recent Crimes Fragment
-//            readPoliceBoundaries(); // for Crime Map Fragment
-//        readStats_Testing(); // for Testing
-            initializeTables();
+            readUserInfo(); // for Recent Crimes Fragment
+            readPoliceBoundaries(); // for Crime Map Fragment
+            // readStats_Testing(); // for Testing
         }
 
     }
@@ -236,8 +235,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                             }
                             Log.d(TAG, "readUserInfo: onComplete -> Success=" + "Lat:" + mUserLatitude + ", Long:" + mUserLongitude + ", Frequency:" + mUserFrequency + ", Radius:" + mUserRadius);
                             readRecentCrimes(); // reads and updates the recent crime info
-//                            readStatsMode1(STUB); // reads and updates for Crime Stats table mode 1
-//                            readStatsMode2(STUB, COLUMN_MODE2);
+                            buildComparisonsTables(HEADER_MODE1, STUB, HEADER_MODE2, STUB, YEARS, CRIMETYPES_YE, CRIMETYPES_YTD);// reads and updates for Crime Stats tables
                         } else Log.e(TAG, "readUserInfo: onComplete -> Fail", task.getException());
                     }
                 });
@@ -310,150 +308,10 @@ public class CrimeStatsActivity extends AppCompatActivity {
             }
         }.getMappingResource(mUserLatitude, mUserLongitude, 4);
     }
-/*
-    private void readStatsMode1(String[] crimeTypes_YE) {
-        // YTD_CRIME={Assault, Auto Theft, Break and Enter, Homicide, Robbery, Sexual Violation, Shooting, Theft Over}
-        // String[] crimeTypes_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
-        String[] header = new String[]{"2018-20 Average", "Growth", "Last Month"}; // excluding (0, 0)
 
-        int[] lmPeriod = getLastMonthPeriod();
-        int[] avgPeriod = new int[]{2018, 1, 1, 2020, 12, 31};
-        int duration = (avgPeriod[3] - avgPeriod[0] + 1) * 12;
-        int totalNumbTableBoxes = NUMB_COL_MODE1 * (crimeTypes_YE.length + 1);
-        mTable_mode1.clear();
-
-        // Row 0, Col 0: Table's First Entry
-        mTable_mode1.add(new TableBox(0, "Types", colorWhite));
-
-        // Col 0 & 2
-        for (int i = 0; i < crimeTypes_YE.length; i++) {
-            mTable_mode1.add(new TableBox((i + 1) * NUMB_COL_MODE1, crimeTypes_YE[i], colorWhite)); // Col 0: Table Stub
-            mTable_mode1.add(new TableBox((2 + NUMB_COL_MODE1 * (i + 1)), "", colorWhite)); // Col 2: place holder for Growth column
-        }
-
-        // Row 0: Table header
-        for (int i = 0; i < header.length; i++)
-            mTable_mode1.add(new TableBox(i + 1, header[i], colorWhite));
-
-        if (mFilterByLocation) {
-            // Col 1: 2018-2019 Monthly Average for each crime type
-            new CrimeApi() {
-                @Override
-                public void processCrimes_YE(List<Crime> crimes) {
-                    // finds crime counts of 2018-2019 per crime type
-                    int[] crimeCounts = new int[crimeTypes_YE.length];
-                    for (Crime crime : crimes) {
-                        String type = crime.getCategory();
-                        for (int i = 0; i < crimeTypes_YE.length; i++)
-                            if (type.equals(crimeTypes_YE[i])) crimeCounts[i]++;
-                    }
-
-                    // calculates average monthly crime counts
-                    int colIndex = 1;
-                    for (int j = 0; j < crimeCounts.length; j++) {
-                        double monthlyAvg = crimeCounts[j] / ((double) duration);
-                        mTable_mode1.add(new TableBox(colIndex + NUMB_COL_MODE1 * (j + 1), String.format("%.1f", monthlyAvg), colorWhite));
-                    }
-
-                    if (mTable_mode1.size() == totalNumbTableBoxes)
-                        calculateGrowth(crimeTypes_YE.length);
-                }
-            }.queryYE(mUserRadius, mUserLatitude, mUserLongitude, -1, -1,
-                    avgPeriod[0], avgPeriod[1], avgPeriod[2], avgPeriod[3], avgPeriod[4], avgPeriod[5], null, null);
-
-            // Col 3: Last Month count for each crime type TODO: handle January's last month
-            new CrimeApi() {
-                @Override
-                public void processCrimes_YTD(List<Crime> crimes) {
-                    // finds crime counts of Last Month per crime type
-                    int[] crimeCounts = new int[crimeTypes_YE.length];
-                    for (Crime crime : crimes) {
-                        String type = crime.getCategory();
-                        for (int i = 0; i < crimeTypes_YE.length; i++)
-                            if (type.equals(crimeTypes_YE[i])) crimeCounts[i]++;
-                    }
-
-                    int colIndex = 3;
-                    for (int j = 0; j < crimeCounts.length; j++)
-                        mTable_mode1.add(new TableBox(colIndex + NUMB_COL_MODE1 * (j + 1), Integer.toString(crimeCounts[j]), colorWhite));
-
-                    if (mTable_mode1.size() == totalNumbTableBoxes)
-                        calculateGrowth(crimeTypes_YE.length);
-                }
-            }.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1,
-                    lmPeriod[0], lmPeriod[1], lmPeriod[2], lmPeriod[3], lmPeriod[4], lmPeriod[5], null, null);
-        } else {
-            // case for filtering by division
-            // include this method in setFilterParams() to update as the User changes filter params
-        }
-    }
-
-    private void readStatsMode2(String[] crimeTypes_YE, int[] years) {
-        // String[] crimeTypes_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"}; // YE crime types
-        // int[] years = new int[] {2017, 2018, 2019};
-        int duration = 12;
-        mTable_mode2.clear();
-
-        // Row 0, Col 0: Table's First Entry
-        mTable_mode2.add(new TableBox(0, "Types", colorWhite));
-
-        // Col 0: Table Stub
-        for (int i = 0; i < crimeTypes_YE.length; i++)
-            mTable_mode2.add(new TableBox((i + 1) * NUMB_COL_MODE2, crimeTypes_YE[i], colorWhite));
-
-        if (mFilterByLocation) {
-            // Row 0: Table Header (Year)
-            for (int i = 0; i < years.length; i++) {
-                int colIndex = i + 1;
-                int year = years[i];
-                mTable_mode2.add(new TableBox(colIndex, Integer.toString(year) + " AVG", colorWhite));
-            }
-
-            // Col 2 to n - 1: monthly average for each crime type per Year
-            new CrimeApi() {
-                @Override
-                public void processCrimes_YE(List<Crime> crimes) {
-                    // finds crime counts per year per crime type
-                    int[][] crimeCounts = new int[years.length][crimeTypes_YE.length];
-                    for (Crime crime : crimes) {
-                        int year = Integer.parseInt(crime.getDate().substring(6)); // "MM-dd-yyyy"
-                        String type = crime.getCategory();
-                        for (int i = 0; i < years.length; i++) {
-                            if (year == years[i]) {
-                                for (int j = 0; j < crimeTypes_YE.length; j++)
-                                    if (type.equals(crimeTypes_YE[j])) crimeCounts[i][j]++;
-                            }
-                        }
-                    }
-
-                    // finds monthly average of crime counts per year per crime type
-                    for (int i = 0; i < crimeCounts.length; i++) {
-                        for (int j = 0; j < crimeCounts[0].length; j++) {
-                            double monthlyAvg = crimeCounts[i][j] / ((double) duration);
-                            int colIndex = i + 1;
-                            int rowIndex = j + 1;
-                            mTable_mode2.add(new TableBox(colIndex + NUMB_COL_MODE2 * (rowIndex), String.format("%.1f", monthlyAvg), colorWhite));
-                        }
-                    }
-
-                    Collections.sort(mTable_mode2);
-                    mTableAdapter_mode2.notifyDataSetChanged();
-                    mProgressBar.setVisibility(View.GONE); // finishes background tasks and brings the Recent Crime Fragment page to front
-                    navigationView.setSelectedItemId(R.id.nav_crime_recent_events);
-                }
-            }.queryYE(mUserRadius, mUserLatitude, mUserLongitude, -1, -1,
-                    years[0], 1, 1, years[years.length - 1], 12, 31, null, null);
-        } else {
-            // case for filtering by division
-            // include this method in setFilterParams() to update as the User changes filter params
-        }
-    }
-*/
-
-    private void initializeTables() {
+    private void buildComparisonsTables(String[] header_mode1, String[] stub_mode1, String[] header_mode2, String[] stub_mode2,
+                                        int[] years, String[] crimeTypes_YE, String[] crimeTypes_YTD) {
         // initializes table mode 1
-        String[] header_mode1 = new String[] {"Types", "2018-20 Average", "Growth", "Last Month"};
-        String[] stub_mode1 = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over", "Sexual Violation", "Shooting"};
         int rowNumb_mode1 = stub_mode1.length + 1;
         int colNumb_mode1 = header_mode1.length;
         for (int row = 0; row < rowNumb_mode1; row++) {
@@ -466,8 +324,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
         }
 
         // initializes table mode 2
-        String[] header_mode2 = new String[] {"Types", "2018 Avg", "2019 Avg", "2020 Avg", "Last Month"};
-        String[] stub_mode2 = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over", "Sexual Violation", "Shooting"};
         int rowNumb_mode2 = stub_mode2.length + 1;
         int colNumb_mode2 = header_mode2.length;
         for (int row = 0; row < rowNumb_mode2; row++) {
@@ -479,11 +335,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
             }
         }
 
-        int[] years = new int[] {2018, 2019, 2020};
-        String[] crimeTypes_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"};
-
-        mUserRadius = 1;mUserLatitude = 43.7615873; mUserLongitude = -79.4109312; // todo: delete
-
+        // reads YE data and fills the tables
         new CrimeApi() {
             @Override
             public void processCrimes_YE(List<Crime> crimes) {
@@ -529,7 +381,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
                     mTable_mode1.get((i + 1) * colNumb_mode1 + 1).setText(String.format("%.1f", monthlyAvg));
                 }
 
-
                 // Mode 2 Table Calculation
                 // finds monthly average of crime counts per year per crime type
                 for (int i = 0; i < crimeCounts.length; i++) { // year
@@ -553,7 +404,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                   years[0], 1, 1, years[years.length - 1], 12, 31, null, null);
 
 
-        String[] crimeTypes_YTD = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over", "Sexual Violation", "Shooting"};
+        // reads YTD data and fills the tables
         int[] lmPeriod = getLastMonthPeriod();
         new CrimeApi() {
             @Override
@@ -630,9 +481,13 @@ public class CrimeStatsActivity extends AppCompatActivity {
             else if (growth > threshold) color = colorRed;
             else color = colorYellow;
 
+
             TableBox growthBox = mTable_mode1.get(rowIndex + 2);
-            growthBox.setText(String.format("%.0f", growth) + "%");
-            growthBox.setBackgroundColor(color);
+            if (Double.isNaN(growth)) growthBox.setText("N/A");
+            else {
+                growthBox.setText(String.format("%.0f", growth) + "%");
+                growthBox.setBackgroundColor(color);
+            }
         }
     }
 
@@ -654,7 +509,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
         }
 
         mTable_mode2.add(new TableBox(0, "Types", colorWhite));
-        for (int year : COLUMN_MODE2) {
+        for (int year : YEARS) {
             mTable_mode2.add(new TableBox(1, Integer.toString(year) + " AVG", colorWhite));
         }
 
