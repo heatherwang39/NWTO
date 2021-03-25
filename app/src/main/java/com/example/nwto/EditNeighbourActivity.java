@@ -97,7 +97,16 @@ public class EditNeighbourActivity extends AppCompatActivity {
     private void updateNeighbour() {
         if(mEditFullName.getText().toString().trim().length() > 0){
             mFullName = mEditFullName.getText().toString().trim();
+            //convert first character of each word to be capitalized
+            String[] split = mFullName.split("\\s+");
+            mFullName = "";
+            for(String word : split){
+                word = word.substring(0, 1).toUpperCase() + word.substring(1);
+                mFullName = mFullName + word + " ";
+            }
+            mFullName.trim();
         }
+
         if(mEditEmail.getText().toString().trim().length() > 0){
             mEmail = mEditEmail.getText().toString().trim();
         }

@@ -17,17 +17,59 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DiscussionDetailActivity"
-            android:label="Discussion Detail"
-            android:parentActivityName=".DiscussionActivity"/>
+        <activity
+            android:name=".NavigationActivity"
+            android:label="Home" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="Login to NWTO app"/>
+        <activity
+            android:name=".RegisterUserActivity"
+            android:label="Register New Account"
+            android:parentActivityName=".LoginActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:label="My Profile"
+            android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".ProfileUpdateActivity"
+            android:label="Update / Settings"
+            android:parentActivityName=".ProfileActivity" />
+
         <activity
             android:name=".DiscussionActivity"
             android:label="Discussion Board"
             android:parentActivityName=".NavigationActivity" />
         <activity
+            android:name=".DiscussionDetailActivity"
+            android:label="Discussion Detail"
+            android:parentActivityName=".DiscussionActivity" />
+
+        <activity
+            android:name=".NeighboursActivity"
+            android:label="My Neighbours"
+            android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".AddNeighbourActivity"
+            android:label="Add a new Contact"
+            android:parentActivityName=".NeighboursActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".EditNeighbourActivity"
+            android:label="Editing Neighbour"
+            android:parentActivityName=".NeighboursActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".SendSMSActivity"
             android:label="Write a new Message"
-            android:parentActivityName=".NeighboursActivity" />
+            android:parentActivityName=".NeighboursActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".SendEmailActivity"
+            android:label="Write a new Email"
+            android:parentActivityName=".NeighboursActivity"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".CrimeStatsActivity"
             android:label="Crime Stats"
@@ -37,40 +79,7 @@
             android:name=".ContactsActivity"
             android:label="Contacts"
             android:parentActivityName=".NavigationActivity" />
-        <activity
-            android:name=".SendEmailActivity"
-            android:label="Write a new Email"
-            android:parentActivityName=".NeighboursActivity" />
-        <activity
-            android:name=".AddNeighbourActivity"
-            android:label="Add a new Contact"
-            android:parentActivityName=".NeighboursActivity" />
-        <activity
-            android:name=".EditNeighbourActivity"
-            android:label="Editing Neighbour"
-            android:parentActivityName=".NeighboursActivity"/>
-        <activity
-            android:name=".NeighboursActivity"
-            android:label="My Neighbours"
-            android:parentActivityName=".NavigationActivity" />
-        <activity
-            android:name=".NavigationActivity"
-            android:label="Home" />
-        <activity
-            android:name=".ProfileUpdateActivity"
-            android:label="Update / Settings"
-            android:parentActivityName=".ProfileActivity" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="Login to NWTO app" />
-        <activity
-            android:name=".ProfileActivity"
-            android:label="My Profile"
-            android:parentActivityName=".NavigationActivity" />
-        <activity
-            android:name=".RegisterUserActivity"
-            android:label="Register New Account"
-            android:parentActivityName=".LoginActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

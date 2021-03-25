@@ -63,7 +63,16 @@ public class AddNeighbourActivity extends AppCompatActivity {
     }
 
     private void addContact() {
-        String mFullName = mEditFullName.getText().toString();
+        String mFullName = mEditFullName.getText().toString().trim();
+        //convert first character of each word to be capitalized
+        String[] split = mFullName.split("\\s+");
+        String mFullNameCap = "";
+        for(String word : split){
+            word = word.substring(0, 1).toUpperCase() + word.substring(1);
+            mFullNameCap = mFullNameCap + word + " ";
+        }
+        mFullNameCap.trim();
+
         String mEmail = mEditEmail.getText().toString().trim();
         String mPhoneNumber = mEditPhoneNumber.getText().toString().trim();
 
@@ -86,7 +95,7 @@ public class AddNeighbourActivity extends AppCompatActivity {
         }
 
         String neighbourID = mOwnerUID + String.valueOf(System.currentTimeMillis()); //set custom id
-        Neighbour neighbour = new Neighbour(neighbourID, mOwnerUID, mFullName, mEmail, mPhoneNumber);
+        Neighbour neighbour = new Neighbour(neighbourID, mOwnerUID, mFullNameCap, mEmail, mPhoneNumber);
 
         db.collection("neighbours").document(neighbourID)
                 .set(neighbour)
