@@ -128,11 +128,12 @@ public class CrimeStatsFragment extends Fragment {
         String[] crimeTypes = CrimeStatsActivity.STUB; // Y- Axis
         int[] years = CrimeStatsActivity.COLUMN_MODE2; // X - Axis
         int rowLength = crimeTypes.length;
-        int colLength = years.length;
+        int colLength = years.length + 1;
 
         // finds x labels
         String[] xLabel = new String[colLength];
-        for (int i = 0; i < colLength; i++) xLabel[i] = Integer.toString(years[i]);
+        for (int i = 0; i < colLength - 1; i++) xLabel[i] = Integer.toString(years[i]);
+        xLabel[colLength  -1] = "Last Month";
 
         // initializes renderers
         GridLabelRenderer gridRenderer = mGraphView_mode2.getGridLabelRenderer();
