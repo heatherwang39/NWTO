@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.nwto.adapter.PlaceAutoSuggestAdapter;
 import com.example.nwto.api.ResourceApi;
+import com.example.nwto.util.Notification;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -238,6 +239,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Profile has been updated for user " + mUID);
+                        new Notification().schedule(ProfileUpdateActivity.this, mLatitude, mLongitude, Integer.parseInt(mRadius), Integer.parseInt(mFrequency));
                         startActivity(new Intent(ProfileUpdateActivity.this, ProfileActivity.class));
                     }
                 }).addOnFailureListener(new OnFailureListener() {

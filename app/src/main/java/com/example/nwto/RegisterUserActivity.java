@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.nwto.adapter.PlaceAutoSuggestAdapter;
 import com.example.nwto.api.ResourceApi;
+import com.example.nwto.util.Notification;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -230,6 +231,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                                         public void onSuccess(Void aVoid) {
                                             Intent intent = new Intent(RegisterUserActivity.this, NavigationActivity.class);
                                             startActivity(intent);
+                                            new Notification().schedule(RegisterUserActivity.this, mLatitude, mLongitude, 5, 1);
                                             Log.d(TAG, "createUserWithEmail: firestore success, user profile is created for" + uID);
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
