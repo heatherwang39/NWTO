@@ -44,10 +44,17 @@
                     android:id="@+id/text_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_toLeftOf="@+id/button_delete_comment"
                     android:layout_marginRight="5dp"
                     android:text="Posted 5h ago"
                     android:textColor="#03A9F4" />
+                <ImageView
+                    android:id="@+id/button_delete_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:visibility="invisible"
+                    android:src="@drawable/ic_delete_custom"/>
             </RelativeLayout>
 
             <TextView
@@ -55,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Here's the content!" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

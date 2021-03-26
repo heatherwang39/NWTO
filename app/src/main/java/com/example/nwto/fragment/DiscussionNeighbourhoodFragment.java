@@ -48,9 +48,9 @@ public class DiscussionNeighbourhoodFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle("Neighbourhood");
 
-        mUID = DiscussionActivity.mUID;
-        mFullName = DiscussionActivity.mFullName;
-        mNeighbourhoodName = DiscussionActivity.mNeighbourhoodName;
+        mUID = DiscussionActivity.uID;
+        mFullName = DiscussionActivity.fullName;
+        mNeighbourhoodName = DiscussionActivity.neighbourhoodName;
 
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();

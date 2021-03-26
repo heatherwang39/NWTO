@@ -25,7 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 public class DiscussionActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    public static String mUID, mFullName, mProfilePic, mNeighbourhoodName;
+    public static String uID, fullName, profilePic, neighbourhoodName;
+    public static boolean isAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class DiscussionActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(this, LoginActivity.class));
         } else {
-            mUID = mAuth.getCurrentUser().getUid();
+            uID = mAuth.getCurrentUser().getUid();
             loadProfile();
         }
 
@@ -100,7 +101,7 @@ public class DiscussionActivity extends AppCompatActivity {
 
     private void loadProfile() {
         //get user info, including fullName, profilePic
-        DocumentReference documentReference = db.collection("users").document(mUID);
+        DocumentReference documentReference = db.collection("users").document(uID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -110,10 +111,11 @@ public class DiscussionActivity extends AppCompatActivity {
                 }
 
                 if (documentSnapshot.exists()) {
-                    mFullName = documentSnapshot.getString("fullName");
-                    mProfilePic = documentSnapshot.getString("displayPicPath");
-                    mNeighbourhoodName = documentSnapshot.getString("neighbourhood");
-                    Log.d("Post:", mNeighbourhoodName);
+                    fullName = documentSnapshot.getString("fullName");
+                    profilePic = documentSnapshot.getString("displayPicPath");
+                    neighbourhoodName = documentSnapshot.getString("neighbourhood");
+                    isAdmin = documentSnapshot.getBoolean("isAdmin");
+                    Log.d("Post:", neighbourhoodName);
                 }
             }
         });

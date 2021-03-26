@@ -1,7 +1,6 @@
 package com.example.nwto.fragment;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -14,18 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,20 +31,11 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.nwto.DiscussionActivity;
-import com.example.nwto.LoginActivity;
-import com.example.nwto.ProfileActivity;
-import com.example.nwto.ProfileUpdateActivity;
 import com.example.nwto.R;
-import com.example.nwto.api.ResourceApi;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -57,9 +43,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DiscussionPostFragment extends Fragment {
@@ -103,10 +87,10 @@ public class DiscussionPostFragment extends Fragment {
         mCheckBoxNeighbourhood = (CheckBox) rootView.findViewById(R.id.checkbox_neighbourhood);
 
         // Get the variable from DiscussionActivity
-        mUID = DiscussionActivity.mUID;
-        mFullName = DiscussionActivity.mFullName;
-        mProfilePic = DiscussionActivity.mProfilePic;
-        mNeighbourhoodName = DiscussionActivity.mNeighbourhoodName;
+        mUID = DiscussionActivity.uID;
+        mFullName = DiscussionActivity.fullName;
+        mProfilePic = DiscussionActivity.profilePic;
+        mNeighbourhoodName = DiscussionActivity.neighbourhoodName;
         mCheckBoxNeighbourhood.setText("Post to: " + mNeighbourhoodName);
 
         mImageUpload.setOnClickListener(new View.OnClickListener() {

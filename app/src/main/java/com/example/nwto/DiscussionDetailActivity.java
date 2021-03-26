@@ -1,38 +1,31 @@
 package com.example.nwto;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nwto.adapter.CommentAdapter;
-import com.example.nwto.adapter.PostAdapter;
 import com.example.nwto.model.Comment;
-import com.example.nwto.model.Neighbour;
-import com.example.nwto.model.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -52,6 +45,7 @@ public class DiscussionDetailActivity extends AppCompatActivity {
     private ImageView mImagePostPic;
     private EditText mEditComment;
     private ImageView mButtonSendComment;
+    private Button mButtonDeletePost;
 
     private RecyclerView mRecycleCommentList;
     private CommentAdapter mCommentAdapter;
@@ -59,6 +53,7 @@ public class DiscussionDetailActivity extends AppCompatActivity {
     private ArrayList<Comment> mCommentList;
 
     private String mPostOwnerUID, mCommenterUID, mFullName, mContent, mProfilePic, mTimeStamp, mPostTimeStamp;
+    private boolean mIsAdmin;
 
 
     @Override
@@ -69,9 +64,10 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
 
-        mCommenterUID = DiscussionActivity.mUID;
-        mFullName = DiscussionActivity.mFullName;
-        mProfilePic = DiscussionActivity.mProfilePic;
+        mCommenterUID = DiscussionActivity.uID;
+        mFullName = DiscussionActivity.fullName;
+        mProfilePic = DiscussionActivity.profilePic;
+        mIsAdmin = DiscussionActivity.isAdmin;
 
         mTextNameAndTime = (TextView) findViewById(R.id.text_name_and_time);
         mTextTopic = (TextView) findViewById(R.id.text_topic);
@@ -81,6 +77,7 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         mImagePostPic = (ImageView) findViewById(R.id.image_post_pic);
         mEditComment = (EditText) findViewById(R.id.edit_comment);
         mButtonSendComment = (ImageView) findViewById(R.id.button_send_comment);
+        mButtonDeletePost = (Button) findViewById(R.id.button_delete_post);
 
         mCommentList = new ArrayList<Comment>();
         mRecycleCommentList = (RecyclerView) findViewById(R.id.recycler_comment_list);
@@ -91,6 +88,13 @@ public class DiscussionDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendComment();
+            }
+        });
+
+        mButtonDeletePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletePost();
             }
         });
 
@@ -106,6 +110,10 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         //I don't use the postPic as identifier cuz postPic is optional
         if (getIntent().hasExtra("ownerUID")) {
             mPostOwnerUID = getIntent().getStringExtra("ownerUID");
+            //Allow the admin user or the post owner to delete the post
+            if(mCommenterUID.equals(mPostOwnerUID)||mIsAdmin){
+                mButtonDeletePost.setVisibility(View.VISIBLE);
+            }
             Log.d(TAG,mPostOwnerUID);
         }
         if (getIntent().hasExtra("postTimeStamp")) {
@@ -171,7 +179,7 @@ public class DiscussionDetailActivity extends AppCompatActivity {
 
         mTimeStamp = String.valueOf(System.currentTimeMillis());
 
-        Comment comment = new Comment(mPostOwnerUID, mProfilePic, mFullName, mTimeStamp, mContent, mPostTimeStamp);
+        Comment comment = new Comment(mCommenterUID, mPostOwnerUID, mProfilePic, mFullName, mTimeStamp, mContent, mPostTimeStamp);
         db.collection("comments")
                 .add(comment)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -194,6 +202,45 @@ public class DiscussionDetailActivity extends AppCompatActivity {
                         Log.w(TAG, "Error adding a new comment", e);
                     }
                 });
+    }
+
+    private void deletePost() {
+        //delete the post
+        db.collection("posts")
+                .whereEqualTo("timeStamp",mPostTimeStamp)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        db.collection("posts").document(document.getId()).delete();
+                        Log.d(TAG, "Successfully deleting post document: "+document.getId());
+
+                        startActivity(new Intent(DiscussionDetailActivity.this, DiscussionActivity.class));
+                        Toast.makeText(DiscussionDetailActivity.this, "Post deleted!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.d(TAG, "Error getting post documents when deleting: ", task.getException());
+                }
+            }
+        });
+
+        //delete the comments
+        db.collection("comments")
+                .whereEqualTo("postTimeStamp",mPostTimeStamp)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        db.collection("comments").document(document.getId()).delete();
+                        Log.d(TAG, "Successfully deleting comment document: "+document.getId());
+                    }
+                } else {
+                    Log.d(TAG, "Error getting comment documents when deleting: ", task.getException());
+                }
+            }
+        });
     }
 
 }

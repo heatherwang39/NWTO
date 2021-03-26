@@ -1,32 +1,50 @@
 package com.example.nwto.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nwto.DiscussionActivity;
+import com.example.nwto.DiscussionDetailActivity;
+import com.example.nwto.NeighboursActivity;
 import com.example.nwto.R;
 import com.example.nwto.model.Comment;
 import com.example.nwto.model.Post;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
-    List<Comment> commentList;
-    LayoutInflater inflater;
-    Context ctx;
+    private List<Comment> commentList;
+    private LayoutInflater inflater;
+    private Context ctx;
+    private FirebaseFirestore db;
+    private String mCurrentUID;
+    private boolean mIsAdmin;
 
     public CommentAdapter(Context ctx, List<Comment> commentList) {
         this.ctx = ctx;
         this.commentList = commentList;
         this.inflater = LayoutInflater.from(ctx);
+        // Initialize Cloud FireStore
+        db = FirebaseFirestore.getInstance();
+        mCurrentUID = DiscussionActivity.uID;
+        mIsAdmin = DiscussionActivity.isAdmin;
     }
 
     @NonNull
@@ -44,6 +62,34 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.content.setText(commentList.get(position).getContent());
         String elapsedTime = getElapsedTime(commentList.get(position).getTimeStamp());
         holder.time.setText("Posted " + elapsedTime + " ago");
+
+        if(mCurrentUID.equals(commentList.get(position).getCommenterUID()) || mIsAdmin){
+            holder.buttonDeleteComment.setVisibility(View.VISIBLE);
+        }
+        holder.buttonDeleteComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //delete the neighbour
+                db.collection("comments") //TODO: this check is not enough
+                        .whereEqualTo("timeStamp", commentList.get(position).getTimeStamp())
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                db.collection("comments").document(document.getId()).delete();
+                                Toast.makeText(ctx, "Comment deleted.", Toast.LENGTH_SHORT).show();
+                                Log.d("Delete comment", "Successfully deleting comment document: "+document.getId());
+                                commentList.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.d("Delete comment", "Error getting comment documents when deleting: ", task.getException());
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -52,7 +98,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageAvatar;
+        ImageView imageAvatar, buttonDeleteComment;
         TextView name, time, content;
 
         public ViewHolder(@NonNull View itemView) {
@@ -61,6 +107,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             name = itemView.findViewById(R.id.text_name);
             time = itemView.findViewById(R.id.text_time);
             content = itemView.findViewById(R.id.text_content);
+            buttonDeleteComment = itemView.findViewById(R.id.button_delete_comment);
         }
     }
 

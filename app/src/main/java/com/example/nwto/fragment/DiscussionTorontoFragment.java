@@ -55,8 +55,8 @@ public class DiscussionTorontoFragment<GlobalPostAdapter> extends Fragment {
         ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.setTitle("Toronto");
 
-        mUID = DiscussionActivity.mUID;
-        mFullName = DiscussionActivity.mFullName;
+        mUID = DiscussionActivity.uID;
+        mFullName = DiscussionActivity.fullName;
 
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();

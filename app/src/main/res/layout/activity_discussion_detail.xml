@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/container_send_comment"
         android:scrollbars="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,12 +31,13 @@
 
             <TextView
                 android:id="@+id/text_topic"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_centerVertical="true"
                 android:text="This is a topic"
                 android:textSize="22sp"
                 android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/text_neighbourhood"
@@ -54,12 +56,13 @@
                 android:background="#B4F6F1F1"
                 android:text="Crime Type: Crime Type"
                 android:textColor="#03A9F4" />
+
             <TextView
                 android:id="@+id/text_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras lacinia in lorem at pretium. Praesent tellus ipsum, imperdiet finibus consectetur ut, ullamcorper vitae diam. Integer fermentum in metus in gravida. Vivamus at nibh sed justo vestibulum ullamcorper. Fusce tortor elit, suscipit vitae est at, tincidunt mattis mauris. Sed eget ultrices lacus. Duis mauris purus, bibendum vel urna sit amet, vehicula sagittis augue."/>
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras lacinia in lorem at pretium. Praesent tellus ipsum, imperdiet finibus consectetur ut, ullamcorper vitae diam. Integer fermentum in metus in gravida. Vivamus at nibh sed justo vestibulum ullamcorper. Fusce tortor elit, suscipit vitae est at, tincidunt mattis mauris. Sed eget ultrices lacus. Duis mauris purus, bibendum vel urna sit amet, vehicula sagittis augue." />
 
             <ImageView
                 android:id="@+id/image_post_pic"
@@ -68,6 +71,38 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_camera_custom" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:gravity="right">
+
+                <Button
+                    android:id="@+id/button_delete_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:drawableRight="@drawable/ic_delete_custom"
+                    android:layout_marginRight="10dp"
+                    android:text="Delete"
+                    android:textColor="#03A9F4"
+                    android:textSize="10sp"
+                    android:visibility="invisible"
+                    app:backgroundTint="#B4F6F1F1" />
+
+                <Button
+                    android:id="@+id/button_report"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:drawableRight="@drawable/ic_flag_custom"
+                    android:text="Report as inappropriate"
+                    android:textColor="#03A9F4"
+                    android:textSize="10sp"
+                    android:visibility="visible"
+                    app:backgroundTint="#B4F6F1F1" />
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_comment_list"
                 android:layout_width="match_parent"
@@ -82,8 +117,8 @@
         android:id="@+id/container_send_comment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="5dp"
         android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal">
@@ -93,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Enter new comment here"/>
+            android:hint="Enter new comment here" />
 
         <ImageView
             android:id="@+id/button_send_comment"
