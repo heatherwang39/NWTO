@@ -49,8 +49,8 @@ public class ServerConnection {
             connection.setRequestMethod("GET");
 
             // configures timeouts
-            connection.setConnectTimeout(3000); // 3s
-            connection.setReadTimeout(3000);
+            connection.setConnectTimeout(10000); // 10s
+            connection.setReadTimeout(10000);
 
             // reads the status code
             int responseCode = connection.getResponseCode();

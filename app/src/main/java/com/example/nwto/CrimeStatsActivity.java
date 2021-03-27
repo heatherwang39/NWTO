@@ -50,6 +50,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
     public static final int[] YEARS = new int[] {2018, 2019, 2020};
     public static final String[] CRIMETYPES_YE = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over"};
     public static final String[] CRIMETYPES_YTD = new String[] {"Assault", "Auto Theft", "Break and Enter", "Robbery", "Theft Over", "Sexual Violation", "Shooting"};
+    public static final String EMPTY_VALUE = "-";
 
     private boolean calculationYE = false, calculationYTD = false;
 
@@ -319,7 +320,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                 int index = row * colNumb_mode1 + col;
                 if (row == 0) mTable_mode1.add(new TableBox(index, header_mode1[col], colorHeader));
                 else if (col == 0) mTable_mode1.add(new TableBox(index, stub_mode1[row - 1], colorHeader));
-                else mTable_mode1.add(new TableBox(index, "0.0", colorBody));
+                else mTable_mode1.add(new TableBox(index, EMPTY_VALUE, colorBody));
             }
         }
 
@@ -331,7 +332,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                 int index = row * colNumb_mode2 + col;
                 if (row == 0) mTable_mode2.add(new TableBox(index, header_mode2[col], colorHeader));
                 else if (col == 0) mTable_mode2.add(new TableBox(index, stub_mode2[row - 1], colorHeader));
-                else mTable_mode2.add(new TableBox(index, "0.0", colorBody));
+                else mTable_mode2.add(new TableBox(index, EMPTY_VALUE, colorBody));
             }
         }
 
@@ -473,14 +474,18 @@ public class CrimeStatsActivity extends AppCompatActivity {
         int threshold = 30;
         for (int i = 1; i < numbOfRows; i++) { // numbOfRows doesn't count the header row
             int rowIndex = numbOfCols * i;
-            double avgMonthlyCount = Double.parseDouble(mTable_mode1.get(rowIndex + 1).getText());
-            double lastMonthCount = Double.parseDouble(mTable_mode1.get(rowIndex + 3).getText());
+            String avgMonthlyCountVal = mTable_mode1.get(rowIndex + 1).getText();
+            if (avgMonthlyCountVal.equals(EMPTY_VALUE)) avgMonthlyCountVal = "0.0";
+            String lastMonthCountVal = mTable_mode1.get(rowIndex + 3).getText();
+            if (lastMonthCountVal.equals(EMPTY_VALUE)) lastMonthCountVal = "0.0";
+
+            double avgMonthlyCount = Double.parseDouble(avgMonthlyCountVal);
+            double lastMonthCount = Double.parseDouble(lastMonthCountVal);
             double growth = (lastMonthCount - avgMonthlyCount) / avgMonthlyCount * 100;
             int color = 0;
             if (growth < -threshold) color = colorGreen;
             else if (growth > threshold) color = colorRed;
             else color = colorYellow;
-
 
             TableBox growthBox = mTable_mode1.get(rowIndex + 2);
             if (avgMonthlyCount == 0) growthBox.setText("N/A");

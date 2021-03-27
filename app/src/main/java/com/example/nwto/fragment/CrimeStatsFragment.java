@@ -18,7 +18,9 @@ import com.google.android.material.button.MaterialButton;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -81,44 +83,53 @@ public class CrimeStatsFragment extends Fragment {
         int rowNumb = table.size() / CrimeStatsActivity.HEADER_MODE1.length - 1; // excluding the header row
         DataPoint[] monthlyAvgDataPoints = new DataPoint[rowNumb];
         DataPoint[] lastMonthDataPoints = new DataPoint[rowNumb];
-        String[] xLabel = new String[rowNumb];
+        String[] xLabel = new String[rowNumb + 1];
+        xLabel[0] = "";
 
         // initializes renderers
         GridLabelRenderer gridRenderer = mGraphView_mode1.getGridLabelRenderer();
         LegendRenderer legendRenderer = mGraphView_mode1.getLegendRenderer();
+        Viewport viewport = mGraphView_mode1.getViewport();
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(mGraphView_mode1);
         staticLabelsFormatter.setHorizontalLabels(xLabel);
 
         // builds plots
         for (int i = 0; i < rowNumb; i++) {
             int rowIndex = CrimeStatsActivity.HEADER_MODE1.length * (i + 1);
-            xLabel[i] = table.get(rowIndex).getText(); // finds x label (Crime Types)
+            xLabel[i+1] = table.get(rowIndex).getText(); // finds x label (Crime Types)
 
             TableBox monthlyAvg = table.get(rowIndex + 1); // plot 1
-            monthlyAvgDataPoints[i] = new DataPoint(i, Double.parseDouble(monthlyAvg.getText()));
+            String monthlyAvgVal = monthlyAvg.getText();
+            if (monthlyAvgVal.equals(CrimeStatsActivity.EMPTY_VALUE)) monthlyAvgVal = "0.0";
+            monthlyAvgDataPoints[i] = new DataPoint(i, Double.parseDouble(monthlyAvgVal));
 
             TableBox lastMonth = table.get(rowIndex + 3); // plot 2
-            lastMonthDataPoints[i] = new DataPoint(i, Double.parseDouble(lastMonth.getText()));
+            String lastMonthVal = lastMonth.getText();
+            if (lastMonthVal.equals(CrimeStatsActivity.EMPTY_VALUE)) lastMonthVal = "0.0";
+            lastMonthDataPoints[i] = new DataPoint(i, Double.parseDouble(lastMonthVal));
         }
 
         // plot 1
-        LineGraphSeries<DataPoint> dataEntry_monthlyAvg = new LineGraphSeries<>(monthlyAvgDataPoints);
+        BarGraphSeries<DataPoint> dataEntry_monthlyAvg = new BarGraphSeries<>(monthlyAvgDataPoints);
         dataEntry_monthlyAvg.setColor(colors[0]);
         dataEntry_monthlyAvg.setTitle(CrimeStatsActivity.HEADER_MODE1[1]);
-        dataEntry_monthlyAvg.setDrawDataPoints(true);
+        dataEntry_monthlyAvg.setDataWidth(0.5);
         mGraphView_mode1.addSeries(dataEntry_monthlyAvg);
 
         // plot 2
-        LineGraphSeries<DataPoint> dataEntry_lastMonth = new LineGraphSeries<>(lastMonthDataPoints);
+        BarGraphSeries<DataPoint> dataEntry_lastMonth = new BarGraphSeries<>(lastMonthDataPoints);
         dataEntry_monthlyAvg.setColor(colors[1]);
         dataEntry_lastMonth.setTitle(CrimeStatsActivity.HEADER_MODE1[3]);
-        dataEntry_lastMonth.setDrawDataPoints(true);
+        dataEntry_lastMonth.setDataWidth(0.5);
         mGraphView_mode1.addSeries(dataEntry_lastMonth);
 
         // sets renderers settings
         gridRenderer.setLabelFormatter(staticLabelsFormatter);
         gridRenderer.setLabelsSpace(20);
         gridRenderer.setHorizontalLabelsAngle(120);
+        gridRenderer.setHighlightZeroLines(false);
+        viewport.setMinX(-1);
+        viewport.setXAxisBoundsManual(true);
         legendRenderer.setVisible(true);
         legendRenderer.setBackgroundColor(colors[colors.length - 1]);
         legendRenderer.setAlign(LegendRenderer.LegendAlign.TOP);
@@ -154,7 +165,9 @@ public class CrimeStatsFragment extends Fragment {
             for (int j = 0; j < colLength; j++) {
                 int col = j + 1;
                 TableBox entry = table.get(row * (colLength + 1) + col);
-                plot[j] = new DataPoint(j, Double.parseDouble(entry.getText()));
+                String entryVal = entry.getText();
+                if (entryVal.equals(CrimeStatsActivity.EMPTY_VALUE)) entryVal = "0.0";
+                plot[j] = new DataPoint(j, Double.parseDouble(entryVal));
             }
             LineGraphSeries<DataPoint> dataSeries = new LineGraphSeries<>(plot);
             dataSeries.setColor(colors[i % colors.length]);
@@ -167,6 +180,7 @@ public class CrimeStatsFragment extends Fragment {
         gridRenderer.setLabelFormatter(staticLabelsFormatter);
         gridRenderer.setLabelsSpace(15);
         gridRenderer.setHorizontalLabelsAngle(120);
+        gridRenderer.setHighlightZeroLines(false);
         legendRenderer.setVisible(true);
         legendRenderer.setBackgroundColor(colors[colors.length - 1]);
         legendRenderer.setAlign(LegendRenderer.LegendAlign.TOP);

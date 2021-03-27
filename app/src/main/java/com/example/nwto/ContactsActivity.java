@@ -146,13 +146,15 @@ public class ContactsActivity extends AppCompatActivity {
                 switch (title) {
                     case "Councillor":
                         order = 2;
-                        title = "City Councillor";
+                        title = "Toronto City Councillor";
                         break;
                     case "MPP":
                         order = 3;
+                        title = "Queen's Park MPP";
                         break;
                     case "MP":
                         order = 4;
+                        title = "Ottawa MP";
                         break;
                 }
                 mContacts.add(new Contact(order, title, name, email, phoneNumb));
@@ -184,8 +186,8 @@ public class ContactsActivity extends AppCompatActivity {
                                 String officerName = (String) document.get(documentField_officerName);
                                 String officerEmail = (String) document.get(documentField_officerEmail);
                                 String officerPhone = (String) document.get(documentField_officerPhone);
-                                mContacts.add(new Contact(0, "Police Division " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
-                                mContacts.add(new Contact(1, "Crime Prevention", officerName, officerEmail, officerPhone));
+                                mContacts.add(new Contact(0, "Toronto Police Div. " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
+                                mContacts.add(new Contact(1, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
                                 Log.d(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Success");
                             }
                         } else
