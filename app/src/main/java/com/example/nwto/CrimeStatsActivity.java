@@ -28,12 +28,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.jjoe64.graphview.series.DataPoint;
 
 import org.osmdroid.util.GeoPoint;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -272,6 +275,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                         mCrimes.add(new Crime(0, "No Results Found", "", "", "", "", 0, 0));
                     else
                         mCrimes.addAll(crimes);
+                    sortRecentCrimesByDate();
                     mCrimeAdapter.notifyDataSetChanged();
                 }
             }.queryYTD(mUserRadius, mUserLatitude, mUserLongitude, -1, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
@@ -283,6 +287,7 @@ public class CrimeStatsActivity extends AppCompatActivity {
                         mCrimes.add(new Crime(0, "No Results Found", "", "", "", "", 0, 0));
                     else
                         mCrimes.addAll(crimes);
+                    sortRecentCrimesByDate();
                     mCrimeAdapter.notifyDataSetChanged();
                 }
             }.queryYTD(-1, -1, -1, mDivisionNumb, startYear, startMonth, startDay, endYear, endMonth, endDay, mPremiseType, mCrimeType);
@@ -494,8 +499,107 @@ public class CrimeStatsActivity extends AppCompatActivity {
                 growthBox.setBackgroundColor(color);
             }
         }
+
+        sortTableMode1ByGrowth(1, numbOfRows - 3); // excluding header, Sexual Violation and Shooting as there are no data for YE
     }
 
+    private void sortRecentCrimesByDate() {
+        Collections.sort(mCrimes, new Comparator<Crime>() {
+            @Override
+            public int compare(Crime crime1, Crime crime2) {
+                String date1 = crime1.getDate();
+                String date2 = crime2.getDate();
+                int month1 = Integer.parseInt(date1.substring(0, 2));
+                int day1 = Integer.parseInt(date1.substring(3, 5));
+                int month2 = Integer.parseInt(date2.substring(0, 2));
+                int day2 = Integer.parseInt(date2.substring(3, 5));
+
+                if (month2 > month1) return 1;
+                else if (month2 == month1) return Integer.compare(day2, day1);
+                else return -1;
+            }
+        });
+    }
+
+    private void sortTableMode1ByGrowth(int startRow, int endRow) {
+        if (startRow >= endRow) return;
+        int colNumbs = HEADER_MODE1.length;
+        int growthBoxIndex = 2;
+        int standard = startRow;
+        int pivot = startRow + 1;
+
+        int index_pivot = colNumbs * pivot;
+        int index_standard = colNumbs * standard;
+        for (int i = startRow + 1; i <= endRow; i++) {
+            int index_i = colNumbs * i;
+
+            String growth_i_text = mTable_mode1.get(index_i + growthBoxIndex).getText();
+            String growth_standard_text = mTable_mode1.get(index_standard + growthBoxIndex).getText();
+            double growth_i = Double.parseDouble(growth_i_text.substring(0, growth_i_text.length() - 1));
+            double growth_standard = Double.parseDouble(growth_standard_text.substring(0, growth_standard_text.length() - 1));
+            Log.e(TAG, "sortTableMode1ByGrowth: " + growth_i_text + " vs " + growth_standard_text );
+
+            if (growth_i > growth_standard) {
+                // row_temp = row_i
+                TableBox[] temp = new TableBox[colNumbs];
+                for (int j = 0; j < colNumbs; j++) {
+                    TableBox boxOfRow_i = mTable_mode1.get(index_i + j);
+                    temp[j] = new TableBox(boxOfRow_i.getOrder(), boxOfRow_i.getText(), boxOfRow_i.getBackgroundColor());
+                }
+
+                // row_i = row_pivot
+                for (int j = 0; j < colNumbs; j++) {
+                    TableBox boxOfRow_pivot = mTable_mode1.get(index_pivot + j);
+                    TableBox boxOfRow_i = mTable_mode1.get(index_i + j);
+                    boxOfRow_i.setOrder(boxOfRow_pivot.getOrder());
+                    boxOfRow_i.setText(boxOfRow_pivot.getText());
+                    boxOfRow_i.setBackgroundColor(boxOfRow_pivot.getBackgroundColor());
+                }
+
+                // row_pivot = row_temp
+                for (int j = 0; j < colNumbs; j++) {
+                    TableBox boxOfRow_pivot = mTable_mode1.get(index_pivot + j);
+                    TableBox boxOfRow_temp = temp[j];
+                    boxOfRow_pivot.setOrder(boxOfRow_temp.getOrder());
+                    boxOfRow_pivot.setText(boxOfRow_temp.getText());
+                    boxOfRow_pivot.setBackgroundColor(boxOfRow_temp.getBackgroundColor());
+                }
+
+                pivot++;
+                index_pivot = colNumbs * pivot;
+            }
+        }
+        pivot--;
+        index_pivot = colNumbs * pivot;
+
+        // row_temp = row_pivot
+        TableBox[] temp = new TableBox[colNumbs];
+        for (int j = 0; j < colNumbs; j++) {
+            TableBox boxOfRow_pivot = mTable_mode1.get(index_pivot + j);
+            temp[j] = new TableBox(boxOfRow_pivot.getOrder(), boxOfRow_pivot.getText(), boxOfRow_pivot.getBackgroundColor());
+        }
+
+        // row_pivot = row_standard
+        for (int j = 0; j < colNumbs; j++) {
+            TableBox boxOfRow_pivot = mTable_mode1.get(index_pivot + j);
+            TableBox boxOfRow_standard =  mTable_mode1.get(index_standard + j);
+            boxOfRow_pivot.setOrder(boxOfRow_standard.getOrder());
+            boxOfRow_pivot.setText(boxOfRow_standard.getText());
+            boxOfRow_pivot.setBackgroundColor(boxOfRow_standard.getBackgroundColor());
+        }
+
+        // row_standard = row_temp
+        for (int j = 0; j < colNumbs; j++) {
+            TableBox boxOfRow_standard = mTable_mode1.get(index_standard + j);
+            TableBox boxOfRow_temp = temp[j];
+            boxOfRow_standard.setOrder(boxOfRow_temp.getOrder());
+            boxOfRow_standard.setText(boxOfRow_temp.getText());
+            boxOfRow_standard.setBackgroundColor(boxOfRow_temp.getBackgroundColor());
+        }
+
+        sortTableMode1ByGrowth(standard, pivot - 1);
+        sortTableMode1ByGrowth(pivot + 1, endRow);
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void readStats_Testing() {
