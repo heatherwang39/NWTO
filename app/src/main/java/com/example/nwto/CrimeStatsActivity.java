@@ -537,7 +537,6 @@ public class CrimeStatsActivity extends AppCompatActivity {
             String growth_standard_text = mTable_mode1.get(index_standard + growthBoxIndex).getText();
             double growth_i = Double.parseDouble(growth_i_text.substring(0, growth_i_text.length() - 1));
             double growth_standard = Double.parseDouble(growth_standard_text.substring(0, growth_standard_text.length() - 1));
-            Log.e(TAG, "sortTableMode1ByGrowth: " + growth_i_text + " vs " + growth_standard_text );
 
             if (growth_i > growth_standard) {
                 // row_temp = row_i

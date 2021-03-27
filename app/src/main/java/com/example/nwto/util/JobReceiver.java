@@ -98,6 +98,7 @@ public class JobReceiver extends BroadcastReceiver {
                 .setContentTitle(title)
                 .setContentText(text)
                 .setContentIntent(contentPendingIntent)
+                .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
         notificationManager.notify(0, builder.build());
     }
