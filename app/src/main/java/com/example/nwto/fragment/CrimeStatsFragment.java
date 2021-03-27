@@ -125,7 +125,7 @@ public class CrimeStatsFragment extends Fragment {
 
         // sets renderers settings
         gridRenderer.setLabelFormatter(staticLabelsFormatter);
-//        gridRenderer.setLabelsSpace(20);
+        gridRenderer.setLabelsSpace(20);
         gridRenderer.setHorizontalLabelsAngle(110);
         gridRenderer.setHighlightZeroLines(false);
         viewport.setMinX(-1);
