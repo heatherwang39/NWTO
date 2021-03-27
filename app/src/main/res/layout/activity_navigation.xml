@@ -94,6 +94,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <ImageView
+                android:id="@+id/image_nav_CPAT_resources"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/ic_resources_custom"/>
@@ -133,6 +134,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <ImageView
+                android:id="@+id/image_nav_NWTO_info"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/ic_nwto_custom"/>

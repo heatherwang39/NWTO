@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="resourceContent">
+        <![CDATA[
+        <big><p style="color:red;">In case of an Emergency, call 9-1-1. </p></big>
+        <p>If you require Police assistance but are not in an emergency situation where no person or property is in immediate danger, please call the <b>Toronto Police Service non-emergency number at (416) 808-2222</b>.
+        </p>
+        <br/>
+
+        <big><p><b>Crime Prevention Association of Toronto</b></p></big>
+        <big><a href="http://crimepreventionto.org/index-4.html">CPAT Resources</a></big>
+        <br/><br/>
+        <big><a href="http://crimepreventionto.org/index-2.html">Neighbourhood Watch</a></big>
+        <br/><br/>
+        <big><a href="https://crimepoint.info/crime-prevention/">CrimePoint</a></big>
+        <br/><br/><br/>
+
+        <big><p><b>Toronto Police Service</b></p></big>
+        <big><a href="https://www.torontopolice.on.ca/">Toronto Police Service</a></big>
+        <br/><br/>
+        <big><a href="http://www.torontopolice.on.ca/crimeprevention/">Crime Prevention Tips</a></big>
+        <br/><br/>
+        <big><a href="https://data.torontopolice.on.ca/">Public Safety Data Portal</a></big>
+        <br/><br/><br/>
+
+        <big><p><b>Other</b></p></big>
+        <big><a href="https://www.222tips.com/">Crime Stoppers</a></big>
+        <br/><br/>
+        ]]>
+    </string>
+</resources>

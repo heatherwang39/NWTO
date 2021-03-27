@@ -3,6 +3,7 @@ package com.example.nwto;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,7 +14,7 @@ public class NavigationActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    private ImageView mImageNavProfile, mImageNavNeighbours, mImageNavDiscussion, mImageNavResources, mImageNavCrimeStats;
+    private ImageView mImageNavProfile, mImageNavNeighbours, mImageNavDiscussion, mImageNavResources, mImageNavCrimeStats, mImageNavCpatResources, mImageNavAppInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,22 @@ public class NavigationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(NavigationActivity.this, CrimeStatsActivity.class));
+            }
+        });
+
+        mImageNavCpatResources = (ImageView) findViewById(R.id.image_nav_CPAT_resources);
+        mImageNavCpatResources.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(NavigationActivity.this, ResourcesActivity.class));
+            }
+        });
+
+        mImageNavAppInfo = (ImageView) findViewById(R.id.image_nav_NWTO_info);
+        mImageNavAppInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(NavigationActivity.this, AboutActivity.class));
             }
         });
     }
