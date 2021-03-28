@@ -2,7 +2,7 @@
 <resources>
     <string name="resourceContent">
         <![CDATA[
-        <big><p style="color:red;">In case of an Emergency, call 9-1-1. </p></big>
+        <big><p style="color:red;"><b>In case of an Emergency, call 9-1-1. </b></p></big>
         <p>If you require Police assistance but are not in an emergency situation where no person or property is in immediate danger, please call the <b>Toronto Police Service non-emergency number at (416) 808-2222</b>.
         </p>
         <br/>
@@ -27,5 +27,41 @@
         <big><a href="https://www.222tips.com/">Crime Stoppers</a></big>
         <br/><br/>
         ]]>
+    </string>
+
+    <string name="aboutNWTO">
+        <![CDATA[
+        <p>
+        <big><b>About</b></big><br/>
+        The NWTO App was designed by Heather Wang, Daniel Lee and Don Cameron and was programmed by Heather Wang and Daniel Lee.
+        This App is sponsored by the Crime Prevention Association of Toronto.
+        </p>
+
+        <p>
+        <big><b>Data</b></big><br/>
+        The NWTO App draws data from the Toronto Police Service (“TPS”) Public Safety Data Portal database.
+        These data are published by the Toronto Police Services in accordance with the Municipal Freedom of Information and Protection of Privacy Act.
+        </p>
+
+        <p>
+        <big><b>Location Data</b></big><br/>
+        The location data provided by the TPS is approximate.
+        The database protects the privacy of individuals involved in the reported incident by adjusting the reported location of the incident to the nearest road intersection.
+        The NWTO App sometimes reports a crime location as an intersection – sometimes as a street address.
+        Accordingly, the crime did not occur at that address, but “near” that address – that is, within a block of that address.
+        Also, due to the offset of occurrence location, the numbers reported by geographic area are approximate and may not reflect the exact number of crimes that happened within that area.
+        </p>
+
+        <p>
+        <big><b>Assaults</b></big><br/>
+        Most assaults are committed by people who know the victim. Therefore, the reports of assaults do not reflect the number of random assaults.
+        </p>
+
+        <p>
+        <big><b>Theft Over</b></big><br/>
+        “Theft Over” refers to theft of property valued over $5,000 (excluding vehicles, which are counted as “Auto Thefts”).
+        </p>
+        ]]>
+
     </string>
 </resources>
