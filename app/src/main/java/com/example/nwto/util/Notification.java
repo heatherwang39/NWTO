@@ -29,8 +29,8 @@ public class Notification {
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 8) // every day at 8 am
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
+            calendar.add(Calendar.DAY_OF_YEAR, 18);
+        calendar.set(Calendar.HOUR_OF_DAY, 18);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         Log.d(TAG, "schedule: notification is scheduled for " + calendar.getTime().toString() + " and repeats every " + frequency + " days");
