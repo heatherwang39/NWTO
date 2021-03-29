@@ -10,12 +10,13 @@ public class Post {
     private String content;
     private String neighbourhood;
     private String crimeType;
+    private boolean isTip;
 
     public Post() {
     }
 
     public Post(String ownerUID, String profilePic, String fullName, String postPic,
-                String timeStamp, String topic, String content, String neighbourhood, String crimeType) {
+                String timeStamp, String topic, String content, String neighbourhood, String crimeType, boolean isTip) {
         this.ownerUID = ownerUID;
         this.profilePic = profilePic;
         this.fullName = fullName;
@@ -25,6 +26,7 @@ public class Post {
         this.content = content;
         this.neighbourhood = neighbourhood;
         this.crimeType = crimeType;
+        this.isTip = isTip;
     }
 
     public String getOwnerUID() {
@@ -97,5 +99,13 @@ public class Post {
 
     public void setCrimeType(String crimeType) {
         this.crimeType = crimeType;
+    }
+
+    public boolean isTip() {
+        return isTip;
+    }
+
+    public void setTip(boolean tip) {
+        isTip = tip;
     }
 }

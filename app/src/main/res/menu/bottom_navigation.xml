@@ -2,13 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_toronto"
-        android:icon="@drawable/ic_discussion_custom"
+        android:icon="@drawable/ic_toronto_discussion_custom"
         android:title="Toronto" />
 
     <item
         android:id="@+id/nav_neighbours"
         android:icon="@drawable/ic_neighbour_custom"
         android:title="Neighbourhood" />
+
+    <item
+        android:id="@+id/nav_tips"
+        android:icon="@drawable/ic_resources_custom"
+        android:title="Tips" />
 
     <item
         android:id="@+id/nav_post"

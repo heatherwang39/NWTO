@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.nwto.fragment.DiscussionNeighbourhoodFragment;
 import com.example.nwto.fragment.DiscussionPostFragment;
+import com.example.nwto.fragment.DiscussionTipsFragment;
 import com.example.nwto.fragment.DiscussionTorontoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +67,9 @@ public class DiscussionActivity extends AppCompatActivity {
                             break;
                         case R.id.nav_neighbours:
                             selectedFragment = new DiscussionNeighbourhoodFragment();
+                            break;
+                        case R.id.nav_tips:
+                            selectedFragment = new DiscussionTipsFragment();
                             break;
                         case R.id.nav_post:
                             selectedFragment = new DiscussionPostFragment();

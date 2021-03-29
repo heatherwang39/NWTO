@@ -57,12 +57,13 @@ public class DiscussionPostFragment extends Fragment {
     private ImageView mImageUpload;
     private Button mButtonPost;
     private Spinner mSpinnerCrimeType;
-    private CheckBox mCheckBoxNeighbourhood;
+    private CheckBox mCheckBoxNeighbourhood, mCheckBoxIsTip;
     private String mUID, mFullName, mProfilePic, mCurrentPhotoPath, mTimeStamp, mTopic, mContent, mNeighbourhoodName;
     private String mCrimeType = "N/A";
     private String mPostNeighbourhoodName = "Toronto";
     private Bitmap mImageBitmap;
     private Uri postURI;
+    private boolean mIsAdmin, mIsTip;
 
     @Nullable
     @Override
@@ -85,12 +86,30 @@ public class DiscussionPostFragment extends Fragment {
         mButtonPost = (Button) rootView.findViewById(R.id.button_post);
         mSpinnerCrimeType = (Spinner) rootView.findViewById(R.id.spinner_crime_type);
         mCheckBoxNeighbourhood = (CheckBox) rootView.findViewById(R.id.checkbox_neighbourhood);
+        mCheckBoxIsTip = (CheckBox) rootView.findViewById(R.id.checkbox_isTip);
 
         // Get the variable from DiscussionActivity
         mUID = DiscussionActivity.uID;
         mFullName = DiscussionActivity.fullName;
         mProfilePic = DiscussionActivity.profilePic;
         mNeighbourhoodName = DiscussionActivity.neighbourhoodName;
+        mIsAdmin = DiscussionActivity.isAdmin;
+        mIsTip = false;
+
+        if(mIsAdmin){
+            mCheckBoxIsTip.setVisibility(View.VISIBLE);
+            mCheckBoxIsTip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((CompoundButton) view).isChecked()) {
+                        mIsTip = true;
+                    } else {
+                        mIsTip = false;
+                    }
+                }
+            });
+        }
+
         mCheckBoxNeighbourhood.setText("Post to: " + mNeighbourhoodName);
 
         mImageUpload.setOnClickListener(new View.OnClickListener() {
@@ -323,6 +342,7 @@ public class DiscussionPostFragment extends Fragment {
         post.put("content", mContent);
         post.put("neighbourhood", mPostNeighbourhoodName);
         post.put("crimeType", mCrimeType);
+        post.put("isTip",mIsTip);
 
         //create a new post and store it in firestore
         db.collection("posts")
