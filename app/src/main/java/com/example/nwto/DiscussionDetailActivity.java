@@ -111,17 +111,17 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         if (getIntent().hasExtra("ownerUID")) {
             mPostOwnerUID = getIntent().getStringExtra("ownerUID");
             //Allow the admin user or the post owner to delete the post
-            if(mCommenterUID.equals(mPostOwnerUID)||mIsAdmin){
+            if (mCommenterUID.equals(mPostOwnerUID) || mIsAdmin) {
                 mButtonDeletePost.setVisibility(View.VISIBLE);
             }
-            Log.d(TAG,mPostOwnerUID);
+            Log.d(TAG, mPostOwnerUID);
         }
         if (getIntent().hasExtra("postTimeStamp")) {
             mPostTimeStamp = getIntent().getStringExtra("postTimeStamp");
         }
         if (getIntent().hasExtra("nameAndTime")) {
             mTextNameAndTime.setText("Posted by: " + getIntent().getStringExtra("nameAndTime") + " ago");
-            Log.d(TAG,getIntent().getStringExtra("nameAndTime"));
+            Log.d(TAG, getIntent().getStringExtra("nameAndTime"));
         }
         if (getIntent().hasExtra("topic")) {
             mTextTopic.setText(getIntent().getStringExtra("topic"));
@@ -137,7 +137,11 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         }
 
         if (getIntent().hasExtra("postPic")) {
-            Picasso.get().load(getIntent().getStringExtra("postPic")).into(mImagePostPic);
+            if (getIntent().getStringExtra("postPic").equals("null")) {
+                mImagePostPic.setVisibility(View.GONE);
+            } else {
+                Picasso.get().load(getIntent().getStringExtra("postPic")).into(mImagePostPic);
+            }
         }
     }
 
@@ -145,8 +149,8 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         mCommentList.clear();
         CollectionReference collectionReference = db.collection("comments");
         collectionReference.orderBy("timeStamp", Query.Direction.DESCENDING)
-                .whereEqualTo("postOwnerUID",mPostOwnerUID)
-                .whereEqualTo("postTimeStamp",mPostTimeStamp)
+                .whereEqualTo("postOwnerUID", mPostOwnerUID)
+                .whereEqualTo("postTimeStamp", mPostTimeStamp)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -171,7 +175,7 @@ public class DiscussionDetailActivity extends AppCompatActivity {
     private void sendComment() {
         String mContent = mEditComment.getText().toString();
 
-        if(mContent.length()<1){
+        if (mContent.length() < 1) {
             mEditComment.setError("Content can't be empty.");
             mEditComment.requestFocus();
             return;
@@ -186,9 +190,9 @@ public class DiscussionDetailActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         mEditComment.setText("");
-                        Toast.makeText(DiscussionDetailActivity.this,"Comment added!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DiscussionDetailActivity.this, "Comment added!", Toast.LENGTH_SHORT).show();
                         //hide the keyboard
-                        InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                                 InputMethodManager.HIDE_NOT_ALWAYS);
 
@@ -207,14 +211,14 @@ public class DiscussionDetailActivity extends AppCompatActivity {
     private void deletePost() {
         //delete the post
         db.collection("posts")
-                .whereEqualTo("timeStamp",mPostTimeStamp)
+                .whereEqualTo("timeStamp", mPostTimeStamp)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
                         db.collection("posts").document(document.getId()).delete();
-                        Log.d(TAG, "Successfully deleting post document: "+document.getId());
+                        Log.d(TAG, "Successfully deleting post document: " + document.getId());
 
                         startActivity(new Intent(DiscussionDetailActivity.this, DiscussionActivity.class));
                         Toast.makeText(DiscussionDetailActivity.this, "Post deleted!", Toast.LENGTH_SHORT).show();
@@ -227,14 +231,14 @@ public class DiscussionDetailActivity extends AppCompatActivity {
 
         //delete the comments
         db.collection("comments")
-                .whereEqualTo("postTimeStamp",mPostTimeStamp)
+                .whereEqualTo("postTimeStamp", mPostTimeStamp)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
                         db.collection("comments").document(document.getId()).delete();
-                        Log.d(TAG, "Successfully deleting comment document: "+document.getId());
+                        Log.d(TAG, "Successfully deleting comment document: " + document.getId());
                     }
                 } else {
                     Log.d(TAG, "Error getting comment documents when deleting: ", task.getException());

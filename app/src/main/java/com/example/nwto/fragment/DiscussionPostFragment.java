@@ -223,6 +223,7 @@ public class DiscussionPostFragment extends Fragment {
         //check the topic is not empty
         mTopic = mEditTopic.getText().toString();
         mContent = mEditContent.getText().toString();
+        mTimeStamp = String.valueOf(System.currentTimeMillis());
         if (mTopic.length() < 1) {
             mEditTopic.setError("Please enter a topic.");
             mEditTopic.requestFocus();
@@ -267,14 +268,11 @@ public class DiscussionPostFragment extends Fragment {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-            mTimeStamp = String.valueOf(System.currentTimeMillis());
             final StorageReference postReference = storage.getReference().child("photos").child(mUID + "/" + mTimeStamp + ".jpeg");
 
             postReference.putBytes(baos.toByteArray()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getActivity(), "Made a new Post",
-                            Toast.LENGTH_SHORT).show();
                     postReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
@@ -292,8 +290,10 @@ public class DiscussionPostFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), "Please upload an image!",
-                    Toast.LENGTH_SHORT).show();
+            Uri uri = null;
+            addToUserPosts(uri);
+            Intent intent = new Intent(getActivity(), DiscussionActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -330,6 +330,7 @@ public class DiscussionPostFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(getActivity(), "Made a new Post", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "On Success: addToUserPosts" + documentReference.getId());
                     }
                 })
