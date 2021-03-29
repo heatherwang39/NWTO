@@ -28,8 +28,8 @@ public class Notification {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 8) // every day at 8 am
-            calendar.add(Calendar.DAY_OF_YEAR, 18);
+        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 18) // every day at 6pm
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 18);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
