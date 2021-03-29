@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,9 +20,12 @@ import com.example.nwto.R;
 import com.example.nwto.model.Post;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> implements Filterable {
+    List<Post> postListAll;
     List<Post> postList;
     LayoutInflater inflater;
     Context ctx;
@@ -28,6 +33,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public PostAdapter(Context ctx, List<Post> postList) {
         this.ctx = ctx;
         this.postList = postList;
+        this.postListAll = new ArrayList<>(postList);
         this.inflater = LayoutInflater.from(ctx);
     }
 
@@ -64,8 +70,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 intent.putExtra("content", postList.get(position).getContent());
                 intent.putExtra("crimeType", postList.get(position).getCrimeType());
                 intent.putExtra("neighbourhood", postList.get(position).getNeighbourhood());
-                intent.putExtra("nameAndTime", postList.get(position).getFullName()+" " + elapsedTime);
-                intent.putExtra("postPic",postList.get(position).getPostPic());
+                intent.putExtra("nameAndTime", postList.get(position).getFullName() + " " + elapsedTime);
+                intent.putExtra("postPic", postList.get(position).getPostPic());
                 ctx.startActivity(intent);
             }
         });
@@ -75,6 +81,47 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public int getItemCount() {
         return postList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    Filter filter = new Filter() {
+
+        //run on the background thread
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Post> filteredList = new ArrayList<>();
+            if (constraint.toString().isEmpty()) {
+                //if constraint is empty, return all posts
+                filteredList.addAll(postListAll);
+            } else {
+                for (Post post : postListAll) {
+                    //if the post's topic, content, or poster's full name, neighbourhood contains the contraint, then return
+                    if (post.getTopic().toLowerCase().contains(constraint.toString().toLowerCase()) ||
+                            post.getContent().toLowerCase().contains(constraint.toString().toLowerCase()) ||
+                            post.getFullName().toLowerCase().contains(constraint.toString().toLowerCase()) ||
+                            post.getNeighbourhood().toLowerCase().contains(constraint.toString().toLowerCase()) ||
+                            post.getCrimeType().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        filteredList.add(post);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+            return filterResults;
+        }
+
+        //runs on a ui thread
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            postList.clear();
+            postList.addAll((Collection<? extends Post>) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardPost;
@@ -108,10 +155,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             elapsedTime = (minutes == 1) ? value + " minute" : value + " minutes";
         } else if (hours > 0 && days == 0) {
             String value = String.valueOf(hours);
-            elapsedTime = (hours == 1) ? value + " hour" : value + " hours" ;
+            elapsedTime = (hours == 1) ? value + " hour" : value + " hours";
         } else if (days > 0) {
             String value = String.valueOf(days);
-            elapsedTime = (days == 1) ? value + " day" : value + " days" ;
+            elapsedTime = (days == 1) ? value + " day" : value + " days";
         }
 
         return elapsedTime;

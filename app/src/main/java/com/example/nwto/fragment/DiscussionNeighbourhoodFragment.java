@@ -84,6 +84,7 @@ public class DiscussionNeighbourhoodFragment extends Fragment {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                         mPostAdapter = new PostAdapter(getActivity(), mNeighbourhoodPostList);
+                        DiscussionActivity.postAdapter = mPostAdapter;
                         mRecycleNeighbourhoodPostList.setAdapter(mPostAdapter);
                         mRecycleNeighbourhoodPostList.setHasFixedSize(true);
                     }

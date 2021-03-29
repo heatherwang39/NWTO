@@ -90,6 +90,7 @@ public class DiscussionTorontoFragment<GlobalPostAdapter> extends Fragment {
                         }
                         Log.d(TAG, "all global posts:" + mTorontoPostList.toString());
                         mPostAdapter = new PostAdapter(getActivity(), mTorontoPostList);
+                        DiscussionActivity.postAdapter = mPostAdapter;
                         mRecycleTorontoPostList.setAdapter(mPostAdapter);
                         mRecycleTorontoPostList.setHasFixedSize(true);
                     }

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.nwto.adapter.PostAdapter;
 import com.example.nwto.fragment.DiscussionNeighbourhoodFragment;
 import com.example.nwto.fragment.DiscussionPostFragment;
 import com.example.nwto.fragment.DiscussionTipsFragment;
@@ -29,6 +30,7 @@ public class DiscussionActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     public static String uID, fullName, profilePic, neighbourhoodName;
     public static boolean isAdmin;
+    public static PostAdapter postAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class DiscussionActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                postAdapter.getFilter().filter(newText);
                 return false;
             }
         });
