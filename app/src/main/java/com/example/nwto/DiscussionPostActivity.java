@@ -1,4 +1,4 @@
-package com.example.nwto.fragment;
+package com.example.nwto;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -30,8 +30,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.example.nwto.DiscussionActivity;
-import com.example.nwto.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -46,7 +44,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiscussionPostFragment extends Fragment {
+public class DiscussionPostActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
@@ -65,14 +63,10 @@ public class DiscussionPostFragment extends Fragment {
     private Uri postURI;
     private boolean mIsAdmin, mIsTip;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_discussion_post, container, false);
-
-        // Set the title of Action Bar
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.setTitle("Make a New Post");
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_discussion_post);
 
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
@@ -80,13 +74,13 @@ public class DiscussionPostFragment extends Fragment {
         // Initialize Storage
         storage = FirebaseStorage.getInstance();
 
-        mImageUpload = (ImageView) rootView.findViewById(R.id.image_upload);
-        mEditTopic = (EditText) rootView.findViewById(R.id.edit_topic);
-        mEditContent = (EditText) rootView.findViewById(R.id.edit_content);
-        mButtonPost = (Button) rootView.findViewById(R.id.button_post);
-        mSpinnerCrimeType = (Spinner) rootView.findViewById(R.id.spinner_crime_type);
-        mCheckBoxNeighbourhood = (CheckBox) rootView.findViewById(R.id.checkbox_neighbourhood);
-        mCheckBoxIsTip = (CheckBox) rootView.findViewById(R.id.checkbox_isTip);
+        mImageUpload = (ImageView) findViewById(R.id.image_upload);
+        mEditTopic = (EditText) findViewById(R.id.edit_topic);
+        mEditContent = (EditText) findViewById(R.id.edit_content);
+        mButtonPost = (Button) findViewById(R.id.button_post);
+        mSpinnerCrimeType = (Spinner) findViewById(R.id.spinner_crime_type);
+        mCheckBoxNeighbourhood = (CheckBox) findViewById(R.id.checkbox_neighbourhood);
+        mCheckBoxIsTip = (CheckBox) findViewById(R.id.checkbox_isTip);
 
         // Get the variable from DiscussionActivity
         mUID = DiscussionActivity.uID;
@@ -130,7 +124,7 @@ public class DiscussionPostFragment extends Fragment {
             }
         });
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.crime_types_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCrimeType.setAdapter(adapter);
@@ -157,46 +151,20 @@ public class DiscussionPostFragment extends Fragment {
             }
         });
 
-
-        return rootView;
     }
-
-//    private void loadProfile() {
-//        //get user info, including fullName, profilePic
-//        DocumentReference documentReference = db.collection("users").document(mUID);
-//        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-//                if (e != null) {
-//                    Toast.makeText(getActivity(), "Error while loading the profile", Toast.LENGTH_SHORT);
-//                    Log.d(TAG, "-->" + e.toString());
-//                    return;
-//                }
-//
-//                if (documentSnapshot.exists()) {
-//                    mFullName = documentSnapshot.getString("fullName");
-//                    mProfilePic = documentSnapshot.getString("displayPicPath");
-//                    mNeighbourhoodName = documentSnapshot.getString("neighbourhood");
-//                    mCheckBoxNeighbourhood.setText("Post to: " + mNeighbourhoodName);
-//                    Log.d("Post:",mNeighbourhoodName);
-//                }
-//            }
-//        });
-//    }
-
 
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                Toast.makeText(getActivity(), "Error when creating the Post File",
+                Toast.makeText(this, "Error when creating the Post File",
                         Toast.LENGTH_LONG).show();
             }
             if (photoFile != null) {
-                postURI = FileProvider.getUriForFile(getActivity(), "com.example.android.fileprovider", photoFile);
+                postURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
 //                getCtx().setPostUri(postURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, postURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -210,7 +178,7 @@ public class DiscussionPostFragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: Make Post Image Capture RESULT OK");
             try {
-                mImageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), postURI);
+                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), postURI);
                 mImageUpload.setImageBitmap(mImageBitmap);
 
                 Log.i(TAG, "onActivityResult ok: get postBitmap successfully");
@@ -227,7 +195,7 @@ public class DiscussionPostFragment extends Fragment {
     private File createImageFile() throws IOException {
         String timeStamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -297,7 +265,7 @@ public class DiscussionPostFragment extends Fragment {
                         public void onSuccess(Uri uri) {
                             Log.d(TAG, "onSuccess: get uri " + uri);
                             addToUserPosts(uri);
-                            Intent intent = new Intent(getActivity(), DiscussionActivity.class);
+                            Intent intent = new Intent(DiscussionPostActivity.this, DiscussionActivity.class);
                             startActivity(intent);
                         }
                     });
@@ -311,7 +279,7 @@ public class DiscussionPostFragment extends Fragment {
         } else {
             Uri uri = null;
             addToUserPosts(uri);
-            Intent intent = new Intent(getActivity(), DiscussionActivity.class);
+            Intent intent = new Intent(this, DiscussionActivity.class);
             startActivity(intent);
         }
     }
@@ -350,7 +318,7 @@ public class DiscussionPostFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getActivity(), "Made a new Post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DiscussionPostActivity.this, "Made a new Post", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "On Success: addToUserPosts" + documentReference.getId());
                     }
                 })
@@ -361,20 +329,5 @@ public class DiscussionPostFragment extends Fragment {
                     }
                 });
     }
-
-//    public void onCheckboxClicked(View view) {
-//        // Is the view now checked?
-//        boolean checked = ((CheckBox) view).isChecked();
-//
-//        if (view.getId() == R.id.checkbox_neighbourhood) {
-//            if (checked) {
-//                mPostNeighbourhoodName = mNeighbourhoodName;
-//            } else {
-//                mPostNeighbourhoodName = "Toronto";
-//            }
-//        }
-//
-//    }
-
 
 }

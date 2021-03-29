@@ -15,8 +15,4 @@
         android:icon="@drawable/ic_resources_custom"
         android:title="Tips" />
 
-    <item
-        android:id="@+id/nav_post"
-        android:icon="@drawable/ic_camera_custom"
-        android:title="Post" />
 </menu>

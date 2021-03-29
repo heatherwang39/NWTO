@@ -48,7 +48,10 @@
             android:name=".DiscussionDetailActivity"
             android:label="Discussion Detail"
             android:parentActivityName=".DiscussionActivity" />
-
+        <activity
+            android:name=".DiscussionPostActivity"
+            android:label="Make a New Post"
+            android:parentActivityName=".DiscussionActivity" />
         <activity
             android:name=".NeighboursActivity"
             android:label="My Neighbours"

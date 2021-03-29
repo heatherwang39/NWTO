@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.example.nwto.adapter.PostAdapter;
 import com.example.nwto.fragment.DiscussionNeighbourhoodFragment;
-import com.example.nwto.fragment.DiscussionPostFragment;
 import com.example.nwto.fragment.DiscussionTipsFragment;
 import com.example.nwto.fragment.DiscussionTorontoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -74,9 +73,6 @@ public class DiscussionActivity extends AppCompatActivity {
                         case R.id.nav_tips:
                             selectedFragment = new DiscussionTipsFragment();
                             break;
-                        case R.id.nav_post:
-                            selectedFragment = new DiscussionPostFragment();
-                            break;
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             selectedFragment).commit();
@@ -110,8 +106,9 @@ public class DiscussionActivity extends AppCompatActivity {
             case R.id.action_search:
                 Toast.makeText(this, "Searching", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.action_filter:
-                Toast.makeText(this, "Filter", Toast.LENGTH_SHORT).show();
+            case R.id.action_add_post:
+                startActivity(new Intent(DiscussionActivity.this, DiscussionPostActivity.class));
+                Toast.makeText(this, "Add new post", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_log_out:
                 try {

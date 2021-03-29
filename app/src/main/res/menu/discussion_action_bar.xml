@@ -8,9 +8,9 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
     <item
-        android:id="@+id/action_filter"
-        android:icon="@drawable/ic_baseline_filter_list_24"
-        android:title="Filter"
+        android:id="@+id/action_add_post"
+        android:icon="@drawable/ic_add"
+        android:title="Add New"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_log_out"

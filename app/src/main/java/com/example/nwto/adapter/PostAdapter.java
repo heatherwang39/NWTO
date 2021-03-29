@@ -53,6 +53,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> im
         holder.neighbourhood.setText("Neighbourhood: " + postList.get(position).getNeighbourhood());
         holder.name.setText(postList.get(position).getFullName());
         holder.time.setText("Posted " + elapsedTime + " ago");
+        holder.crimeType.setText("Crime Type: " + postList.get(position).getCrimeType());
         String content = postList.get(position).getContent();
         if (content.length() > 82) {
             holder.content.setText(content.substring(0, 82) + "...");
@@ -126,7 +127,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> im
     public class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardPost;
         ImageView imageAvatar;
-        TextView topic, neighbourhood, name, time, content;
+        TextView topic, neighbourhood, name, time, content, crimeType;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -137,6 +138,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> im
             name = itemView.findViewById(R.id.text_name);
             time = itemView.findViewById(R.id.text_time);
             content = itemView.findViewById(R.id.text_content);
+            crimeType = itemView.findViewById(R.id.text_crime_type);
         }
     }
 
