@@ -85,7 +85,8 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:max="3"
+                android:min="1"
+                android:max="5"
                 android:progress="3" />
 
             <TextView
@@ -120,6 +121,7 @@
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:max="7"
+                android:min="1"
                 android:progress="3" />
             <TextView
                 android:id="@+id/text_frequency"
