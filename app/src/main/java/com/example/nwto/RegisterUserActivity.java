@@ -58,7 +58,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     private TextView textViewTakePicture;
     private ImageView profileImage;
     private Button signUp;
-    private EditText editTextEmail, editTextPassword, editTextPassword2, editTextName;
+    private EditText editTextEmail, editTextPassword, editTextPassword2, editTextName, mEditPhoneNumber;
     private AutoCompleteTextView autoCompleteTextView;
     private ProgressBar progressBar;
     private String uID, mNeighbourhoodName;
@@ -66,7 +66,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private Boolean noProfilePic = true;
     private Bitmap imageBitmap;
-    private String email, name;
+    private String email, name, mPhoneNumber;
     private String autoCompleteAddress, postalCode;
     private double mLatitude, mLongitude;
 
@@ -105,6 +105,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         editTextPassword = (EditText) findViewById(R.id.edit_password);
         editTextPassword2 = (EditText) findViewById(R.id.edit_password2);
         editTextName = (EditText) findViewById(R.id.edit_name);
+        mEditPhoneNumber = (EditText) findViewById(R.id.edit_phone_number);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         autoCompleteTextView = findViewById(R.id.auto_complete_address);
@@ -168,6 +169,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         String password = editTextPassword.getText().toString();
         String password2 = editTextPassword2.getText().toString();
         name = editTextName.getText().toString().trim();
+        mPhoneNumber = mEditPhoneNumber.getText().toString().trim();
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Valid Email Address is required!");
@@ -193,6 +195,10 @@ public class RegisterUserActivity extends AppCompatActivity {
             return;
         }
 
+        if (mPhoneNumber.length()<1) {
+            mPhoneNumber = "N/A";
+        }
+
         progressBar.setVisibility(View.VISIBLE);
 
         // [START create_user_with_email]
@@ -211,6 +217,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                             new ResourceApi() {
                                 @Override
                                 public void processNeighbourhoodName(String neighbourhoodName) {
+                                    Log.d("NeighbourhoodName:", neighbourhoodName);
                                     mNeighbourhoodName = neighbourhoodName.split("\\(")[0].trim();
                                     Log.d("NeighbourhoodName:", mNeighbourhoodName);
 
@@ -219,6 +226,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                                     user.put("email", email);
                                     user.put("fullName", name);
                                     user.put("address", autoCompleteAddress);
+                                    user.put("phoneNumber", mPhoneNumber);
                                     user.put("postalCode", postalCode);
                                     user.put("coordinates", Arrays.asList(mLatitude, mLongitude));
                                     user.put("radius", "5");

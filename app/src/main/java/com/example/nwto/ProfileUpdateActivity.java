@@ -67,8 +67,9 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     private SeekBar mSeekBarRadius, mSeekBarFrequency;
     private ImageView mImageProfile, mImageCamera;
     private Button mButtonLogOut, mButtonSave, mButtonCancel;
+    private EditText mEditPhoneNumber;
     private AutoCompleteTextView mAutoCompleteAddress;
-    private String mUID, mAddress, mPostalCode, mRadius, mFrequency, mProfilePic, mNeighbourhoodName;
+    private String mUID, mAddress, mPostalCode, mRadius, mFrequency, mProfilePic, mNeighbourhoodName, mPhoneNumber;
     private double mLatitude, mLongitude;
     private Bitmap mImageBitmap;
 
@@ -90,6 +91,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         mTextEmail = (TextView) findViewById(R.id.text_email);
         mTextRadius = (TextView) findViewById(R.id.text_radius);
         mTextFrequency = (TextView) findViewById(R.id.text_frequency);
+        mEditPhoneNumber = (EditText) findViewById(R.id.edit_phone_number);
 
         mSeekBarRadius = (SeekBar) findViewById(R.id.seek_bar_radius);
         mSeekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -189,7 +191,11 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     mTextFullName.setText(fullName);
                     String email = documentSnapshot.getString("email");
                     mTextEmail.setText(email);
-                    //Initialize the mAddress, mPostalCode, mRadius, mFrequency, mProfilePic variable (they can be updated later)
+
+                    //Initialize the mPhoneNumber, mAddress, mPostalCode, mRadius, mFrequency, mProfilePic variable (they can be updated later)
+                    mPhoneNumber = documentSnapshot.getString("phoneNumber");
+                    mEditPhoneNumber.setText(mPhoneNumber);
+
                     mAddress = documentSnapshot.getString("address");
                     mAutoCompleteAddress.setHint(mAddress);
                     mPostalCode = documentSnapshot.getString("postalCode");
@@ -225,10 +231,12 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             public void processNeighbourhoodName(String neighbourhoodName) {
                 mNeighbourhoodName = neighbourhoodName.split("\\(")[0].trim();
                 Log.d("NeighbourhoodName:", mNeighbourhoodName);
+                mPhoneNumber = mEditPhoneNumber.getText().toString().trim();
 
                 DocumentReference documentReference = db.collection("users").document(mUID);
                 Map<String, Object> userUpdate = new HashMap<>();
                 userUpdate.put("address", mAddress);
+                userUpdate.put("phoneNumber", mPhoneNumber);
                 userUpdate.put("postalCode", mPostalCode);
                 userUpdate.put("coordinates", Arrays.asList(mLatitude, mLongitude));
                 userUpdate.put("radius", mRadius);

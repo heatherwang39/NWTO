@@ -180,21 +180,26 @@ public class NeighboursActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.action_bar, menu);
+        // hide search and add new button
+        menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_add_post).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_log_out) {
-            try {
-                // Sign out and then go to login page
-                mAuth.signOut();
-                startActivity(new Intent(NeighboursActivity.this, LoginActivity.class));
-                Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        switch(item.getItemId()){
+            case R.id.action_log_out:
+                try {
+                    // Sign out and then go to login page
+                    mAuth.signOut();
+                    startActivity(new Intent(NeighboursActivity.this, LoginActivity.class));
+                    Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);

@@ -21,7 +21,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.storage.FirebaseStorage;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "Profile";
 
-    private TextView mTextFullName, mTextEmail, mTextAddress, mTextRadius, mTextFrequency;
+    private TextView mTextFullName, mTextEmail, mTextAddress, mTextRadius, mTextFrequency, mTextPhoneNumber;
     private ImageView mImageProfile;
     private String mUID;
     private Button mButtonEdit;
@@ -54,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         mTextFullName = (TextView) findViewById(R.id.text_full_name);
         mTextEmail = (TextView) findViewById(R.id.text_email);
+        mTextPhoneNumber = (TextView) findViewById(R.id.text_phone_number);
         mTextAddress = (TextView) findViewById(R.id.text_address);
         mTextRadius = (TextView) findViewById(R.id.text_radius);
         mTextFrequency = (TextView) findViewById(R.id.text_frequency);
@@ -93,6 +93,8 @@ public class ProfileActivity extends AppCompatActivity {
                     mTextFullName.setText(fullName);
                     String email = documentSnapshot.getString("email");
                     mTextEmail.setText(email);
+                    String phoneNumber = documentSnapshot.getString("phoneNumber");
+                    mTextPhoneNumber.setText(phoneNumber);
                     String address = documentSnapshot.getString("address");
                     mTextAddress.setText(address);
                     String radius = documentSnapshot.getString("radius");
@@ -111,21 +113,26 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.action_bar, menu);
+        // hide search and add new button
+        menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_add_post).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_log_out) {
-            try {
-                // Sign out and then go to login page
-                mAuth.signOut();
-                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
-                Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        switch(item.getItemId()){
+            case R.id.action_log_out:
+                try {
+                    // Sign out and then go to login page
+                    mAuth.signOut();
+                    startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                    Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
