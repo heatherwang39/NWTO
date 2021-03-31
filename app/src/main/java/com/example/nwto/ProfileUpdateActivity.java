@@ -97,7 +97,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         mSeekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mRadius = String.valueOf(progress);
+                mRadius = String.valueOf(progress + 1);
                 mTextRadius.setText(mRadius);
             }
 
@@ -114,7 +114,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         mSeekBarFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mFrequency = String.valueOf(progress);
+                mFrequency = String.valueOf(progress + 1);
                 mTextFrequency.setText(mFrequency);
             }
 
@@ -206,12 +206,12 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
                     mRadius = documentSnapshot.getString("radius");
                     mTextRadius.setText(mRadius);
-                    mSeekBarRadius.setProgress(Integer.parseInt(mRadius));
+                    mSeekBarRadius.setProgress(Integer.parseInt(mRadius) - 1);
 
                     //TODO: change to set Text, and change the check empty after click save
                     mFrequency = documentSnapshot.getString("frequency");
                     mTextFrequency.setText(mFrequency);
-                    mSeekBarFrequency.setProgress(Integer.parseInt(mFrequency));
+                    mSeekBarFrequency.setProgress(Integer.parseInt(mFrequency) - 1);
 
                     mProfilePic = documentSnapshot.getString("displayPicPath");
                     Glide.with(ProfileUpdateActivity.this).load(mProfilePic).into(mImageProfile);

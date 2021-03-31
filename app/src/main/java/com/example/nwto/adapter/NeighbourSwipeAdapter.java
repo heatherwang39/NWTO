@@ -133,6 +133,11 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
             textFullName = itemView.findViewById(R.id.text_full_name);
             textEmail = itemView.findViewById(R.id.text_email);
             textPhoneNumber = itemView.findViewById(R.id.text_phone_number);
+
+            //disable admin to edit user's information
+            if(NeighboursActivity.isAdmin){
+                textEdit.setVisibility(View.GONE);
+            }
         }
 
         void bindData(Neighbour neighbour){

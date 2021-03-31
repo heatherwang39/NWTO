@@ -104,9 +104,7 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:max="5"
-                android:min="1"
-                android:progress="3" />
+                android:max="4"/>
 
             <TextView
                 android:id="@+id/text_radius"
@@ -143,9 +141,7 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:max="7"
-                android:min="1"
-                android:progress="3" />
+                android:max="6"/>
 
             <TextView
                 android:id="@+id/text_frequency"

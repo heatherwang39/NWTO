@@ -1,6 +1,7 @@
 package com.example.nwto;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,13 +41,12 @@ public class NeighboursActivity extends AppCompatActivity {
     private static final String TAG = "Neighbours";
 
     private String mOwnerUID;
-    private boolean isAdmin;
+    public static boolean isAdmin;
     private Button mButtonAddNeighbour, mButtonSendSMS, mButtonSendEmail;
 
     private RecyclerView mRecycleNeighbourList;
     private NeighbourSwipeAdapter mNeighbourSwipeAdapter;
     public static ArrayList<Neighbour> mNeighbourList;
-//    private NeighbourAdapter mNeighbourAdapter;
     private GridLayoutManager mGridLayoutManager;
 
     @Override
@@ -119,10 +119,15 @@ public class NeighboursActivity extends AppCompatActivity {
 
                     //load neighbours
                     mNeighbourList.clear();
-                    CollectionReference collectionReference = db.collection("neighbours");
 
-                    //load all neighbours for admin
+
+                    //load all authenticated User for admin
                     if (isAdmin) {
+                        // Set the title of Action Bar
+                        ActionBar actionBar = getSupportActionBar();
+                        actionBar.setTitle("Registered Users");
+
+                        CollectionReference collectionReference = db.collection("users");
                         collectionReference.orderBy("fullName")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -130,7 +135,13 @@ public class NeighboursActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Neighbour neighbour = document.toObject(Neighbour.class);
+                                                String neighbourID = document.getId();
+                                                String ownerUID = mOwnerUID;
+                                                String fullName = document.getString("fullName");
+                                                String email = document.getString("email");
+                                                String phoneNumber = document.getString("phoneNumber");
+
+                                                Neighbour neighbour = new Neighbour(neighbourID, ownerUID, fullName, email, phoneNumber);
                                                 mNeighbourList.add(neighbour);
                                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                             }
@@ -147,6 +158,7 @@ public class NeighboursActivity extends AppCompatActivity {
                                     }
                                 });
                     } else {
+                        CollectionReference collectionReference = db.collection("neighbours");
                         //load owned neighbours if not admin
                         collectionReference.orderBy("fullName")
                                 .whereEqualTo("ownerUID", mOwnerUID)
