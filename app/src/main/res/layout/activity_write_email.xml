@@ -6,61 +6,100 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".SendEmailActivity">
+
     <TextView
         android:id="@+id/text_subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_below="@+id/text_banner"
+        android:layout_margin="10dp"
         android:text="Subject:"
         android:textSize="20sp"
         android:textStyle="bold" />
+
     <EditText
         android:id="@+id/edit_subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_below="@+id/text_subject"
+        android:layout_margin="10dp"
         android:hint="Enter the subject of the Email"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
+
     <TextView
         android:id="@+id/text_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_below="@+id/edit_subject"
+        android:layout_margin="10dp"
         android:text="Body:"
         android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/edit_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_below="@+id/text_body"
+        android:layout_margin="10dp"
         android:hint="Enter the content of the email."
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/text_take_a_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_body"
+        android:layout_margin="10dp"
+        android:drawableLeft="@drawable/ic_camera_custom"
+        android:text="Take a Picture"
+        android:textColor="#03A9F4"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+
+    <ImageView
+        android:id="@+id/image_preview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/text_take_a_picture"
+        android:layout_margin="10dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/text_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image_preview"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal"
+        android:text="Image Preview"
+        android:textColor="#03A9F4"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
+        android:gravity="center"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:drawableRight="@drawable/ic_cancel"
             android:text="Cancel"
-            android:textAllCaps="true"
-            android:drawableRight="@drawable/ic_cancel"/>
+            android:textAllCaps="true" />
+
         <Button
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:drawableRight="@drawable/ic_send"
             android:text="Send"
-            android:textAllCaps="true"
-            android:drawableRight="@drawable/ic_send"/>
+            android:textAllCaps="true" />
     </LinearLayout>
 </RelativeLayout>

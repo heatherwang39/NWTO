@@ -77,7 +77,7 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
                 intent.putExtra("fullName",neighbourList.get(position).getFullName());
                 intent.putExtra("email",neighbourList.get(position).getEmail());
                 intent.putExtra("phoneNumber",neighbourList.get(position).getPhoneNumber());
-                ctx.startActivity(intent);
+                notifyDataSetChanged();
             }
         });
         holder.textDelete.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +95,7 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
                                 Toast.makeText(ctx, "Neighbour deleted.", Toast.LENGTH_SHORT).show();
                                 Log.d("Delete neighbour", "Successfully deleting neighbour document: "+document.getId());
                                 neighbourList.remove(position);
-                                ctx.startActivity(new Intent(ctx, NeighboursActivity.class));
+                                notifyDataSetChanged();
                             }
                         } else {
                             Log.d("Delete neighbour", "Error getting neighbour documents when deleting: ", task.getException());
