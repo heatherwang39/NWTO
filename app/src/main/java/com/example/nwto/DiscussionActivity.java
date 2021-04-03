@@ -36,6 +36,8 @@ public class DiscussionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discussion);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);// set drawable home icon
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 

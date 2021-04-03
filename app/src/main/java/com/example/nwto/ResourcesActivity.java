@@ -19,6 +19,8 @@ public class ResourcesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resources);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);// set drawable home icon
+
         mContent = (TextView) findViewById(R.id.resources_content);
         mContent.setMovementMethod(LinkMovementMethod.getInstance());
         mContent.setText(Html.fromHtml(getString(R.string.resourceContent)));

@@ -51,6 +51,8 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);// set drawable home icon
+
         // Initializes Firebase Variables
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mFireStore = FirebaseFirestore.getInstance();

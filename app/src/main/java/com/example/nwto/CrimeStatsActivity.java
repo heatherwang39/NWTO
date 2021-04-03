@@ -81,6 +81,8 @@ public class CrimeStatsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crimestats);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);// set drawable home icon
+
         mProgressBar = (ProgressBar) findViewById(R.id.crimestats_progressBar);
 
         // Initializes Firebase Variables

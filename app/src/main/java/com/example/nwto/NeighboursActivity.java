@@ -54,6 +54,8 @@ public class NeighboursActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_neighbours);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);// set drawable home icon
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
