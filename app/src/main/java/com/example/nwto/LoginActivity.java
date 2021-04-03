@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,7 +25,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginByEmailPassword";
 
-    private Button mButtonSignUp, mButtonLogin;
+    private Button mButtonLogin;
+    private TextView mButtonSignUp, mNWTO;
     private EditText mEditEmail, mEditPassword;
     private ProgressBar mProgressBar;
 
@@ -36,11 +38,19 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        mNWTO = (TextView) findViewById(R.id.text_nwto);
+        mNWTO.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, AboutActivity.class));
+            }
+        });
+
         // Check whether the user has been logged in
         if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(this, NavigationActivity.class));
         } else {
-            mButtonSignUp = (Button) findViewById(R.id.button_sign_up);
+            mButtonSignUp = (TextView) findViewById(R.id.button_sign_up);
             mButtonSignUp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -101,12 +101,11 @@
 
         <Button
             android:id="@+id/button_sign_up"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="SIGN UP"
-            android:textSize="18sp"
-            app:backgroundTint="#777272" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 

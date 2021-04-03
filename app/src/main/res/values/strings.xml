@@ -6,6 +6,16 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <!--    Login Screen Strings   -->
+    <string name="login_about_nwto"><u>NWTO</u> !</string>
+    <string name="login_welcome_to">Welcome to </string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_forget_password">Forget password?</string>
+    <string name="login_log_in">LOG IN</string>
+    <string name="login_sign_up_pre">Don\'t have an account?</string>
+    <string name="login_sign_up"><u>SIGN UP</u></string>
+
     <!--    FireBase Strings    -->
     <string name="firestore_collection_users">users</string>
     <string name="firestore_users_fullName">fullName</string>
@@ -37,5 +47,7 @@
     <string name="crimefilter_divisionNumber">division</string>
     <string name="crimefilter_premiseType">premise</string>
     <string name="crimefilter_crimeType">crime</string>
+
+
 
 </resources>
