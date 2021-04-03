@@ -189,11 +189,6 @@ public class RegisterUserActivity extends AppCompatActivity {
             return;
         }
 
-        if (noProfilePic) {
-            textViewTakePicture.setError("Profile picture is required!");
-            textViewTakePicture.requestFocus();
-            return;
-        }
 
         if (mPhoneNumber.length()<1) {
             mPhoneNumber = "N/A";
@@ -233,7 +228,11 @@ public class RegisterUserActivity extends AppCompatActivity {
                                     user.put("frequency", "1");
                                     user.put("neighbourhood", mNeighbourhoodName);
                                     user.put("isAdmin", false);
-                                    upload(imageBitmap);
+                                    if(noProfilePic){
+                                        user.put("displayPicPath", null);
+                                    }else{
+                                        upload(imageBitmap);
+                                    }
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {

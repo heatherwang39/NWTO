@@ -214,7 +214,9 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     mSeekBarFrequency.setProgress(Integer.parseInt(mFrequency) - 1);
 
                     mProfilePic = documentSnapshot.getString("displayPicPath");
-                    Glide.with(ProfileUpdateActivity.this).load(mProfilePic).into(mImageProfile);
+                    if (mProfilePic != null) {
+                        Glide.with(ProfileUpdateActivity.this).load(mProfilePic).into(mImageProfile);
+                    }
 
                     Log.i(TAG, "Load profile successfully" + fullName + " " + mUID);
                 }

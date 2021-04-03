@@ -57,7 +57,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Picasso.get().load(commentList.get(position).getProfilePic()).into(holder.imageAvatar);
+        if(commentList.get(position).getProfilePic() != null){
+            Picasso.get().load(commentList.get(position).getProfilePic()).into(holder.imageAvatar);
+        }
         holder.name.setText(commentList.get(position).getFullName());
         holder.content.setText(commentList.get(position).getContent());
         String elapsedTime = getElapsedTime(commentList.get(position).getTimeStamp());

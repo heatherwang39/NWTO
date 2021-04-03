@@ -101,7 +101,9 @@ public class ProfileActivity extends AppCompatActivity {
                     mTextFrequency.setText(frequency);
 
                     String profilePic = documentSnapshot.getString("displayPicPath");
-                    Glide.with(ProfileActivity.this).load(profilePic).into(mImageProfile);
+                    if(profilePic!=null){
+                        Glide.with(ProfileActivity.this).load(profilePic).into(mImageProfile);
+                    }
 
                     Log.i(TAG, "Show profile successfully" + fullName + " " + mUID);
                 }

@@ -48,7 +48,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String elapsedTime = getElapsedTime(postList.get(position).getTimeStamp());
-        Picasso.get().load(postList.get(position).getProfilePic()).into(holder.imageAvatar);
+        if (postList.get(position).getProfilePic() != null) {
+            Picasso.get().load(postList.get(position).getProfilePic()).into(holder.imageAvatar);
+        }
         holder.topic.setText(postList.get(position).getTopic());
         holder.neighbourhood.setText("Neighbourhood: " + postList.get(position).getNeighbourhood());
         holder.name.setText(postList.get(position).getFullName());
