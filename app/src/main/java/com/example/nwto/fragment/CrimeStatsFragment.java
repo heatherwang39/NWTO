@@ -1,5 +1,6 @@
 package com.example.nwto.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.util.List;
 
@@ -131,7 +133,7 @@ public class CrimeStatsFragment extends Fragment {
         viewport.setMinX(-1);
         viewport.setXAxisBoundsManual(true);
         legendRenderer.setVisible(true);
-        legendRenderer.setBackgroundColor(colors[colors.length - 1]);
+        legendRenderer.setBackgroundColor(Color.argb(70, 218, 233, 244));
         legendRenderer.setAlign(LegendRenderer.LegendAlign.TOP);
     }
 
@@ -158,7 +160,7 @@ public class CrimeStatsFragment extends Fragment {
         staticLabelsFormatter.setHorizontalLabels(xLabel);
 
         // builds plots
-        for (int i = 0; i < rowLength; i++) {
+        for (int i = 0; i < rowLength - 2; i++) {
             int row = i + 1;
             DataPoint[] plot = new DataPoint[colLength];
             String plotName = crimeTypes[i];
@@ -176,13 +178,29 @@ public class CrimeStatsFragment extends Fragment {
             mGraphView_mode2.addSeries(dataSeries);
         }
 
+        // edge cases (sexual violation and shooting)
+        for (int i = rowLength - 2; i < rowLength; i++) {
+            int row = i + 1;
+            DataPoint[] plot = new DataPoint[1];
+            String plotName = crimeTypes[i];
+            int col = colLength;
+            TableBox entry = table.get(row * (colLength + 1) + col);
+            String entryVal = entry.getText();
+            plot[0] = new DataPoint(colLength - 1, Double.parseDouble(entryVal));
+            PointsGraphSeries<DataPoint> dataSeries = new PointsGraphSeries<>(plot);
+            dataSeries.setColor(colors[i % colors.length]);
+            dataSeries.setTitle(plotName);
+            dataSeries.setSize(10);
+            mGraphView_mode2.addSeries(dataSeries);
+        }
+
         // sets renderers settings
         gridRenderer.setLabelFormatter(staticLabelsFormatter);
         gridRenderer.setLabelsSpace(15);
         gridRenderer.setHorizontalLabelsAngle(110);
         gridRenderer.setHighlightZeroLines(false);
         legendRenderer.setVisible(true);
-        legendRenderer.setBackgroundColor(colors[colors.length - 1]);
+        legendRenderer.setBackgroundColor(Color.argb(70, 218, 233, 244));
         legendRenderer.setAlign(LegendRenderer.LegendAlign.TOP);
     }
 
