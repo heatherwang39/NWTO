@@ -91,8 +91,8 @@ public class JobReceiver extends BroadcastReceiver {
                 new Intent(context, NavigationActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         String title = crimeCounts > 1 ? crimeCounts + " New Crimes" : crimeCounts + " New Crime";
-        String text = frequency > 1 ? "has occurred near you during the last " + frequency + " days."
-                                    : "has occurred near you during the last " + frequency + " day.";
+        String text = frequency > 1 ? "occurred near you during the last " + frequency + " days."
+                                    : "occurred near you during the last " + frequency + " day.";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.landing_logo)
                 .setContentTitle(title)
