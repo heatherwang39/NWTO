@@ -1,5 +1,7 @@
 package com.example.nwto.fragment;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -92,7 +94,35 @@ public class CrimeMapFragment extends Fragment {
             crimeMarker.setTitle(crime.getCategory());
             crimeMarker.setSnippet(crime.getPremise());
             crimeMarker.setSubDescription(crime.getDate());
-            crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_baseline_location_on_24));
+            switch (crime.getCategory()) {
+                case "Assault":
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_assault));
+                    break;
+                case "Auto Theft":
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_auto_theft));
+                    break;
+                case "Break and Enter":
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_break_enter));
+                    break;
+                case "Homicide":
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_homicide));
+                    break;
+                case "Robbery":
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_robbery));
+                    break;
+                case "Theft Over":
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_theft_over));
+                    break;
+                case "Sexual Violation":
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_sexual_assault));
+                    break;
+                case "Shooting":
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_shooting));
+                    break;
+                default:
+                    crimeMarker.setIcon(getResources().getDrawable(R.drawable.ic_default));
+                    break;
+            }
             crimeMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
