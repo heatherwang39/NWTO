@@ -7,7 +7,7 @@
     <string name="previous">Previous</string>
 
     <!--    Login Screen Strings   -->
-    <string name="login_about_nwto"><u>NWTO</u> !</string>
+    <string name="login_about_nwto"> <u>NWTO</u> !</string>
     <string name="login_welcome_to">Welcome to </string>
     <string name="login_email_hint">Email</string>
     <string name="login_password_hint">Password</string>
