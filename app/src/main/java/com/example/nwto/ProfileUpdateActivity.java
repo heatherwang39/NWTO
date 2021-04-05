@@ -63,11 +63,11 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     private static final String TAG = "Profile Update";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private TextView mTextFullName, mTextEmail, mTextRadius, mTextFrequency;
+    private TextView mTextEmail, mTextRadius, mTextFrequency;
     private SeekBar mSeekBarRadius, mSeekBarFrequency;
     private ImageView mImageProfile, mImageCamera;
     private Button mButtonLogOut, mButtonSave, mButtonCancel;
-    private EditText mEditPhoneNumber;
+    private EditText mEditFullName, mEditPhoneNumber;
     private AutoCompleteTextView mAutoCompleteAddress;
     private String mUID, mAddress, mPostalCode, mRadius, mFrequency, mProfilePic, mNeighbourhoodName, mPhoneNumber;
     private double mLatitude, mLongitude;
@@ -87,7 +87,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         // Initialize Storage
         storage = FirebaseStorage.getInstance();
 
-        mTextFullName = (TextView) findViewById(R.id.text_full_name);
+        mEditFullName = (EditText) findViewById(R.id.edit_full_name);
         mTextEmail = (TextView) findViewById(R.id.text_email);
         mTextRadius = (TextView) findViewById(R.id.text_radius);
         mTextFrequency = (TextView) findViewById(R.id.text_frequency);
@@ -188,7 +188,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
                 if (documentSnapshot.exists()) {
                     String fullName = documentSnapshot.getString("fullName");
-                    mTextFullName.setText(fullName);
+                    mEditFullName.setText(fullName);
                     String email = documentSnapshot.getString("email");
                     mTextEmail.setText(email);
 
@@ -231,12 +231,14 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         new ResourceApi() {
             @Override
             public void processNeighbourhoodName(String neighbourhoodName) {
+                String mFullName = mEditFullName.getText().toString().trim();
                 mNeighbourhoodName = neighbourhoodName.split("\\(")[0].trim();
                 Log.d("NeighbourhoodName:", mNeighbourhoodName);
                 mPhoneNumber = mEditPhoneNumber.getText().toString().trim();
 
                 DocumentReference documentReference = db.collection("users").document(mUID);
                 Map<String, Object> userUpdate = new HashMap<>();
+                userUpdate.put("fullName", mFullName);
                 userUpdate.put("address", mAddress);
                 userUpdate.put("phoneNumber", mPhoneNumber);
                 userUpdate.put("postalCode", mPostalCode);

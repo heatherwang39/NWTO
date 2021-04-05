@@ -38,14 +38,18 @@
                 app:civ_border_width="0dp" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/text_full_name"
+        <EditText
+            android:id="@+id/edit_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="FirstName LastName"
+            android:background="@android:color/transparent"
+            android:inputType="textPersonName"
+            android:drawableRight="@drawable/ic_edit_custom"
+            android:gravity="center_horizontal"
+            android:hint="FirstName LastName"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/text_email"

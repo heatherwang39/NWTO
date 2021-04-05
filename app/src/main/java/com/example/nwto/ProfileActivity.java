@@ -30,7 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "Profile";
 
-    private TextView mTextFullName, mTextEmail, mTextAddress, mTextRadius, mTextFrequency, mTextPhoneNumber;
+    private TextView mTextFullName, mTextEmail, mTextAddress, mTextRadius, mTextFrequency, mTextPhoneNumber,mTextNeighbourhood;
     private ImageView mImageProfile;
     private String mUID;
     private Button mButtonEdit;
@@ -53,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
         mTextEmail = (TextView) findViewById(R.id.text_email);
         mTextPhoneNumber = (TextView) findViewById(R.id.text_phone_number);
         mTextAddress = (TextView) findViewById(R.id.text_address);
+        mTextNeighbourhood = (TextView) findViewById(R.id.text_neighbourhood);
         mTextRadius = (TextView) findViewById(R.id.text_radius);
         mTextFrequency = (TextView) findViewById(R.id.text_frequency);
         mImageProfile = (ImageView) findViewById(R.id.image_profile);
@@ -95,6 +96,8 @@ public class ProfileActivity extends AppCompatActivity {
                     mTextPhoneNumber.setText(phoneNumber);
                     String address = documentSnapshot.getString("address");
                     mTextAddress.setText(address);
+                    String neighbourhoodName = documentSnapshot.getString("neighbourhood");
+                    mTextNeighbourhood.setText(neighbourhoodName);
                     String radius = documentSnapshot.getString("radius");
                     mTextRadius.setText(radius);
                     String frequency = documentSnapshot.getString("frequency");
