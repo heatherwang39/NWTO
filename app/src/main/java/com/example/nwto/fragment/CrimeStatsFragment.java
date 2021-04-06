@@ -2,6 +2,7 @@ package com.example.nwto.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,9 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class CrimeStatsFragment extends Fragment {
@@ -98,7 +102,10 @@ public class CrimeStatsFragment extends Fragment {
         // builds plots
         for (int i = 0; i < rowNumb; i++) {
             int rowIndex = CrimeStatsActivity.HEADER_MODE1.length * (i + 1);
-            xLabel[i+1] = table.get(rowIndex).getText(); // finds x label (Crime Types)
+            String crimeType = table.get(rowIndex).getText(); // finds x label (Crime Types)
+            if (crimeType.equals("Break and Enter")) crimeType = "B & E";
+            else if (crimeType.equals("Sexual Violation")) crimeType = "Sexual";
+            xLabel[i+1] = crimeType;
 
             TableBox monthlyAvg = table.get(rowIndex + 1); // plot 1
             String monthlyAvgVal = monthlyAvg.getText();
@@ -147,8 +154,18 @@ public class CrimeStatsFragment extends Fragment {
         // finds x labels
         String[] xLabel = new String[colLength];
         for (int i = 0; i < colLength; i++) {
-            if (i == colLength - 1)
-                xLabel[i] = CrimeStatsActivity.HEADER_MODE2[4];
+            if (i == colLength - 1) {
+                // xLabel[i] = CrimeStatsActivity.HEADER_MODE2[4];
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.MONTH, -1);
+                calendar.set(Calendar.DATE, 1);
+                Date lastMonth = calendar.getTime();
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
+                String lastM = dateFormat.format(lastMonth);
+                xLabel[i] = lastM;
+            }
             else
                 xLabel[i] = Integer.toString(years[i]); // 2018, 2019, 2020
         }
