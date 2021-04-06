@@ -36,8 +36,8 @@ public class Notification {
         Log.d(TAG, "schedule: notification is scheduled for " + calendar.getTime().toString() + " and repeats every " + frequency + " days");
 
         long triggerTime = calendar.getTimeInMillis();
-        long repeatInterval = AlarmManager.INTERVAL_DAY * frequency;
-        // long repeatInterval = ONE_MIN_INTERVAL * 2; // testing
+        long repeatInterval = ONE_DAY_INTERVAL * frequency;
+//         long repeatInterval = ONE_MIN_INTERVAL * 1; // testing
 
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast(context, JOB_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
