@@ -1,7 +1,9 @@
 package com.example.nwto;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
@@ -10,9 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,15 +20,16 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,9 +51,11 @@ public class DiscussionPostActivity extends AppCompatActivity {
 
     private static final String TAG = "Post Discussion";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_SELECT = 2;
 
+    private TextView mTextTakePicture, mTextSelectFromGallery;
     private EditText mEditTopic, mEditContent;
-    private ImageView mImageUpload;
+    private ImageView mImagePreview;
     private Button mButtonPost;
     private Spinner mSpinnerCrimeType;
     private CheckBox mCheckBoxNeighbourhood, mCheckBoxIsTip;
@@ -61,6 +64,7 @@ public class DiscussionPostActivity extends AppCompatActivity {
     private String mPostNeighbourhoodName = "Toronto";
     private Bitmap mImageBitmap;
     private Uri postURI;
+    private ProgressBar mProgressBar;
     private boolean mIsAdmin, mIsTip;
 
     @Override
@@ -74,13 +78,16 @@ public class DiscussionPostActivity extends AppCompatActivity {
         // Initialize Storage
         storage = FirebaseStorage.getInstance();
 
-        mImageUpload = (ImageView) findViewById(R.id.image_upload);
+        mTextTakePicture = (TextView) findViewById(R.id.text_take_picture);
+        mTextSelectFromGallery = (TextView) findViewById(R.id.text_select_from_gallery);
+        mImagePreview = (ImageView) findViewById(R.id.image_preview);
         mEditTopic = (EditText) findViewById(R.id.edit_topic);
         mEditContent = (EditText) findViewById(R.id.edit_content);
         mButtonPost = (Button) findViewById(R.id.button_post);
         mSpinnerCrimeType = (Spinner) findViewById(R.id.spinner_crime_type);
         mCheckBoxNeighbourhood = (CheckBox) findViewById(R.id.checkbox_neighbourhood);
         mCheckBoxIsTip = (CheckBox) findViewById(R.id.checkbox_isTip);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         // Get the variable from DiscussionActivity
         mUID = DiscussionActivity.uID;
@@ -90,7 +97,7 @@ public class DiscussionPostActivity extends AppCompatActivity {
         mIsAdmin = DiscussionActivity.isAdmin;
         mIsTip = false;
 
-        if(mIsAdmin){
+        if (mIsAdmin) {
             mCheckBoxIsTip.setVisibility(View.VISIBLE);
             mCheckBoxIsTip.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,10 +113,21 @@ public class DiscussionPostActivity extends AppCompatActivity {
 
         mCheckBoxNeighbourhood.setText("Post to: " + mNeighbourhoodName);
 
-        mImageUpload.setOnClickListener(new View.OnClickListener() {
+        mTextTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
+            }
+        });
+
+        mTextSelectFromGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(DiscussionPostActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(DiscussionPostActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_IMAGE_SELECT);
+                } else {
+                    selectFromGallery();
+                }
             }
         });
 
@@ -153,6 +171,24 @@ public class DiscussionPostActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_IMAGE_SELECT) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectFromGallery();
+            }
+        }
+    }
+
+    private void selectFromGallery() {
+        // Pick images from Gallery
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_IMAGE_SELECT);
+    }
+
+
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
@@ -165,7 +201,6 @@ public class DiscussionPostActivity extends AppCompatActivity {
             }
             if (photoFile != null) {
                 postURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
-//                getCtx().setPostUri(postURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, postURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -179,7 +214,7 @@ public class DiscussionPostActivity extends AppCompatActivity {
             Log.i(TAG, "onActivityResult: Make Post Image Capture RESULT OK");
             try {
                 mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), postURI);
-                mImageUpload.setImageBitmap(mImageBitmap);
+                mImagePreview.setImageBitmap(mImageBitmap);
 
                 Log.i(TAG, "onActivityResult ok: get postBitmap successfully");
             } catch (IOException e) {
@@ -188,7 +223,16 @@ public class DiscussionPostActivity extends AppCompatActivity {
             }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_CANCELED) {
             Log.i(TAG, "onActivityResult: Make Post Image Capture RESULT CANCELLED");
+        } else if (requestCode == REQUEST_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null) {
+            postURI = data.getData();
+            try {
+                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), postURI);
+                mImagePreview.setImageBitmap(mImageBitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
+
         }
     }
 
@@ -207,6 +251,8 @@ public class DiscussionPostActivity extends AppCompatActivity {
     }
 
     private void makePost() throws IOException {
+        mProgressBar.setVisibility(View.VISIBLE);
+
         //check the topic is not empty
         mTopic = mEditTopic.getText().toString();
         mContent = mEditContent.getText().toString();
@@ -222,34 +268,12 @@ public class DiscussionPostActivity extends AppCompatActivity {
             return;
         }
 
-        //check if postBitmap exists
+        //check if imageBitmap exists
         if (mImageBitmap != null) {
-            // crop the picture to square
-            Bitmap square = cropToSquare(mImageBitmap);
-
-            //Rotate the image
-            ExifInterface ei = new ExifInterface(mCurrentPhotoPath);
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL);
-            Bitmap rotatedBitmap = null;
-            Matrix matrix = new Matrix();
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    matrix.postRotate(90);
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    matrix.postRotate(180);
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    matrix.postRotate(270);
-                    break;
-                default:
-            }
-            rotatedBitmap = Bitmap.createBitmap(square, 0, 0, square.getWidth(), square.getHeight(),
-                    matrix, true);
-
-            // Downscale to 1024*1024
-            Bitmap finalBitmap = Bitmap.createScaledBitmap(rotatedBitmap, 1024, 1024, true);
+            //downscale the imageBitmap
+            float ratio = mImageBitmap.getWidth() / mImageBitmap.getHeight();
+            Log.d("float",String.valueOf(mImageBitmap.getWidth())+"  "+ String.valueOf(mImageBitmap.getWidth())+ " " +String.valueOf(ratio));
+            Bitmap finalBitmap = Bitmap.createScaledBitmap(mImageBitmap, 1024,  1024, true);
 
             //upload
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -265,6 +289,7 @@ public class DiscussionPostActivity extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             Log.d(TAG, "onSuccess: get uri " + uri);
                             addToUserPosts(uri);
+                            mProgressBar.setVisibility(View.GONE);
                             Intent intent = new Intent(DiscussionPostActivity.this, DiscussionActivity.class);
                             startActivity(intent);
                         }
@@ -274,6 +299,7 @@ public class DiscussionPostActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.e(TAG, "OnFailure: ", e.getCause());
+                    mProgressBar.setVisibility(View.GONE);
                 }
             });
         } else {
@@ -282,20 +308,8 @@ public class DiscussionPostActivity extends AppCompatActivity {
             Intent intent = new Intent(this, DiscussionActivity.class);
             startActivity(intent);
         }
-    }
 
-    private Bitmap cropToSquare(Bitmap bitmap) {
-        Bitmap cropImg;
-        if (bitmap.getWidth() >= bitmap.getHeight()) {
-            cropImg = Bitmap.createBitmap(bitmap, bitmap.getWidth() / 2 - bitmap.getHeight() / 2, 0,
-                    bitmap.getHeight(), bitmap.getHeight());
-        } else {
-            cropImg = Bitmap.createBitmap(bitmap, 0, bitmap.getHeight() / 2 - bitmap.getWidth() / 2,
-                    bitmap.getWidth(), bitmap.getWidth());
-        }
-        return cropImg;
     }
-
 
     private void addToUserPosts(Uri uri) {
         Map<String, Object> post = new HashMap<>();
@@ -310,7 +324,7 @@ public class DiscussionPostActivity extends AppCompatActivity {
         post.put("content", mContent);
         post.put("neighbourhood", mPostNeighbourhoodName);
         post.put("crimeType", mCrimeType);
-        post.put("isTip",mIsTip);
+        post.put("isTip", mIsTip);
 
         //create a new post and store it in firestore
         db.collection("posts")
@@ -320,12 +334,14 @@ public class DiscussionPostActivity extends AppCompatActivity {
                     public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(DiscussionPostActivity.this, "Made a new Post", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "On Success: addToUserPosts" + documentReference.getId());
+                        mProgressBar.setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error addToUserPosts", e);
+                        mProgressBar.setVisibility(View.GONE);
                     }
                 });
     }

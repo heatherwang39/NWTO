@@ -9,11 +9,41 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/image_upload"
+            android:id="@+id/image_preview"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/ic_camera_custom" />
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_preview_custom"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image Preview"
+            android:layout_gravity="center_horizontal"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/text_take_picture"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:textColor="#47A8D5"
+            android:drawableLeft="@drawable/ic_camera_custom"
+            android:text="Take a Picture"/>
+        <TextView
+            android:id="@+id/text_select_from_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textColor="#47A8D5"
+            android:drawableLeft="@drawable/ic_image_custom"
+            android:text="Select from Gallery"/>
+    </LinearLayout>
 
         <CheckBox
             android:id="@+id/checkbox_neighbourhood"
@@ -98,6 +128,13 @@
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:text="Post" />
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_marginTop="-300dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

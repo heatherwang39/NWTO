@@ -67,8 +67,8 @@
 
             <ImageView
                 android:id="@+id/image_post_pic"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_camera_custom" />
