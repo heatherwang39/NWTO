@@ -46,22 +46,50 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/text_take_a_picture"
+        android:id="@+id/text_add_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_body"
         android:layout_margin="10dp"
-        android:drawableLeft="@drawable/ic_camera_custom"
-        android:text="Take a Picture"
-        android:textColor="#03A9F4"
+        android:text="Attach a picture (optional):"
         android:textSize="20sp"
-        android:textStyle="italic" />
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/container_attach_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_add_image"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_take_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ic_camera_custom"
+            android:text="Take a Picture"
+            android:textColor="#47A8D5" />
+
+        <TextView
+            android:id="@+id/text_select_from_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ic_image_custom"
+            android:text="Select from Gallery"
+            android:textColor="#47A8D5" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@+id/text_take_a_picture"
+        android:layout_height="300dp"
+        android:layout_below="@+id/container_attach_image"
         android:layout_margin="10dp"
         android:visibility="gone" />
 
