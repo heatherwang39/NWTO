@@ -271,9 +271,9 @@ public class DiscussionPostActivity extends AppCompatActivity {
         //check if imageBitmap exists
         if (mImageBitmap != null) {
             //downscale the imageBitmap
-            float ratio = mImageBitmap.getWidth() / mImageBitmap.getHeight();
+            double ratio =  (double) mImageBitmap.getWidth() /  (double) mImageBitmap.getHeight();
             Log.d("float",String.valueOf(mImageBitmap.getWidth())+"  "+ String.valueOf(mImageBitmap.getWidth())+ " " +String.valueOf(ratio));
-            Bitmap finalBitmap = Bitmap.createScaledBitmap(mImageBitmap, 1024,  1024, true);
+            Bitmap finalBitmap = Bitmap.createScaledBitmap(mImageBitmap, 1024,  (int)(1024/ratio), true);
 
             //upload
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
