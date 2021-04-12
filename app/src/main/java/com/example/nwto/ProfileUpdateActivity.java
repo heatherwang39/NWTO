@@ -2,9 +2,13 @@ package com.example.nwto;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -62,10 +66,11 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
     private static final String TAG = "Profile Update";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_SELECT = 2;
 
-    private TextView mTextEmail, mTextRadius, mTextFrequency;
+    private TextView mTextEmail, mTextRadius, mTextFrequency, mTextTakePicture, mTextSelectFromGallery;
     private SeekBar mSeekBarRadius, mSeekBarFrequency;
-    private ImageView mImageProfile, mImageCamera;
+    private ImageView mImageProfile;
     private Button mButtonLogOut, mButtonSave, mButtonCancel;
     private EditText mEditFullName, mEditPhoneNumber;
     private AutoCompleteTextView mAutoCompleteAddress;
@@ -138,14 +143,25 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         });
 
         mImageProfile = (ImageView) findViewById(R.id.image_profile);
-        mImageCamera = (ImageView) findViewById(R.id.image_camera);
-        mImageCamera.setOnClickListener(new View.OnClickListener() {
+        mTextTakePicture = (TextView) findViewById(R.id.text_take_picture);
+        mTextTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
             }
         });
 
+        mTextSelectFromGallery = (TextView) findViewById(R.id.text_select_from_gallery);
+        mTextSelectFromGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(ProfileUpdateActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ProfileUpdateActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_IMAGE_SELECT);
+                } else {
+                    selectFromGallery();
+                }
+            }
+        });
 
         mButtonSave = (Button) findViewById(R.id.button_save);
         mButtonSave.setOnClickListener(new View.OnClickListener() {
@@ -266,6 +282,22 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_IMAGE_SELECT) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectFromGallery();
+            }
+        }
+    }
+
+    private void selectFromGallery() {
+        // Pick images from Gallery
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_IMAGE_SELECT);
+    }
 
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -283,9 +315,16 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             mImageBitmap = (Bitmap) extras.get("data");
             mImageProfile.setImageBitmap(mImageBitmap);
-        } else {
-            Log.i(TAG, "takePictureIntent onActivityResult: RESULT CANCELLED");
-            Toast.makeText(ProfileUpdateActivity.this, "Take Picture Cancelled.", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == REQUEST_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null) {
+            Uri profileURI = data.getData();
+            try {
+                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), profileURI);
+                mImageProfile.setImageBitmap(mImageBitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.i(TAG, "onActivityResult: Add a Profile Image RESULT CANCELLED");
         }
     }
 

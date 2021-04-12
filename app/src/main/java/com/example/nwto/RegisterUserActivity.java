@@ -2,9 +2,13 @@ package com.example.nwto;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -43,19 +47,23 @@ import com.google.firebase.storage.UploadTask;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RegisterUserActivity extends AppCompatActivity {
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private StorageReference storageReference;
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_SELECT = 2;
     private static final String TAG = "EmailPassword";
-    private TextView textViewTakePicture;
+
+    private TextView textViewTakePicture, mTextSelectFromGallery;
     private ImageView profileImage;
     private Button signUp;
     private EditText editTextEmail, editTextPassword, editTextPassword2, editTextName, mEditPhoneNumber;
@@ -63,7 +71,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private String uID, mNeighbourhoodName;
     private String currentPhotoPath;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+
     private Boolean noProfilePic = true;
     private Bitmap imageBitmap;
     private String email, name, mPhoneNumber;
@@ -89,6 +97,18 @@ public class RegisterUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 takePicture();
+            }
+        });
+
+        mTextSelectFromGallery = (TextView) findViewById(R.id.text_select_from_gallery);
+        mTextSelectFromGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(RegisterUserActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(RegisterUserActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_IMAGE_SELECT);
+                } else {
+                    selectFromGallery();
+                }
             }
         });
 
@@ -139,6 +159,23 @@ public class RegisterUserActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_IMAGE_SELECT) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectFromGallery();
+            }
+        }
+    }
+
+    private void selectFromGallery() {
+        // Pick images from Gallery
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_IMAGE_SELECT);
+    }
+
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
@@ -156,9 +193,17 @@ public class RegisterUserActivity extends AppCompatActivity {
             imageBitmap = (Bitmap) extras.get("data");
             profileImage.setImageBitmap(imageBitmap);
             noProfilePic = false;
-        } else {
-            Log.i(TAG, "takePictureIntent onActivityResult: RESULT CANCELLED");
-            Toast.makeText(RegisterUserActivity.this, "Take Picture Cancelled.", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == REQUEST_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null) {
+            Uri profileURI = data.getData();
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), profileURI);
+                profileImage.setImageBitmap(imageBitmap);
+                noProfilePic = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.i(TAG, "onActivityResult: Add a Profile Image RESULT CANCELLED");
         }
     }
 
@@ -190,7 +235,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         }
 
 
-        if (mPhoneNumber.length()<1) {
+        if (mPhoneNumber.length() < 1) {
             mPhoneNumber = "N/A";
         }
 
@@ -228,9 +273,9 @@ public class RegisterUserActivity extends AppCompatActivity {
                                     user.put("frequency", "1");
                                     user.put("neighbourhood", mNeighbourhoodName);
                                     user.put("isAdmin", false);
-                                    if(noProfilePic){
+                                    if (noProfilePic) {
                                         user.put("displayPicPath", null);
-                                    }else{
+                                    } else {
                                         upload(imageBitmap);
                                     }
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {

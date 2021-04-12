@@ -15,28 +15,43 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <RelativeLayout
-            android:layout_width="140dp"
-            android:layout_height="140dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_profile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_avatar"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_profile"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_avatar"
-                app:civ_border_color="#FF000000"
-                app:civ_border_width="2dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_camera"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_camera_custom"
-                app:civ_border_color="#FF000000"
-                app:civ_border_width="0dp" />
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/text_take_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableLeft="@drawable/ic_camera_custom"
+                android:text="Take a Picture"
+                android:textColor="#47A8D5" />
+
+            <TextView
+                android:id="@+id/text_select_from_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableLeft="@drawable/ic_image_custom"
+                android:text="Select from Gallery"
+                android:textColor="#47A8D5" />
+        </LinearLayout>
+
 
         <EditText
             android:id="@+id/edit_full_name"
@@ -44,12 +59,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@android:color/transparent"
-            android:inputType="textPersonName"
             android:drawableRight="@drawable/ic_edit_custom"
             android:gravity="center_horizontal"
             android:hint="FirstName LastName"
+            android:inputType="textPersonName"
             android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/text_email"
@@ -108,7 +123,7 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:max="4"/>
+                android:max="4" />
 
             <TextView
                 android:id="@+id/text_radius"
@@ -145,7 +160,7 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:max="6"/>
+                android:max="6" />
 
             <TextView
                 android:id="@+id/text_frequency"
