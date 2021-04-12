@@ -331,8 +331,8 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     private void upload(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-        StorageReference reference = storage.getReference().child("profileImages").child(mUID + ".jpeg");
+        String mTimeStamp = String.valueOf(System.currentTimeMillis());
+        StorageReference reference = storage.getReference().child("profileImages").child(mUID + "/" + mTimeStamp + ".jpeg");
 
         reference.putBytes(baos.toByteArray()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

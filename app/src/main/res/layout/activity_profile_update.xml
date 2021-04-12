@@ -35,8 +35,8 @@
                 android:id="@+id/text_take_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:drawableLeft="@drawable/ic_camera_custom"
                 android:text="Take a Picture"
                 android:textColor="#47A8D5" />
@@ -45,8 +45,8 @@
                 android:id="@+id/text_select_from_gallery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:drawableLeft="@drawable/ic_image_custom"
                 android:text="Select from Gallery"
                 android:textColor="#47A8D5" />
