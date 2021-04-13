@@ -28,8 +28,8 @@ public class Notification {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 10) // every day at 6pm
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
+//        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 10) // every day at 6pm
+//            calendar.add(Calendar.DAY_OF_YEAR, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 10);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -37,7 +37,7 @@ public class Notification {
 
         long triggerTime = calendar.getTimeInMillis();
         long repeatInterval = ONE_DAY_INTERVAL * frequency;
-//         long repeatInterval = ONE_MIN_INTERVAL * 1; // testing
+//         long repeatInterval = ONE_MIN_INTERVAL * 2; // testing
 
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast(context, JOB_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
