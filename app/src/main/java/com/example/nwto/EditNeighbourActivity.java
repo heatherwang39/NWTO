@@ -62,7 +62,6 @@ public class EditNeighbourActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updateNeighbour();
-                Log.d(TAG,"Added new neighbour.");
             }
         });
 
@@ -83,6 +82,7 @@ public class EditNeighbourActivity extends AppCompatActivity {
         if (getIntent().hasExtra("fullName")) {
             mFullName = getIntent().getStringExtra("fullName");
             mEditFullName.setHint(mFullName);
+            Log.d(TAG, "edit fullname" + mFullName);
         }
         if (getIntent().hasExtra("email")) {
             mEmail = getIntent().getStringExtra("email");

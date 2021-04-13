@@ -39,7 +39,7 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
-    public NeighbourSwipeAdapter(Context ctx, List<Neighbour> neighbourList){
+    public NeighbourSwipeAdapter(Context ctx, List<Neighbour> neighbourList) {
         this.ctx = ctx;
         this.neighbourList = neighbourList;
         this.inflater = LayoutInflater.from(ctx);
@@ -47,7 +47,7 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
         db = FirebaseFirestore.getInstance();
     }
 
-    public void setNeighbours(ArrayList<Neighbour> neighbourList){
+    public void setNeighbours(ArrayList<Neighbour> neighbourList) {
         this.neighbourList = new ArrayList<>();
         this.neighbourList = neighbourList;
         notifyDataSetChanged();
@@ -56,14 +56,14 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
     @NonNull
     @Override
     public SwipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(ctx).inflate(R.layout.custom_layout_neighbour_swipe,parent,false);
+        View view = LayoutInflater.from(ctx).inflate(R.layout.custom_layout_neighbour_swipe, parent, false);
         return new SwipeViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SwipeViewHolder holder, int position) {
         viewBinderHelper.setOpenOnlyOne(true);
-        viewBinderHelper.bind(holder.swipeRevealLayout,String.valueOf(neighbourList.get(position).getFullName()));
+        viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(neighbourList.get(position).getFullName()));
         viewBinderHelper.closeLayout(String.valueOf(neighbourList.get(position).getFullName()));
         holder.bindData(neighbourList.get(position));
 
@@ -71,41 +71,26 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
         holder.textEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ctx,"Edit is clicked",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ctx, EditNeighbourActivity.class);
                 intent.putExtra("neighbourID",neighbourList.get(position).getNeighbourID());
                 intent.putExtra("fullName",neighbourList.get(position).getFullName());
                 intent.putExtra("email",neighbourList.get(position).getEmail());
                 intent.putExtra("phoneNumber",neighbourList.get(position).getPhoneNumber());
-                notifyDataSetChanged();
+                ctx.startActivity(intent);
             }
         });
         holder.textDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //delete the neighbour
-                db.collection("neighbours") //TODO: this check is not enough
-                        .whereEqualTo("email", neighbourList.get(position).getEmail())
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                db.collection("neighbours").document(document.getId()).delete();
-                                Toast.makeText(ctx, "Neighbour deleted.", Toast.LENGTH_SHORT).show();
-                                Log.d("Delete neighbour", "Successfully deleting neighbour document: "+document.getId());
-                                neighbourList.remove(position);
-                                notifyDataSetChanged();
-                            }
-                        } else {
-                            Log.d("Delete neighbour", "Error getting neighbour documents when deleting: ", task.getException());
-                        }
-                    }
-                });
+                db.collection("neighbours").document(neighbourList.get(position).getNeighbourID()).delete();
+                Toast.makeText(ctx, "Neighbour deleted.", Toast.LENGTH_SHORT).show();
+                Log.d("Delete neighbour", "Successfully deleting neighbour document: " + neighbourList.get(position).getNeighbourID());
+                neighbourList.remove(position);
+                notifyDataSetChanged();
             }
         });
-
-    }
+        }
 
     @Override
     public int getItemCount() {
@@ -113,41 +98,41 @@ public class NeighbourSwipeAdapter extends RecyclerView.Adapter<NeighbourSwipeAd
     }
 
 
-    class SwipeViewHolder extends RecyclerView.ViewHolder{
-        SwipeRevealLayout swipeRevealLayout;
+class SwipeViewHolder extends RecyclerView.ViewHolder {
+    SwipeRevealLayout swipeRevealLayout;
 
-        //in swipe layout
-        TextView textEdit;
-        TextView textDelete;
+    //in swipe layout
+    TextView textEdit;
+    TextView textDelete;
 
-        //in main layout
-        TextView textFullName;
-        TextView textEmail;
-        TextView textPhoneNumber;
+    //in main layout
+    TextView textFullName;
+    TextView textEmail;
+    TextView textPhoneNumber;
 
-        public SwipeViewHolder(@NonNull View itemView) {
-            super(itemView);
-            swipeRevealLayout = itemView.findViewById(R.id.swipe_layout);
-            textEdit = itemView.findViewById(R.id.text_edit);
-            textDelete = itemView.findViewById(R.id.text_delete);
-            textFullName = itemView.findViewById(R.id.text_full_name);
-            textEmail = itemView.findViewById(R.id.text_email);
-            textPhoneNumber = itemView.findViewById(R.id.text_phone_number);
+    public SwipeViewHolder(@NonNull View itemView) {
+        super(itemView);
+        swipeRevealLayout = itemView.findViewById(R.id.swipe_layout);
+        textEdit = itemView.findViewById(R.id.text_edit);
+        textDelete = itemView.findViewById(R.id.text_delete);
+        textFullName = itemView.findViewById(R.id.text_full_name);
+        textEmail = itemView.findViewById(R.id.text_email);
+        textPhoneNumber = itemView.findViewById(R.id.text_phone_number);
 
-            //disable admin to edit user's information
-            if(NeighboursActivity.isAdmin){
-                textEdit.setVisibility(View.GONE);
-            }
+        //disable admin to edit user's information
+        if (NeighboursActivity.isAdmin) {
+            textEdit.setVisibility(View.GONE);
         }
-
-        void bindData(Neighbour neighbour){
-            textFullName.setText(neighbour.getFullName());
-            textEmail.setText(neighbour.getEmail());
-            textPhoneNumber.setText(neighbour.getPhoneNumber());
-        }
-
-
     }
+
+    void bindData(Neighbour neighbour) {
+        textFullName.setText(neighbour.getFullName());
+        textEmail.setText(neighbour.getEmail());
+        textPhoneNumber.setText(neighbour.getPhoneNumber());
+    }
+
+
+}
 
 
 }

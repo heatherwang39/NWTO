@@ -10,6 +10,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.nwto.model.Neighbour;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -82,16 +83,21 @@ public class AddNeighbourActivity extends AppCompatActivity {
             return;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()){
-            mEditEmail.setError("Valid Email Address is required!");
+        if((!Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()) && mPhoneNumber.length()<1){
+            //The User should enter at least one of the field
             mEditEmail.requestFocus();
+            mEditEmail.setError("Valid Email and Phone Number can't be both empty.");
+            mEditPhoneNumber.requestFocus();
+            mEditPhoneNumber.setError("Valid Email and Phone Number can't be both empty.");
             return;
         }
 
-        if(mFullName.length()<1){ //TODO: add regex here
-            mEditPhoneNumber.setError("Phone Number can't be empty.");
-            mEditPhoneNumber.requestFocus();
-            return;
+        if (mEmail.length() < 1) {
+            mEmail = "N/A";
+        }
+
+        if (mPhoneNumber.length() < 1) {
+            mPhoneNumber = "N/A";
         }
 
         String neighbourID = mOwnerUID + String.valueOf(System.currentTimeMillis()); //set custom id
