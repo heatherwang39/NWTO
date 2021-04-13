@@ -65,7 +65,6 @@ public class NeighboursActivity extends AppCompatActivity {
         // Initialize Cloud FireStore
         db = FirebaseFirestore.getInstance();
 
-
         mButtonAddNeighbour = (Button) findViewById(R.id.button_add_neighbour);
         mButtonAddNeighbour.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +129,9 @@ public class NeighboursActivity extends AppCompatActivity {
                         // Set the title of Action Bar
                         ActionBar actionBar = getSupportActionBar();
                         actionBar.setTitle("Registered Users");
+
+                        //hide the add new neighbours button
+                        mButtonAddNeighbour.setVisibility(View.GONE);
 
                         mRegisteredUserList.clear();
 

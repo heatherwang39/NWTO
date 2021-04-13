@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+import com.example.nwto.DiscussionActivity;
+import com.example.nwto.DiscussionDetailActivity;
+import com.example.nwto.NeighboursActivity;
 import com.example.nwto.R;
 import com.example.nwto.model.RegisteredUser;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,9 +25,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ManageUserSwipeAdapter extends RecyclerView.Adapter<ManageUserSwipeAdapter.SwipeViewHolder> {
     private static final String TAG = "Manage User";
@@ -65,6 +71,36 @@ public class ManageUserSwipeAdapter extends RecyclerView.Adapter<ManageUserSwipe
         viewBinderHelper.closeLayout(String.valueOf(registeredUserList.get(position).getFullName()));
         holder.bindData(registeredUserList.get(position));
 
+
+
+        holder.textMute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "muted status " +registeredUserList.get(position).getIsMuted());
+                db.collection("users") //TODO: this check is not enough
+                        .whereEqualTo("email", registeredUserList.get(position).getEmail())
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                boolean updateMuted = !(registeredUserList.get(position).getIsMuted());
+                                Map<String, Object> userUpdate = new HashMap<>();
+                                userUpdate.put("isMuted", updateMuted);
+                                db.collection("users").document(document.getId()).set(userUpdate, SetOptions.merge());
+                                Toast.makeText(ctx, "User Muted Status Updates.", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Successfully mute/unmute User document: " + document.getId());
+
+                                ctx.startActivity(new Intent(ctx, NeighboursActivity.class));
+//                                notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting User documents when updating muted status: ", task.getException());
+                        }
+                    }
+                });
+            }
+        });
 
         holder.textDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,13 +180,6 @@ public class ManageUserSwipeAdapter extends RecyclerView.Adapter<ManageUserSwipe
             }
         });
 
-        holder.textMute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ctx, "Mute User is clicked.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     @Override
@@ -183,11 +212,19 @@ public class ManageUserSwipeAdapter extends RecyclerView.Adapter<ManageUserSwipe
         }
 
         void bindData(RegisteredUser registeredUser) {
+
             textNeighbourhood.setText("Neighbourhood: " + registeredUser.getNeighbourhood());
             textFullName.setText(registeredUser.getFullName());
             textEmail.setText(registeredUser.getEmail());
             textPhoneNumber.setText(registeredUser.getPhoneNumber());
-            textIsMuted.setText("Muted: " + String.valueOf(registeredUser.isMuted()));
+            textIsMuted.setText("Muted: " + String.valueOf(registeredUser.getIsMuted()));
+
+            if (registeredUser.getIsMuted()) {
+                textMute.setText("Unmute");
+            } else {
+                textMute.setText("Mute");
+            }
+
         }
 
 

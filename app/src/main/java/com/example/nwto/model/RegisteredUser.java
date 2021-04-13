@@ -106,12 +106,12 @@ public class RegisteredUser {
         this.neighbourhood = neighbourhood;
     }
 
-    public boolean isAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 
     public void setAdmin(boolean isAdmin) {
-        isAdmin = isAdmin;
+        this.isAdmin = isAdmin;
     }
 
     public String getDisplayPicPath() {
@@ -122,11 +122,11 @@ public class RegisteredUser {
         this.displayPicPath = displayPicPath;
     }
 
-    public boolean isMuted() {
+    public boolean getIsMuted() {
         return isMuted;
     }
 
     public void setMuted(boolean isMuted) {
-        isMuted = isMuted;
+        this.isMuted = isMuted;
     }
 }
