@@ -15,9 +15,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.example.nwto.adapter.ManageUserSwipeAdapter;
 import com.example.nwto.adapter.NeighbourSwipeAdapter;
 import com.example.nwto.model.Neighbour;
+import com.example.nwto.model.RegisteredUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,7 +47,9 @@ public class NeighboursActivity extends AppCompatActivity {
 
     private RecyclerView mRecycleNeighbourList;
     private NeighbourSwipeAdapter mNeighbourSwipeAdapter;
+    private ManageUserSwipeAdapter mManageUserSwipeAdapter;
     public static ArrayList<Neighbour> mNeighbourList;
+    public static ArrayList<RegisteredUser> mRegisteredUserList;
     private GridLayoutManager mGridLayoutManager;
 
     @Override
@@ -87,8 +90,12 @@ public class NeighboursActivity extends AppCompatActivity {
             }
         });
 
-        //Set GridLayoutManager
+
+        mRegisteredUserList = new ArrayList<RegisteredUser>();
+
         mNeighbourList = new ArrayList<Neighbour>();
+
+        //Set GridLayoutManager
         mRecycleNeighbourList = (RecyclerView) findViewById(R.id.recycler_neighbour_list);
         mGridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         mRecycleNeighbourList.setLayoutManager(mGridLayoutManager);
@@ -117,17 +124,14 @@ public class NeighboursActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     //check admin
                     isAdmin = documentSnapshot.getBoolean("isAdmin");
-                    Log.i(TAG, "Show isAdmin successfully " + isAdmin);
-
-                    //load neighbours
-                    mNeighbourList.clear();
-
 
                     //load all authenticated User for admin
                     if (isAdmin) {
                         // Set the title of Action Bar
                         ActionBar actionBar = getSupportActionBar();
                         actionBar.setTitle("Registered Users");
+
+                        mRegisteredUserList.clear();
 
                         CollectionReference collectionReference = db.collection("users");
                         collectionReference.orderBy("fullName")
@@ -137,31 +141,25 @@ public class NeighboursActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                                String neighbourID = document.getId();
-                                                String ownerUID = mOwnerUID;
-                                                String fullName = document.getString("fullName");
-                                                String email = document.getString("email");
-                                                String phoneNumber = document.getString("phoneNumber");
-
-                                                Neighbour neighbour = new Neighbour(neighbourID, ownerUID, fullName, email, phoneNumber);
-                                                mNeighbourList.add(neighbour);
+                                                RegisteredUser registeredUser = document.toObject(RegisteredUser.class);
+                                                mRegisteredUserList.add(registeredUser);
                                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                             }
                                         } else {
                                             Log.d(TAG, "Error getting documents: ", task.getException());
                                         }
-                                        Log.d(TAG, "all neighbours:" + mNeighbourList.toString());
-                                        mNeighbourSwipeAdapter = new NeighbourSwipeAdapter(NeighboursActivity.this, mNeighbourList);
-                                        mRecycleNeighbourList.setAdapter(mNeighbourSwipeAdapter);
-                                        mNeighbourSwipeAdapter.setNeighbours(mNeighbourList);
-//                        mNeighbourAdapter = new NeighbourAdapter(NeighboursActivity.this, mNeighbourList);
-//                        mRecycleNeighbourList.setAdapter(mNeighbourAdapter);
+                                        Log.d(TAG, "all registered users:" + mRegisteredUserList.toString());
+
+                                        mManageUserSwipeAdapter = new ManageUserSwipeAdapter(NeighboursActivity.this, mRegisteredUserList);
+                                        mRecycleNeighbourList.setAdapter(mManageUserSwipeAdapter);
+                                        mManageUserSwipeAdapter.setRegisteredUsers(mRegisteredUserList);
                                         mRecycleNeighbourList.setHasFixedSize(true);
                                     }
                                 });
-                    } else {
+                    } else {//load owned neighbours if not admin
+                        //load neighbours
+                        mNeighbourList.clear();
                         CollectionReference collectionReference = db.collection("neighbours");
-                        //load owned neighbours if not admin
                         collectionReference.orderBy("fullName")
                                 .whereEqualTo("ownerUID", mOwnerUID)
                                 .get()

@@ -273,6 +273,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                                     user.put("frequency", "1");
                                     user.put("neighbourhood", mNeighbourhoodName);
                                     user.put("isAdmin", false);
+                                    user.put("isMuted", false);
                                     if (noProfilePic) {
                                         user.put("displayPicPath", null);
                                     } else {

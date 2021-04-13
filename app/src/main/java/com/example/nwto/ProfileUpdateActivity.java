@@ -71,7 +71,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     private TextView mTextEmail, mTextRadius, mTextFrequency, mTextTakePicture, mTextSelectFromGallery;
     private SeekBar mSeekBarRadius, mSeekBarFrequency;
     private ImageView mImageProfile;
-    private Button mButtonLogOut, mButtonSave, mButtonCancel;
+    private Button mButtonSave, mButtonCancel;
     private EditText mEditFullName, mEditPhoneNumber;
     private AutoCompleteTextView mAutoCompleteAddress;
     private String mUID, mAddress, mPostalCode, mRadius, mFrequency, mProfilePic, mNeighbourhoodName, mPhoneNumber;
