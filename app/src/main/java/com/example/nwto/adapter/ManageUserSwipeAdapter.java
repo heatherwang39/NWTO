@@ -2,6 +2,7 @@ package com.example.nwto.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,8 +72,6 @@ public class ManageUserSwipeAdapter extends RecyclerView.Adapter<ManageUserSwipe
         viewBinderHelper.closeLayout(String.valueOf(registeredUserList.get(position).getFullName()));
         holder.bindData(registeredUserList.get(position));
 
-
-
         holder.textMute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +87,7 @@ public class ManageUserSwipeAdapter extends RecyclerView.Adapter<ManageUserSwipe
                                 Map<String, Object> userUpdate = new HashMap<>();
                                 userUpdate.put("isMuted", updateMuted);
                                 db.collection("users").document(document.getId()).set(userUpdate, SetOptions.merge());
-                                Toast.makeText(ctx, "User Muted Status Updates.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ctx, registeredUserList.get(position).getFullName()+" Muted Status Updates.", Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "Successfully mute/unmute User document: " + document.getId());
 
                                 ctx.startActivity(new Intent(ctx, NeighboursActivity.class));
@@ -220,8 +219,10 @@ public class ManageUserSwipeAdapter extends RecyclerView.Adapter<ManageUserSwipe
             textIsMuted.setText("Muted: " + String.valueOf(registeredUser.getIsMuted()));
 
             if (registeredUser.getIsMuted()) {
+                textIsMuted.setTextColor(Color.parseColor("#E91E63"));
                 textMute.setText("Unmute");
             } else {
+                textIsMuted.setTextColor(Color.parseColor("#47A8D5"));
                 textMute.setText("Mute");
             }
 

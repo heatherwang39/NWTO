@@ -53,7 +53,7 @@ public class DiscussionDetailActivity extends AppCompatActivity {
     private ArrayList<Comment> mCommentList;
 
     private String mPostOwnerUID, mCommenterUID, mFullName, mContent, mProfilePic, mTimeStamp, mPostTimeStamp;
-    private boolean mIsAdmin;
+    private boolean mIsAdmin,mIsMuted;
 
 
     @Override
@@ -68,6 +68,7 @@ public class DiscussionDetailActivity extends AppCompatActivity {
         mFullName = DiscussionActivity.fullName;
         mProfilePic = DiscussionActivity.profilePic;
         mIsAdmin = DiscussionActivity.isAdmin;
+        mIsMuted = DiscussionActivity.isMuted;
 
         mTextNameAndTime = (TextView) findViewById(R.id.text_name_and_time);
         mTextTopic = (TextView) findViewById(R.id.text_topic);
@@ -174,6 +175,11 @@ public class DiscussionDetailActivity extends AppCompatActivity {
 
     private void sendComment() {
         String mContent = mEditComment.getText().toString();
+
+        if(mIsMuted){
+            Toast.makeText(DiscussionDetailActivity.this, "Sorry, you're muted!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (mContent.length() < 1) {
             mEditComment.setError("Content can't be empty.");

@@ -28,7 +28,7 @@ public class DiscussionActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     public static String uID, fullName, profilePic, neighbourhoodName;
-    public static boolean isAdmin;
+    public static boolean isAdmin,isMuted;
     public static PostAdapter postAdapter;
 
     @Override
@@ -85,6 +85,11 @@ public class DiscussionActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
+        // hide add new button if the user is muted
+        if(isMuted){
+            menu.findItem(R.id.action_add_post).setVisible(false);
+        }
+
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -142,7 +147,7 @@ public class DiscussionActivity extends AppCompatActivity {
                     profilePic = documentSnapshot.getString("displayPicPath");
                     neighbourhoodName = documentSnapshot.getString("neighbourhood");
                     isAdmin = documentSnapshot.getBoolean("isAdmin");
-                    Log.d("Post:", neighbourhoodName);
+                    isMuted = documentSnapshot.getBoolean("isMuted");
                 }
             }
         });
