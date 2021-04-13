@@ -20,6 +20,7 @@ import com.example.nwto.api.ResourceApi;
 import com.example.nwto.model.Contact;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -147,15 +148,15 @@ public class ContactsActivity extends AppCompatActivity {
                 int order = 0;
                 switch (title) {
                     case "Councillor":
-                        order = 2;
+                        order = 3;
                         title = "Toronto City Councillor";
                         break;
                     case "MPP":
-                        order = 3;
+                        order = 4;
                         title = "Queen's Park MPP";
                         break;
                     case "MP":
-                        order = 4;
+                        order = 5;
                         title = "Ottawa MP";
                         break;
                 }
@@ -189,7 +190,8 @@ public class ContactsActivity extends AppCompatActivity {
                                 String officerEmail = (String) document.get(documentField_officerEmail);
                                 String officerPhone = (String) document.get(documentField_officerPhone);
                                 mContacts.add(new Contact(0, "Toronto Police Div. " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
-                                mContacts.add(new Contact(1, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
+                                mContacts.add(new Contact(2, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
+                                mContacts.add(new Contact(1, "CPAT", "Crime Prevention Association of Toronto",  "info@CrimePreventionTO.org", "N/A"));
                                 Log.d(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Success");
                             }
                         } else

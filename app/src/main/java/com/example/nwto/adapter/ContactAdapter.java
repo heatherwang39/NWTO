@@ -42,9 +42,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         holder.mTitle.setText(contact.getTitle());
         holder.mName.setText(contact.getName());
         holder.mEmail.setText(contact.getEmail());
-        holder.mPhoneNumb.setText(contact.getPhoneNumb());
-//        if (position % 2 == 0) holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.crimeCard2));
-//        else holder.mCardView.setCardBackgroundColor(context.getResources().getColor(R.color.crimeCard1));
+        if (contact.getPhoneNumb().equals("N/A")) {
+            // holder.mPhoneNumb.setVisibility(View.GONE);
+            holder.mPhoneNumb.setText(contact.getPhoneNumb());
+            holder.mPhoneButton.setVisibility(View.GONE);
+        }
+        else holder.mPhoneNumb.setText(contact.getPhoneNumb());
+
 
         // opens Android system's default email or phone features
         holder.mEmailButton.setOnClickListener(new OpenEmail(contact.getEmail()));
