@@ -190,8 +190,8 @@ public class ContactsActivity extends AppCompatActivity {
                                 String officerEmail = (String) document.get(documentField_officerEmail);
                                 String officerPhone = (String) document.get(documentField_officerPhone);
                                 mContacts.add(new Contact(0, "Toronto Police Div. " + divisionNumb, divisionAddress, divisionEmail, divisionPhone));
-                                mContacts.add(new Contact(2, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
-                                mContacts.add(new Contact(1, "CPAT", "Crime Prevention Association of Toronto",  "info@CrimePreventionTO.org", "N/A"));
+                                mContacts.add(new Contact(1, "Crime Prevention Officer", officerName, officerEmail, officerPhone));
+                                mContacts.add(new Contact(2, "CPAT", "Crime Prevention Association of Toronto",  "info@CrimePreventionTO.org", "N/A"));
                                 Log.d(TAG, "readPoliceContactInfoFromFireStore: onComplete -> Read Info Success");
                             }
                         } else
