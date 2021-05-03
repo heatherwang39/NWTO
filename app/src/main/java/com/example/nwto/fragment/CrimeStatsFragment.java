@@ -164,7 +164,7 @@ public class CrimeStatsFragment extends Fragment {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
                 String lastM = dateFormat.format(lastMonth);
-                xLabel[i] = lastM;
+                xLabel[i] = lastM.substring(0, lastM.length());
             }
             else
                 xLabel[i] = Integer.toString(years[i]); // 2018, 2019, 2020

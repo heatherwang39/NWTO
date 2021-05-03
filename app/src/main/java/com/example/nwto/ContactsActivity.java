@@ -149,7 +149,7 @@ public class ContactsActivity extends AppCompatActivity {
                 switch (title) {
                     case "Councillor":
                         order = 3;
-                        title = "Toronto City Councillor";
+                        title = "Toronto City Councilor";
                         break;
                     case "MPP":
                         order = 4;
